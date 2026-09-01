@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-// 言語ごとのテキスト定義
 const translations = {
   ja: {
     badge: "✨ 先着3名限定・日給5万円簡単ワーク ✨",
@@ -24,6 +23,8 @@ const translations = {
       "……だが、好都合だ。お前を「おとり捜査官（エージェント）」として特例採用する。これより、そのアカウントを使って奴らを逆にハックし、全ての証拠を暴いてもらう！",
     startBtn: "捜査任務を開始する ＞",
     fillAll: "すべての項目を入力してください！",
+    emailDuplicate:
+      "このメールアドレスはすでに別のエージェント（または詐欺グループ）によって登録されています！別のメールアドレスを使用してください。",
   },
   en: {
     badge: "✨ Limited to first 3 people • $500/day Easy Work ✨",
@@ -45,13 +46,15 @@ const translations = {
       "...However, this is convenient. We are specially recruiting you as an 'Undercover Agent'. From now on, use that account to hack them back and expose all their evidence!",
     startBtn: "Start Investigation Mission ＞",
     fillAll: "Please fill in all fields!",
+    emailDuplicate:
+      "This email address is already registered by another agent! Please use a different one.",
   },
 };
 
 export default function LoginPage() {
   const router = useRouter();
   const [step, setStep] = useState<"login" | "hacked">("login");
-  const [lang, setLang] = useState<"ja" | "en">("ja"); // 言語の状態（デフォルト：日本語）
+  const [lang, setLang] = useState<"ja" | "en">("ja");
 
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
@@ -74,6 +77,23 @@ export default function LoginPage() {
       alert(t.fillAll);
       return;
     }
+
+    // 登録済みメールアドレスの重複チェック
+    const existingEmails = JSON.parse(
+      localStorage.getItem("scam_registered_emails") || "[]",
+    );
+    if (existingEmails.includes(email)) {
+      alert(t.emailDuplicate);
+      return;
+    }
+
+    // 新しいメールアドレスを登録リストに追加して保存
+    existingEmails.push(email);
+    localStorage.setItem(
+      "scam_registered_emails",
+      JSON.stringify(existingEmails),
+    );
+
     localStorage.setItem("scam_nickname", nickname);
     localStorage.setItem("scam_email", email);
     setStep("hacked");
@@ -81,12 +101,12 @@ export default function LoginPage() {
 
   const handleStartGame = () => {
     localStorage.setItem("scam_step", "game");
+    localStorage.setItem("scam_lang", lang);
     router.push("/dashboard");
   };
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-gray-950 text-gray-100 relative">
-      {/* 右上に言語切り替えボタンを配置 */}
       <div className="absolute top-6 right-6 flex gap-2">
         <button
           onClick={() => setLang("ja")}
@@ -134,7 +154,6 @@ export default function LoginPage() {
                 className="w-full p-3 bg-gray-800 border border-gray-700 rounded text-white focus:border-pink-500 focus:outline-none"
               />
             </div>
-
             <div>
               <label className="block text-xs font-semibold text-gray-300 mb-1">
                 {t.emailLabel}
@@ -147,7 +166,6 @@ export default function LoginPage() {
                 className="w-full p-3 bg-gray-800 border border-gray-700 rounded text-white focus:border-pink-500 focus:outline-none"
               />
             </div>
-
             <div>
               <label className="block text-xs font-semibold text-gray-300 mb-1">
                 {t.passwordLabel}
@@ -160,7 +178,6 @@ export default function LoginPage() {
                 className="w-full p-3 bg-gray-800 border border-gray-700 rounded text-white focus:border-pink-500 focus:outline-none"
               />
             </div>
-
             <button
               type="submit"
               className="w-full py-3 bg-pink-600 hover:bg-pink-500 font-bold rounded text-white transition duration-200 shadow-lg shadow-pink-600/30 cursor-pointer"
@@ -183,7 +200,6 @@ export default function LoginPage() {
             <span className="text-white font-bold">{nickname}</span>
             {t.hackedText2}
           </p>
-
           <div className="bg-green-950/40 border border-green-800/60 rounded p-3 mb-6 text-xs space-y-1">
             <div className="text-green-500 font-bold">{t.evidenceTitle}</div>
             <div>
@@ -193,7 +209,6 @@ export default function LoginPage() {
               {t.contact}: <span className="text-white">{email}</span>
             </div>
           </div>
-
           <p className="text-sm leading-relaxed mb-6">{t.hackedText3}</p>
           <button
             onClick={handleStartGame}
