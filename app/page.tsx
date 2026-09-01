@@ -17,6 +17,9 @@ const translations = {
     passwordLabel: "ログインパスワード",
     registerBtn: "無料登録して今すぐ稼ぐ 🚀",
     loginBtn: "捜査（ログイン）を再開する 💻",
+    orText: "または外部アカウントでログイン",
+    googleBtn: "Googleでログイン 🌐",
+    githubBtn: "GitHubでログイン 🐙",
     hackedTitle: "⚠️ 警視庁 サイバー犯罪対策課",
     hackedText1: "対象のデータベースへの侵入を確認。",
     hackedText2:
@@ -44,6 +47,9 @@ const translations = {
     passwordLabel: "Password",
     registerBtn: "Register Free & Earn Now 🚀",
     loginBtn: "Resume Investigation (Login) 💻",
+    orText: "Or sign in with social accounts",
+    googleBtn: "Sign in with Google 🌐",
+    githubBtn: "Sign in with GitHub 🐙",
     hackedTitle: "⚠️ Tokyo Metropolitan Police - Cybercrime Division",
     hackedText1: "Invasion of target database confirmed.",
     hackedText2:
@@ -128,6 +134,20 @@ export default function LoginPage() {
       localStorage.setItem("scam_nickname", nickname);
       localStorage.setItem("scam_email", email);
       setStep("hacked");
+    }
+  };
+
+  // ソーシャルログイン処理（Google / GitHub）
+  const handleSocialLogin = async (provider: "google" | "github") => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: provider,
+      options: {
+        redirectTo: `${window.location.origin}/dashboard`,
+      },
+    });
+
+    if (error) {
+      alert("ソーシャルログインに失敗しました: " + error.message);
     }
   };
 
@@ -249,6 +269,34 @@ export default function LoginPage() {
                   : t.registerBtn}
             </button>
           </form>
+
+          {/* ソーシャルログイン（Google / GitHub）ボタンエリア */}
+          <div className="mt-6">
+            <div className="relative flex py-2 items-center">
+              <div className="flex-grow border-t border-gray-800"></div>
+              <span className="flex-shrink mx-4 text-gray-500 text-xs">
+                {t.orText}
+              </span>
+              <div className="flex-grow border-t border-gray-800"></div>
+            </div>
+
+            <div className="mt-4 space-y-2">
+              <button
+                type="button"
+                onClick={() => handleSocialLogin("google")}
+                className="w-full py-2.5 bg-white text-black font-bold rounded text-sm hover:bg-gray-200 transition cursor-pointer flex items-center justify-center gap-2"
+              >
+                <span>🌐</span> {t.googleBtn}
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSocialLogin("github")}
+                className="w-full py-2.5 bg-gray-800 text-white font-bold rounded text-sm hover:bg-gray-700 transition border border-gray-700 cursor-pointer flex items-center justify-center gap-2"
+              >
+                <span>🐙</span> {t.githubBtn}
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
