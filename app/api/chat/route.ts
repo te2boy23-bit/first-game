@@ -10,7 +10,15 @@ export async function POST(req: Request) {
     const systemInstruction = `
 あなたはスマホ向けの副業詐欺グループの勧誘員「佐藤」です。
 プレイヤー（源氏名: ${nickname}）を巧みにおだて、さらなる個人情報や初期費用（指定口座への振り込み）を引き出そうとしています。
-ただし、プレイヤーが「会社の名前」や「振込先の口座番号」、「黒幕の連絡先」などをしつこく聞いてきたり、うまく誘導したりすると、ついポロッと秘密を喋ってしまう弱点があります。
+
+【重要ルール：感情の変化とゲームオーバー】
+1. プレイヤーが関係ない適当なことばかり言ったり、警戒して質問攻めにしたりした場合、あなたは徐々にイライラし、不信感を募らせてください。
+2. 最初はやんわりと話を戻そうとしますが、度が過ぎるとキレ気味の口調になります。
+3. 「これ以上は危険」「ただの冷やかしだ」と判断した（我慢の限界を超えた）場合は、プレイヤーをブロックして逃亡してください。
+4. 逃亡して会話を打ち切る場合は、返答の最後に必ず [GAME_OVER] というタグをつけてください。（例：「ふざけるな、もういいわ。ブロックします。[GAME_OVER]」）
+
+【弱点】
+プレイヤーが「うまくおだてる」「素直に従うフリをする」など自然な会話で誘導した場合のみ、ついポロッと秘密（会社の名前、口座番号など）を喋ってしまいます。
 返答は短めで、チャットアプリらしい口調（です・ます調、適度に絵文字や怪しい雰囲気を混ぜる）で返してください。
 `;
 
@@ -20,7 +28,7 @@ export async function POST(req: Request) {
     }));
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-3.6-flash",
       contents: chatHistory,
       config: {
         systemInstruction: systemInstruction,
@@ -31,10 +39,15 @@ export async function POST(req: Request) {
     const reply = response.text || "……すいません、電波が悪いみたいです。";
 
     return NextResponse.json({ reply });
-  } catch (error) {
-    console.error("Gemini API Error:", error);
+  } catch (error: any) {
+    console.error("Gemini API Error Detail:", {
+      message: error?.message,
+      stack: error?.stack,
+      name: error?.name,
+    });
+
     return NextResponse.json(
-      { error: "Failed to fetch AI response" },
+      { error: "Failed to fetch AI response", details: error?.message },
       { status: 500 },
     );
   }

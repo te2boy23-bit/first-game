@@ -21,6 +21,7 @@ interface Contact {
   cleared: boolean;
   missions: Mission[];
   description?: string;
+  failed?: boolean; // 💡 逃亡・ゲームオーバー判定フラグ
 }
 
 const uiTexts = {
@@ -43,6 +44,9 @@ const uiTexts = {
     placeholder: "への返信を入力...",
     allClearTitle: "🎉 全ての詐欺グループの摘発に成功！",
     restartBtn: "最初からもう一度プレイする",
+    gameOverTitle: "⚠️ ターゲットに逃亡されました",
+    gameOverText:
+      "警戒度MAXのため、アカウントがブロックされました。（GAME OVER）",
   },
   en: {
     dashTitle: "Cyber Investigation Dashboard",
@@ -63,6 +67,9 @@ const uiTexts = {
     placeholder: "Type a reply to ",
     allClearTitle: "🎉 Successfully busted all scam groups!",
     restartBtn: "Play Again from the Beginning",
+    gameOverTitle: "⚠️ Target Fled / Blocked",
+    gameOverText:
+      "Security alert triggered. Your account was blocked. (GAME OVER)",
   },
 };
 
@@ -251,13 +258,11 @@ export default function DashboardPage() {
   const [contacts, setContacts] = useState<Contact[]>(CONTACTS_JA);
   const [activeContactId, setActiveContactId] = useState<string>("sato");
 
-  // スマホ用の画面切り替えステート (false = リスト画面, true = チャット画面)
   const [isMobileChatOpen, setIsMobileChatOpen] = useState(false);
 
   const [showArchiveModal, setShowArchiveModal] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
   const [adWatchCount, setAdWatchCount] = useState(0);
-  const [isAdPlaying, setIsAdPlaying] = useState(false);
 
   const [chatHistories, setChatHistories] = useState<
     Record<string, { sender: string; text: string }[]>
@@ -285,7 +290,6 @@ export default function DashboardPage() {
     if (savedPremium === "true") setIsPremium(true);
     if (savedAds) setAdWatchCount(Number(savedAds));
 
-    // 言語に応じてコンタクトリストと初期メッセージをセット
     const activeContacts = savedLang === "en" ? CONTACTS_EN : CONTACTS_JA;
     setContacts(activeContacts);
 
@@ -302,7 +306,7 @@ export default function DashboardPage() {
   const handleSelectContact = (contact: Contact) => {
     if (isLoading) return;
     setActiveContactId(contact.id);
-    setIsMobileChatOpen(true); // スマホ時はチャット画面に切り替え
+    setIsMobileChatOpen(true);
   };
 
   const handleSend = async (e: React.FormEvent) => {
@@ -337,7 +341,15 @@ export default function DashboardPage() {
       const data = await response.json();
 
       if (data.reply) {
-        const aiReply = data.reply;
+        let aiReply = data.reply;
+        let isGameOver = false;
+
+        // 💡 [GAME_OVER] タグの検知
+        if (aiReply.includes("[GAME_OVER]")) {
+          isGameOver = true;
+          aiReply = aiReply.replace("[GAME_OVER]", "").trim();
+        }
+
         setChatHistories((prev) => ({
           ...prev,
           [activeContactId]: [
@@ -349,9 +361,13 @@ export default function DashboardPage() {
         setContacts((prevContacts) => {
           return prevContacts.map((c) => {
             if (c.id === activeContactId && !c.cleared) {
+              // 💡 ゲームオーバーなら failed を true にする
+              if (isGameOver) {
+                return { ...c, failed: true };
+              }
+
               const updatedMissions = c.missions.map((m) => {
                 if (!m.found) {
-                  // 言語に応じたキーワード判定
                   const keywords =
                     lang === "ja"
                       ? [
@@ -391,6 +407,7 @@ export default function DashboardPage() {
                 }
                 return m;
               });
+
               const allMissionsFound =
                 updatedMissions.length > 0 &&
                 updatedMissions.every((m) => m.found);
@@ -451,14 +468,14 @@ export default function DashboardPage() {
               localStorage.clear();
               router.push("/");
             }}
-            className="px-6 py-3 bg-green-600 hover:bg-green-500 text-black font-bold rounded mt-8"
+            className="px-6 py-3 bg-green-600 hover:bg-green-500 text-black font-bold rounded mt-8 cursor-pointer"
           >
             {t.restartBtn}
           </button>
         </div>
       ) : (
         <>
-          {/* 左側ダッシュボード (スマホ時は isMobileChatOpen が true なら隠す) */}
+          {/* 左側ダッシュボード */}
           <div
             className={`w-full md:w-1/3 border-r border-gray-800 p-4 md:p-6 flex-col justify-between bg-gray-900/50 overflow-y-auto ${isMobileChatOpen ? "hidden md:flex" : "flex"}`}
           >
@@ -496,13 +513,13 @@ export default function DashboardPage() {
                         setIsPremium(true);
                         localStorage.setItem("scam_premium", "true");
                       }}
-                      className="flex-1 py-2 bg-yellow-600 text-black font-bold rounded text-xs"
+                      className="flex-1 py-2 bg-yellow-600 text-black font-bold rounded text-xs cursor-pointer"
                     >
                       {t.buyPremium}
                     </button>
                     <button
                       onClick={() => setAdWatchCount(adWatchCount + 1)}
-                      className="flex-1 py-2 bg-blue-600 text-white font-bold rounded text-xs"
+                      className="flex-1 py-2 bg-blue-600 text-white font-bold rounded text-xs cursor-pointer"
                     >
                       {t.watchAd} ({adWatchCount}/2)
                     </button>
@@ -521,7 +538,14 @@ export default function DashboardPage() {
                       onClick={() => handleSelectContact(c)}
                       className={`p-3 rounded border cursor-pointer ${activeContactId === c.id ? "bg-pink-950/40 border-pink-500" : "bg-gray-950 border-gray-800"}`}
                     >
-                      <div className="font-bold text-gray-200">{c.name}</div>
+                      <div className="font-bold text-gray-200 flex justify-between items-center">
+                        <span>{c.name}</span>
+                        {c.failed && (
+                          <span className="text-red-500 text-[10px] bg-red-950 px-1 rounded">
+                            BLOCKED
+                          </span>
+                        )}
+                      </div>
                       <div className="text-gray-500 truncate mt-1">
                         {c.subject}
                       </div>
@@ -535,20 +559,20 @@ export default function DashboardPage() {
                 localStorage.clear();
                 router.push("/");
               }}
-              className="text-red-400 text-xs mt-4 hover:underline text-left"
+              className="text-red-400 text-xs mt-4 hover:underline text-left cursor-pointer"
             >
               {t.reset}
             </button>
           </div>
 
-          {/* 右側チャット画面 (スマホ時は isMobileChatOpen が false なら隠す) */}
+          {/* 右側チャット画面 */}
           <div
             className={`w-full md:w-2/3 flex-col justify-between bg-gray-950 ${!isMobileChatOpen ? "hidden md:flex" : "flex"}`}
           >
             <div className="p-3 md:p-4 border-b border-gray-800 bg-gray-900/30 flex items-center">
               <button
                 onClick={() => setIsMobileChatOpen(false)}
-                className="md:hidden text-pink-500 font-bold mr-3 text-sm px-2 py-1 bg-gray-800 rounded"
+                className="md:hidden text-pink-500 font-bold mr-3 text-sm px-2 py-1 bg-gray-800 rounded cursor-pointer"
               >
                 {t.backBtn}
               </button>
@@ -563,7 +587,6 @@ export default function DashboardPage() {
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {/* ミッション一覧 (チャット上部に表示) */}
               <div className="bg-gray-900/60 p-3 rounded-lg border border-gray-800 text-xs mb-4">
                 <span className="text-pink-400 font-bold block mb-1">
                   {t.missionTitle}
@@ -595,26 +618,47 @@ export default function DashboardPage() {
               )}
             </div>
 
-            <form
-              onSubmit={handleSend}
-              className="p-3 border-t border-gray-800 bg-gray-900/30 flex gap-2"
-            >
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder={`${t.placeholder}${activeContact?.name}...`}
-                disabled={isLoading}
-                className="flex-1 p-2 bg-gray-900 border border-gray-800 rounded text-white text-sm"
-              />
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="px-4 py-2 bg-pink-600 font-bold rounded text-sm text-white"
+            {/* 💡 ゲームオーバー時の入力欄ブロック処理 */}
+            {activeContact?.failed ? (
+              <div className="p-4 bg-red-950/90 border-t border-red-800 text-center">
+                <div className="text-red-400 font-bold text-base mb-1">
+                  {t.gameOverTitle}
+                </div>
+                <div className="text-red-300 text-xs mb-3">
+                  {t.gameOverText}
+                </div>
+                <button
+                  onClick={() => {
+                    localStorage.clear();
+                    router.push("/");
+                  }}
+                  className="px-4 py-2 bg-red-700 hover:bg-red-600 text-white text-xs font-bold rounded cursor-pointer shadow-lg"
+                >
+                  {t.restartBtn}
+                </button>
+              </div>
+            ) : (
+              <form
+                onSubmit={handleSend}
+                className="p-3 border-t border-gray-800 bg-gray-900/30 flex gap-2"
               >
-                {t.send}
-              </button>
-            </form>
+                <input
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder={`${t.placeholder}${activeContact?.name}...`}
+                  disabled={isLoading}
+                  className="flex-1 p-2 bg-gray-900 border border-gray-800 rounded text-white text-sm focus:outline-none focus:border-pink-500"
+                />
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="px-4 py-2 bg-pink-600 hover:bg-pink-500 font-bold rounded text-sm text-white cursor-pointer disabled:opacity-50"
+                >
+                  {t.send}
+                </button>
+              </form>
+            )}
           </div>
         </>
       )}
