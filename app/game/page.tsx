@@ -1,31 +1,65 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+interface Message {
+  sender: "player" | "scammer";
+  text: string;
+}
+
+interface Evidence {
+  id: number;
+  name: string;
+  found: boolean;
+}
 
 export default function GamePage() {
-  const [messages, setMessages] = useState([
-    {
-      sender: "scammer",
-      text: "登録ありがとうございます！担当の佐藤です。本日から副業スタートですね。まずは最初の簡単な作業をご案内します。",
-    },
-  ]);
+  // 1. ローカルストレージからメッセージを復元（なければ初期メッセージ）
+  const [messages, setMessages] = useState<Message[]>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("scam_chat_messages");
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+    return [
+      {
+        sender: "scammer",
+        text: "登録ありがとうございます！担当の佐藤です。本日から副業スタートですね。まずは最初の簡単な作業をご案内します。",
+      },
+    ];
+  });
+
   const [input, setInput] = useState("");
 
-  const [evidences, setEvidences] = useState([
+  const [evidences, setEvidences] = useState<Evidence[]>([
     { id: 1, name: "組織の正式名称", found: false },
     { id: 2, name: "振込先口座番号", found: false },
     { id: 3, name: "黒幕の連絡先", found: false },
   ]);
 
+  // 2. メッセージが更新されるたびにブラウザに保存
+  useEffect(() => {
+    localStorage.setItem("scam_chat_messages", JSON.stringify(messages));
+  }, [messages]);
+
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    const newMessages = [...messages, { sender: "player", text: input }];
+    const newMessages: Message[] = [
+      ...messages,
+      { sender: "player", text: input },
+    ];
     setMessages(newMessages);
     setInput("");
 
+    // 3. 詐欺師からの自動返信（型エラー修正済み）
     setTimeout(() => {
-      setMessages((prev) => [
+      setMessages((prev: Message[]) => [
         ...prev,
         {
           sender: "scammer",
@@ -38,7 +72,6 @@ export default function GamePage() {
   return (
     <main className="flex flex-col md:flex-row h-[100dvh] bg-gray-950 text-gray-100 overflow-hidden">
       {/* 左側（スマホでは上部）：警察からのミッション・証拠リスト */}
-      {/* スマホでは高さを抑え、デスクトップ(md)では横幅1/3にする */}
       <div className="w-full md:w-1/3 border-b md:border-b-0 md:border-r border-gray-800 p-4 md:p-6 flex flex-col justify-between bg-gray-900/50 shrink-0 max-h-[30vh] md:max-h-none overflow-y-auto">
         <div>
           <div className="text-xs text-pink-500 font-bold mb-1">STAGE 1</div>
