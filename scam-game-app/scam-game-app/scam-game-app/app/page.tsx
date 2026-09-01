@@ -61,7 +61,7 @@ const translations = {
 
 export default function LoginPage() {
   const router = useRouter();
-  const [isLoginMode, setIsLoginMode] = useState(false);
+  const [isLoginMode, setIsLoginMode] = useState(false); // false = 登録, true = ログイン
   const [step, setStep] = useState<"login" | "hacked">("login");
   const [lang, setLang] = useState<"ja" | "en">("ja");
 
@@ -89,6 +89,7 @@ export default function LoginPage() {
     setIsLoading(true);
 
     if (isLoginMode) {
+      // ── ログイン処理 ──
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -101,6 +102,7 @@ export default function LoginPage() {
         return;
       }
 
+      // ログイン成功したら直接ゲーム画面へ
       localStorage.setItem("scam_step", "game");
       localStorage.setItem("scam_email", email);
       localStorage.setItem(
@@ -110,11 +112,12 @@ export default function LoginPage() {
       localStorage.setItem("scam_lang", lang);
       router.push("/dashboard");
     } else {
+      // ── 新規登録処理 ──
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          data: { nickname },
+          data: { nickname }, // ニックネームをSupabaseのメタデータに保存
         },
       });
 
@@ -125,6 +128,7 @@ export default function LoginPage() {
         return;
       }
 
+      // 登録成功したらハック演出画面へ
       localStorage.setItem("scam_nickname", nickname);
       localStorage.setItem("scam_email", email);
       setStep("hacked");
@@ -168,6 +172,7 @@ export default function LoginPage() {
             {t.badge}
           </div>
 
+          {/* 登録 / ログインのタブ切り替え */}
           <div className="flex border-b border-gray-800 mt-4 mb-6">
             <button
               type="button"
