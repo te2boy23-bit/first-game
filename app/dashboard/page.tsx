@@ -21,7 +21,7 @@ interface Contact {
   cleared: boolean;
   missions: Mission[];
   description?: string;
-  failed?: boolean; // 💡 逃亡・ゲームオーバー判定フラグ
+  failed?: boolean;
 }
 
 const uiTexts = {
@@ -293,12 +293,18 @@ export default function DashboardPage() {
     const activeContacts = savedLang === "en" ? CONTACTS_EN : CONTACTS_JA;
     setContacts(activeContacts);
 
-    const initialHistories: Record<string, { sender: string; text: string }[]> =
-      {};
-    activeContacts.forEach((c) => {
-      initialHistories[c.id] = [{ sender: "scammer", text: c.initialMessage }];
+    // 💡 修正：既にチャット履歴が存在しない場合のみ初期メッセージをセットする（上書き事故防止）
+    setChatHistories((prev) => {
+      const initialHistories = { ...prev };
+      activeContacts.forEach((c) => {
+        if (!initialHistories[c.id]) {
+          initialHistories[c.id] = [
+            { sender: "scammer", text: c.initialMessage },
+          ];
+        }
+      });
+      return initialHistories;
     });
-    setChatHistories(initialHistories);
   }, [router]);
 
   const t = uiTexts[lang] || uiTexts.ja;
@@ -313,28 +319,33 @@ export default function DashboardPage() {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
 
+    const targetContactId = activeContactId;
     const userMessage = input;
-    const currentMessages = chatHistories[activeContactId] || [];
-    const updatedMessages = [
-      ...currentMessages,
-      { sender: "player", text: userMessage },
-    ];
-
-    setChatHistories((prev) => ({
-      ...prev,
-      [activeContactId]: updatedMessages,
-    }));
     setInput("");
     setIsLoading(true);
 
     try {
+      // 1. 現在の履歴を取得し、プレイヤーの発言を追加
+      const currentMessages = chatHistories[targetContactId] || [];
+      const updatedMessages = [
+        ...currentMessages,
+        { sender: "player", text: userMessage },
+      ];
+
+      // 2. 画面上の履歴を即座に更新
+      setChatHistories((prev) => ({
+        ...prev,
+        [targetContactId]: updatedMessages,
+      }));
+
+      // 3. APIにこれまでの全会話履歴（updatedMessages）を送信
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: updatedMessages,
           nickname,
-          contactId: activeContactId,
+          contactId: targetContactId,
           lang,
         }),
       });
@@ -344,24 +355,27 @@ export default function DashboardPage() {
         let aiReply = data.reply;
         let isGameOver = false;
 
-        // 💡 [GAME_OVER] タグの検知
         if (aiReply.includes("[GAME_OVER]")) {
           isGameOver = true;
           aiReply = aiReply.replace("[GAME_OVER]", "").trim();
         }
 
-        setChatHistories((prev) => ({
-          ...prev,
-          [activeContactId]: [
-            ...(prev[activeContactId] || []),
-            { sender: "scammer", text: aiReply },
-          ],
-        }));
+        // 4. APIからの返事をチャット履歴に確実に追加
+        setChatHistories((prev) => {
+          const prevMessages = prev[targetContactId] || updatedMessages;
+          return {
+            ...prev,
+            [targetContactId]: [
+              ...prevMessages,
+              { sender: "scammer", text: aiReply },
+            ],
+          };
+        });
 
+        // 5. ターゲットのミッション・ゲームオーバー状態の更新
         setContacts((prevContacts) => {
           return prevContacts.map((c) => {
-            if (c.id === activeContactId && !c.cleared) {
-              // 💡 ゲームオーバーなら failed を true にする
+            if (c.id === targetContactId && !c.cleared) {
               if (isGameOver) {
                 return { ...c, failed: true };
               }
@@ -618,7 +632,6 @@ export default function DashboardPage() {
               )}
             </div>
 
-            {/* 💡 ゲームオーバー時の入力欄ブロック処理 */}
             {activeContact?.failed ? (
               <div className="p-4 bg-red-950/90 border-t border-red-800 text-center">
                 <div className="text-red-400 font-bold text-base mb-1">
