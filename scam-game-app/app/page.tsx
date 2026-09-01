@@ -23,6 +23,8 @@ const translations = {
       "……だが、好都合だ。お前を「おとり捜査官（エージェント）」として特例採用する。これより、そのアカウントを使って奴らを逆にハックし、全ての証拠を暴いてもらう！",
     startBtn: "捜査任務を開始する ＞",
     fillAll: "すべての項目を入力してください！",
+    emailDuplicate:
+      "このメールアドレスはすでに別のエージェント（または詐欺グループ）によって登録されています！別のメールアドレスを使用してください。",
   },
   en: {
     badge: "✨ Limited to first 3 people • $500/day Easy Work ✨",
@@ -44,6 +46,8 @@ const translations = {
       "...However, this is convenient. We are specially recruiting you as an 'Undercover Agent'. From now on, use that account to hack them back and expose all their evidence!",
     startBtn: "Start Investigation Mission ＞",
     fillAll: "Please fill in all fields!",
+    emailDuplicate:
+      "This email address is already registered by another agent! Please use a different one.",
   },
 };
 
@@ -73,6 +77,23 @@ export default function LoginPage() {
       alert(t.fillAll);
       return;
     }
+
+    // 登録済みメールアドレスの重複チェック
+    const existingEmails = JSON.parse(
+      localStorage.getItem("scam_registered_emails") || "[]",
+    );
+    if (existingEmails.includes(email)) {
+      alert(t.emailDuplicate);
+      return;
+    }
+
+    // 新しいメールアドレスを登録リストに追加して保存
+    existingEmails.push(email);
+    localStorage.setItem(
+      "scam_registered_emails",
+      JSON.stringify(existingEmails),
+    );
+
     localStorage.setItem("scam_nickname", nickname);
     localStorage.setItem("scam_email", email);
     setStep("hacked");
@@ -80,7 +101,7 @@ export default function LoginPage() {
 
   const handleStartGame = () => {
     localStorage.setItem("scam_step", "game");
-    localStorage.setItem("scam_lang", lang); // 👈 言語設定を保存！
+    localStorage.setItem("scam_lang", lang);
     router.push("/dashboard");
   };
 
