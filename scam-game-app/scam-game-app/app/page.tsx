@@ -1,16 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-<<<<<<< HEAD
 import { supabase } from "./lib/supabase";
-=======
->>>>>>> cb69bf7eb190b6b1293baa5e2b5ce955d6408850
 
 const translations = {
   ja: {
     badge: "✨ 先着3名限定・日給5万円簡単ワーク ✨",
     title: "【公式】シークレット副業エージェント",
-<<<<<<< HEAD
     modeRegister: "新規登録",
     modeLogin: "ログイン",
     descRegister: "以下の情報を登録して、今すぐ高収入案件をゲットしよう！",
@@ -21,14 +17,6 @@ const translations = {
     passwordLabel: "ログインパスワード",
     registerBtn: "無料登録して今すぐ稼ぐ 🚀",
     loginBtn: "捜査（ログイン）を再開する 💻",
-=======
-    desc: "以下の情報を登録して、今すぐ高収入案件をゲットしよう！",
-    nicknameLabel: "ニックネーム（源氏名）",
-    nicknamePlaceholder: "例：カモ太郎",
-    emailLabel: "連絡用メールアドレス",
-    passwordLabel: "ログインパスワード",
-    submitBtn: "無料登録して今すぐ稼ぐ 🚀",
->>>>>>> cb69bf7eb190b6b1293baa5e2b5ce955d6408850
     hackedTitle: "⚠️ 警視庁 サイバー犯罪対策課",
     hackedText1: "対象のデータベースへの侵入を確認。",
     hackedText2:
@@ -40,18 +28,12 @@ const translations = {
       "……だが、好都合だ。お前を「おとり捜査官（エージェント）」として特例採用する。これより、そのアカウントを使って奴らを逆にハックし、全ての証拠を暴いてもらう！",
     startBtn: "捜査任務を開始する ＞",
     fillAll: "すべての項目を入力してください！",
-<<<<<<< HEAD
     authError:
       "認証に失敗しました。メールアドレスやパスワードを確認してください。",
-=======
-    emailDuplicate:
-      "このメールアドレスはすでに別のエージェント（または詐欺グループ）によって登録されています！別のメールアドレスを使用してください。",
->>>>>>> cb69bf7eb190b6b1293baa5e2b5ce955d6408850
   },
   en: {
     badge: "✨ Limited to first 3 people • $500/day Easy Work ✨",
     title: "[Official] Secret Side Hustle Agent",
-<<<<<<< HEAD
     modeRegister: "Register",
     modeLogin: "Login",
     descRegister: "Register your info below to get high-paying gigs right now!",
@@ -62,14 +44,6 @@ const translations = {
     passwordLabel: "Password",
     registerBtn: "Register Free & Earn Now 🚀",
     loginBtn: "Resume Investigation (Login) 💻",
-=======
-    desc: "Register your info below to get high-paying gigs right now!",
-    nicknameLabel: "Nickname (Alias)",
-    nicknamePlaceholder: "e.g. John Doe",
-    emailLabel: "Email Address",
-    passwordLabel: "Password",
-    submitBtn: "Register Free & Earn Now 🚀",
->>>>>>> cb69bf7eb190b6b1293baa5e2b5ce955d6408850
     hackedTitle: "⚠️ Tokyo Metropolitan Police - Cybercrime Division",
     hackedText1: "Invasion of target database confirmed.",
     hackedText2:
@@ -81,21 +55,13 @@ const translations = {
       "...However, this is convenient. We are specially recruiting you as an 'Undercover Agent'. From now on, use that account to hack them back and expose all their evidence!",
     startBtn: "Start Investigation Mission ＞",
     fillAll: "Please fill in all fields!",
-<<<<<<< HEAD
     authError: "Authentication failed. Please check your email or password.",
-=======
-    emailDuplicate:
-      "This email address is already registered by another agent! Please use a different one.",
->>>>>>> cb69bf7eb190b6b1293baa5e2b5ce955d6408850
   },
 };
 
 export default function LoginPage() {
   const router = useRouter();
-<<<<<<< HEAD
   const [isLoginMode, setIsLoginMode] = useState(false); // false = 登録, true = ログイン
-=======
->>>>>>> cb69bf7eb190b6b1293baa5e2b5ce955d6408850
   const [step, setStep] = useState<"login" | "hacked">("login");
   const [lang, setLang] = useState<"ja" | "en">("ja");
 
@@ -107,33 +73,19 @@ export default function LoginPage() {
   const t = translations[lang];
 
   useEffect(() => {
-<<<<<<< HEAD
     const savedStep = localStorage.getItem("scam_step");
     if (savedStep === "game") {
-=======
-    const savedNickname = localStorage.getItem("scam_nickname");
-    const savedStep = localStorage.getItem("scam_step");
-
-    if (savedNickname && savedStep === "game") {
->>>>>>> cb69bf7eb190b6b1293baa5e2b5ce955d6408850
       router.push("/dashboard");
     }
   }, [router]);
 
-<<<<<<< HEAD
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password || (!isLoginMode && !nickname)) {
-=======
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!nickname || !email || !password) {
->>>>>>> cb69bf7eb190b6b1293baa5e2b5ce955d6408850
       alert(t.fillAll);
       return;
     }
 
-<<<<<<< HEAD
     setIsLoading(true);
 
     if (isLoginMode) {
@@ -187,33 +139,6 @@ export default function LoginPage() {
     localStorage.setItem("scam_step", "game");
     localStorage.setItem("scam_lang", lang);
     router.push("/dashboard");
-=======
-    // 登録済みメールアドレスの重複チェック
-    const existingEmails = JSON.parse(
-      localStorage.getItem("scam_registered_emails") || "[]",
-    );
-    if (existingEmails.includes(email)) {
-      alert(t.emailDuplicate);
-      return;
-    }
-
-    // 新しいメールアドレスを登録リストに追加して保存
-    existingEmails.push(email);
-    localStorage.setItem(
-      "scam_registered_emails",
-      JSON.stringify(existingEmails),
-    );
-
-    localStorage.setItem("scam_nickname", nickname);
-    localStorage.setItem("scam_email", email);
-    setStep("hacked");
->>>>>>> cb69bf7eb190b6b1293baa5e2b5ce955d6408850
-  };
-
-  const handleStartGame = () => {
-    localStorage.setItem("scam_step", "game");
-    localStorage.setItem("scam_lang", lang);
-    router.push("/dashboard");
   };
 
   return (
@@ -247,7 +172,6 @@ export default function LoginPage() {
             {t.badge}
           </div>
 
-<<<<<<< HEAD
           {/* 登録 / ログインのタブ切り替え */}
           <div className="flex border-b border-gray-800 mt-4 mb-6">
             <button
@@ -278,12 +202,6 @@ export default function LoginPage() {
           <p className="text-sm text-gray-400 mb-6">
             {isLoginMode ? t.descLogin : t.descRegister}
           </p>
-=======
-          <h2 className="text-xl font-bold mt-4 mb-2 text-pink-400">
-            {t.title}
-          </h2>
-          <p className="text-sm text-gray-400 mb-6">{t.desc}</p>
->>>>>>> cb69bf7eb190b6b1293baa5e2b5ce955d6408850
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLoginMode && (
@@ -302,21 +220,6 @@ export default function LoginPage() {
             )}
             <div>
               <label className="block text-xs font-semibold text-gray-300 mb-1">
-<<<<<<< HEAD
-=======
-                {t.nicknameLabel}
-              </label>
-              <input
-                type="text"
-                value={nickname}
-                onChange={(e) => setNickname(e.target.value)}
-                placeholder={t.nicknamePlaceholder}
-                className="w-full p-3 bg-gray-800 border border-gray-700 rounded text-white focus:border-pink-500 focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-gray-300 mb-1">
->>>>>>> cb69bf7eb190b6b1293baa5e2b5ce955d6408850
                 {t.emailLabel}
               </label>
               <input
@@ -341,7 +244,6 @@ export default function LoginPage() {
             </div>
             <button
               type="submit"
-<<<<<<< HEAD
               disabled={isLoading}
               className="w-full py-3 bg-pink-600 hover:bg-pink-500 font-bold rounded text-white transition duration-200 shadow-lg shadow-pink-600/30 cursor-pointer disabled:opacity-50 text-sm"
             >
@@ -350,11 +252,6 @@ export default function LoginPage() {
                 : isLoginMode
                   ? t.loginBtn
                   : t.registerBtn}
-=======
-              className="w-full py-3 bg-pink-600 hover:bg-pink-500 font-bold rounded text-white transition duration-200 shadow-lg shadow-pink-600/30 cursor-pointer"
-            >
-              {t.submitBtn}
->>>>>>> cb69bf7eb190b6b1293baa5e2b5ce955d6408850
             </button>
           </form>
         </div>
