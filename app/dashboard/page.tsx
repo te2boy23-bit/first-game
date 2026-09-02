@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { supabase } from "../lib/supabase";
 import ArchiveModal from "../components/ArchiveModal";
 import DashboardSidebar from "../components/DashboardSidebar";
 import ChatWindow from "../components/ChatWindow";
@@ -275,39 +276,61 @@ export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const savedNickname = localStorage.getItem("scam_nickname");
-    const savedEmail = localStorage.getItem("scam_email");
-    const savedStep = localStorage.getItem("scam_step");
-    const savedLang =
-      (localStorage.getItem("scam_lang") as "ja" | "en") || "ja";
-    const savedPremium = localStorage.getItem("scam_premium");
-    const savedAds = localStorage.getItem("scam_ads");
+    const initDashboard = async () => {
+      let savedNickname = localStorage.getItem("scam_nickname");
+      let savedEmail = localStorage.getItem("scam_email");
+      let savedStep = localStorage.getItem("scam_step");
+      const savedLang =
+        (localStorage.getItem("scam_lang") as "ja" | "en") || "ja";
+      const savedPremium = localStorage.getItem("scam_premium");
+      const savedAds = localStorage.getItem("scam_ads");
 
-    if (!savedNickname || savedStep !== "game") {
-      router.push("/");
-      return;
-    }
+      let nicknameToSet = savedNickname || "";
+      let emailToSet = savedEmail || "";
 
-    setNickname(savedNickname);
-    if (savedEmail) setEmail(savedEmail);
-    setLang(savedLang);
-    if (savedPremium === "true") setIsPremium(true);
-    if (savedAds) setAdWatchCount(Number(savedAds));
-
-    const activeContacts = savedLang === "en" ? CONTACTS_EN : CONTACTS_JA;
-    setContacts(activeContacts);
-
-    setChatHistories((prev) => {
-      const initialHistories = { ...prev };
-      activeContacts.forEach((c) => {
-        if (!initialHistories[c.id]) {
-          initialHistories[c.id] = [
-            { sender: "scammer", text: c.initialMessage },
-          ];
+      if (!savedNickname || savedStep !== "game") {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (user) {
+          nicknameToSet =
+            user.user_metadata?.full_name ||
+            user.user_metadata?.nickname ||
+            user.email?.split("@")[0] ||
+            "エージェント";
+          emailToSet = user.email || "";
+          localStorage.setItem("scam_nickname", nicknameToSet);
+          localStorage.setItem("scam_email", emailToSet);
+          localStorage.setItem("scam_step", "game");
+        } else {
+          router.push("/");
+          return;
         }
+      }
+
+      setNickname(nicknameToSet);
+      if (emailToSet) setEmail(emailToSet);
+      setLang(savedLang);
+      if (savedPremium === "true") setIsPremium(true);
+      if (savedAds) setAdWatchCount(Number(savedAds));
+
+      const activeContacts = savedLang === "en" ? CONTACTS_EN : CONTACTS_JA;
+      setContacts(activeContacts);
+
+      setChatHistories((prev) => {
+        const initialHistories = { ...prev };
+        activeContacts.forEach((c) => {
+          if (!initialHistories[c.id]) {
+            initialHistories[c.id] = [
+              { sender: "scammer", text: c.initialMessage },
+            ];
+          }
+        });
+        return initialHistories;
       });
-      return initialHistories;
-    });
+    };
+
+    initDashboard();
   }, [router]);
 
   const t = uiTexts[lang] || uiTexts.ja;
