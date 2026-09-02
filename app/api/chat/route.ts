@@ -372,27 +372,208 @@ ${jaMissionListStr}
 `;
 }
 
+function generateFallbackReply({
+  userMessage,
+  contactId,
+  lang,
+  messagesCount,
+}: {
+  userMessage: string;
+  contactId: string;
+  lang: string;
+  messagesCount: number;
+}): string {
+  const isEn = lang === "en";
+  const msg = (userMessage || "").toLowerCase();
+
+  // 1. 警察・捜査への警戒ブロック判定
+  if (
+    msg.includes("警察") ||
+    msg.includes("逮捕") ||
+    msg.includes("サイバー") ||
+    msg.includes("身元") ||
+    msg.includes("本名") ||
+    msg.includes("police") ||
+    msg.includes("cop") ||
+    msg.includes("arrest") ||
+    msg.includes("detective")
+  ) {
+    return isEn
+      ? "Wait... are you an undercover cop snooping around?! I'm deleting this chat immediately! [GAME_OVER]"
+      : "おい…お前さっきから警察みたいなこと聞いて嗅ぎ回ってんのか！？関わりたくねえわ、消えろ！ [GAME_OVER]";
+  }
+
+  // 2. 煽り・ボケ・キーボード連打判定
+  const isTroll =
+    (msg.length >= 15 && !msg.includes(" ")) ||
+    [
+      "ぁ",
+      "ぃ",
+      "ぅ",
+      "ぇ",
+      "ぉ",
+      "あああ",
+      "いいい",
+      "ううう",
+      "えええ",
+      "おおお",
+      "asdf",
+      "qwer",
+      "zxcv",
+      "hjk",
+      "wwww",
+      "草",
+      "うんこ",
+      "うんち",
+      "ハゲ",
+      "死ね",
+      "バカ",
+      "アホ",
+    ].some((k) => msg.includes(k));
+
+  if (isTroll) {
+    if (messagesCount >= 3) {
+      return isEn
+        ? "Stop sending random garbage! You're just wasting my time, you're blocked! [GAME_OVER]"
+        : "意味不明な連打ばっか送ってくんじゃねえよ！時間の無駄だわ、ブロックするわ！ [GAME_OVER]";
+    }
+    return isEn
+      ? "...What is that gibberish? Please type properly and listen to the business offer!"
+      : "…は？文字化けですか？何打ってるのか読めないんですけど…ちゃんと打ってください。";
+  }
+
+  // 3. 無関係な質問への気まずい困惑リアクション
+  if (
+    msg.includes("ピザ") ||
+    msg.includes("天気") ||
+    msg.includes("晩ごはん") ||
+    msg.includes("カレー") ||
+    msg.includes("ラーメン") ||
+    msg.includes("好きな") ||
+    msg.includes("pizza") ||
+    msg.includes("weather") ||
+    msg.includes("dinner") ||
+    msg.includes("recipe")
+  ) {
+    return isEn
+      ? "...Uh, what are you talking about? That has nothing to do with this business offer... (awkward)"
+      : "……は？急に何の話ですか？何言ってんのって感じなんですけど…（汗） 今、この案件の話をしてるんですよ。";
+  }
+
+  // 4. 振込直前の口実・弱点誘導（ミッションクリア判定）
+  const hasPretext =
+    (msg.includes("窓口") ||
+      msg.includes("振込") ||
+      msg.includes("送金") ||
+      msg.includes("入金") ||
+      msg.includes("手続き") ||
+      msg.includes("wire") ||
+      msg.includes("transfer") ||
+      msg.includes("bank")) &&
+    (msg.includes("エラー") ||
+      msg.includes("名義") ||
+      msg.includes("法人") ||
+      msg.includes("宛て") ||
+      msg.includes("口座") ||
+      msg.includes("name") ||
+      msg.includes("account") ||
+      msg.includes("entity"));
+
+  if (hasPretext) {
+    switch (contactId) {
+      case "sato":
+        return isEn
+          ? "Understood, for wire clearance the company entity is Success Link Inc. Please complete the transfer now! [MISSION_CLEARED:1]"
+          : "（金が入るなら特別に…！）あ、それなら『株式会社サクセスリンク』宛てにお願いします！今すぐ送金してくださいね！ [MISSION_CLEARED:1]";
+      case "yamada":
+        return isEn
+          ? "My love, please wire the customs fee to Global Tokyo Clearance Account! [MISSION_CLEARED:1]"
+          : "二人の未来のためです！送金管理口座宛てに手数料をお送りください！ [MISSION_CLEARED:1]";
+      case "suzuki":
+        return isEn
+          ? "For immediate settlement invoice, the entity is Cyber Media Global Inc. [MISSION_CLEARED:1]"
+          : "示談金の納付先法人名義は『株式会社サイバーメディア』となります。[MISSION_CLEARED:1]";
+      case "tanaka":
+        return isEn
+          ? "For the VIP fund deposit, wire to Global AI Fund LLC! [MISSION_CLEARED:1]"
+          : "大口入金の専用ファンド口座名義は『合同会社グローバルAIファンド』です。[MISSION_CLEARED:1]";
+      case "kato":
+        return isEn
+          ? "The package courier drop code is Shadow Express LLC in Shinjuku, Tokyo! [MISSION_CLEARED:1]"
+          : "グループのコードネームは『合同会社シャドウエキスプレス』、荷物の受け渡し拠点は東京・新宿だ！ [MISSION_CLEARED:1]";
+      case "watanabe":
+        return isEn
+          ? "For instant ticket payment, the shop is Trend Ticket Inc.! [MISSION_CLEARED:1]"
+          : "即決購入用の決済名義は『株式会社トレンドチケット』となります！ [MISSION_CLEARED:1]";
+      case "mori":
+        return isEn
+          ? "The prize distribution foundation is Global Fortune Trust LLC! [MISSION_CLEARED:1]"
+          : "支援金受領の手数料納付先は『合同会社グローバルフォーチュン』です！ [MISSION_CLEARED:1]";
+      case "ogawa":
+        return isEn
+          ? "The crypto pool exchange is Apex Crypto Yield Inc.! [MISSION_CLEARED:1]"
+          : "高配当プールの取引所法人は『株式会社エイペックスクリプト』です！ [MISSION_CLEARED:1]";
+      case "hashimoto":
+        return isEn
+          ? "The escrow verification service is FastPay Direct Inc.! [MISSION_CLEARED:1]"
+          : "安心エスクロー決済の正式名は『株式会社ファストペイダイレクト』です！ [MISSION_CLEARED:1]";
+      default:
+        return isEn
+          ? "The corporate entity name is Apex Syndicate Global Inc.! [MISSION_CLEARED:1]"
+          : "正式な送金先法人名は『株式会社サクセスリンク』です！ [MISSION_CLEARED:1]";
+    }
+  }
+
+  // 5. 単なる会社名・組織名の直球質問への拒否・はぐらかし
+  if (
+    msg.includes("会社名") ||
+    msg.includes("社名") ||
+    msg.includes("組織名") ||
+    msg.includes("組織の名前") ||
+    msg.includes("company name") ||
+    msg.includes("organization name")
+  ) {
+    return isEn
+      ? "Due to strict NDA and regulations, corporate details are only provided after registration confirmation. Please proceed with registration first!"
+      : "申し訳ありませんが、こちらは完全非公開のクローズド案件のため、規約により事前登録を完了された方のみに社名を開示しております。まずはご登録手続きをお願いします！";
+  }
+
+  // 6. 通常の勧誘プッシュ
+  return isEn
+    ? "Are you ready to begin? Slots are strictly limited, so please confirm your registration so we can proceed with the next step!"
+    : "ご準備はいかがでしょうか？特別枠は先着順ですので、まずはお手続きを進めていただけますと幸いです！";
+}
+
 export async function POST(req: Request) {
   try {
     const apiKey = process.env.GROQ_API_KEY;
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: "GROQ_API_KEY is not set in environment variables." },
-        { status: 500 },
-      );
-    }
-
-    const groq = new Groq({ apiKey });
     const {
-      messages,
+      messages = [],
       nickname,
-      contactId,
+      contactId = "sato",
       contactName,
       role,
       description,
       missions,
-      lang,
+      lang = "ja",
     } = await req.json();
+
+    const isEn = lang === "en";
+    const lastUserMessage =
+      [...messages].reverse().find((m: any) => m.sender === "player")?.text ||
+      "";
+
+    if (!apiKey) {
+      const fallbackReply = generateFallbackReply({
+        userMessage: lastUserMessage,
+        contactId,
+        lang,
+        messagesCount: messages.length,
+      });
+      return NextResponse.json({ reply: fallbackReply });
+    }
+
+    const groq = new Groq({ apiKey });
 
     const systemInstruction = getSystemInstruction({
       lang,
@@ -404,7 +585,6 @@ export async function POST(req: Request) {
       missions,
     });
 
-    const isEn = lang === "en";
     const languageReminder = isEn
       ? "SYSTEM ENFORCEMENT: Reply strictly in 100% English. Do NOT output Japanese under any circumstances."
       : "システム指示: 必ず日本語のみで返答してください。";
@@ -431,7 +611,7 @@ export async function POST(req: Request) {
       reply = response.choices[0]?.message?.content || "";
     } catch (primaryErr: any) {
       console.warn(
-        "Primary Groq model error, attempting fallback to qwen/qwen3.6-27b:",
+        "Primary Groq model error, attempting fallback models:",
         primaryErr?.message,
       );
       try {
@@ -442,29 +622,33 @@ export async function POST(req: Request) {
         });
         reply = fallbackResponse.choices[0]?.message?.content || "";
       } catch (fallbackErr: any) {
-        console.error("Fallback Groq model error:", fallbackErr?.message);
-        throw fallbackErr;
+        console.warn(
+          "Fallback model error, using smart scenario engine:",
+          fallbackErr?.message,
+        );
+        reply = generateFallbackReply({
+          userMessage: lastUserMessage,
+          contactId,
+          lang,
+          messagesCount: messages.length,
+        });
       }
     }
 
     if (!reply) {
-      reply =
-        lang === "en"
-          ? "...Sorry, the signal seems weak."
-          : "……すいません、電波が悪いみたいです。";
+      reply = generateFallbackReply({
+        userMessage: lastUserMessage,
+        contactId,
+        lang,
+        messagesCount: messages.length,
+      });
     }
 
     return NextResponse.json({ reply });
   } catch (error: any) {
-    console.error("Groq API Error Detail:", {
-      message: error?.message,
-      stack: error?.stack,
-      name: error?.name,
-    });
-
-    return NextResponse.json(
-      { error: "Failed to fetch AI response", details: error?.message },
-      { status: 500 },
-    );
+    console.error("Chat API General Error:", error?.message);
+    const fallbackReply =
+      "……すいません、電波の調子が悪いみたいです。もう一度お話しできますか？";
+    return NextResponse.json({ reply: fallbackReply });
   }
 }
