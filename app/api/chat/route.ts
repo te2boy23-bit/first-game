@@ -150,7 +150,7 @@ Target Modus Operandi: ${description || "Lure the victim into wiring money or sh
 ${personaDetails}
 
 【CONVERSATION & ANGER/SUSPICION ESCALATION: BLOCK / GAME OVER RULES】
-1. Language Requirement: Reply ONLY in natural English.
+1. STRICT LANGUAGE REQUIREMENT: You MUST speak and reply ONLY in natural ENGLISH. NEVER output Japanese under any circumstances, even if previous messages or the player's name contain Japanese.
 2. Direct Questions Refusal & Secrecy (CRUCIAL):
    - If the player simply asks "What is your company name?", "What is the organization name?", "Who is the boss?", or "Where is the hideout?":
    - DO NOT answer immediately! REFUSE, DEFLECT, or EVADE!
@@ -174,6 +174,7 @@ ${personaDetails}
    Target Missions:
 ${missionListStr}
 7. Chat Length: Keep replies punchy, natural, and realistic for a chat app (2-3 sentences).
+8. REMINDER: ALWAYS REPLY IN 100% ENGLISH ONLY.
 `;
   }
 
@@ -400,10 +401,15 @@ export async function POST(req: Request) {
       missions,
     });
 
+    const isEn = lang === "en";
+    const languageReminder = isEn
+      ? "SYSTEM ENFORCEMENT: Reply strictly in 100% English. Do NOT output Japanese under any circumstances."
+      : "システム指示: 必ず日本語のみで返答してください。";
+
     const chatMessages: Groq.Chat.Completions.ChatCompletionMessageParam[] = [
       {
         role: "system",
-        content: systemInstruction,
+        content: `${systemInstruction}\n\n[${languageReminder}]`,
       },
       ...messages.map((m: { sender: string; text: string }) => ({
         role:

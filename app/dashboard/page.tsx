@@ -56,6 +56,12 @@ const uiTexts = {
     gameOverTitle: "⚠️ ターゲットに逃亡されました",
     gameOverText:
       "警戒度MAXのため、アカウントがブロックされました。（GAME OVER）",
+    evidenceSecured: "証拠押収完了！",
+    targetClearedTitle: "✔ このターゲットの捜査・摘発は完了しました",
+    targetClearedDesc:
+      "決定的な証拠の押収に成功しました。次のターゲットの捜査へ進んでください。",
+    nextTargetBtn: "次の未解決ターゲットへ ❯",
+    retryTargetBtn: "この相手をリトライする",
   },
   en: {
     dashTitle: "Cyber Investigation Dashboard",
@@ -80,6 +86,12 @@ const uiTexts = {
     gameOverTitle: "⚠️ Target Fled / Blocked",
     gameOverText:
       "Security alert triggered. Your account was blocked. (GAME OVER)",
+    evidenceSecured: "EVIDENCE SECURED!",
+    targetClearedTitle: "✔ Investigation on this target is complete",
+    targetClearedDesc:
+      "Decisive evidence secured. Proceed to the next suspect.",
+    nextTargetBtn: "Next Unsolved Target ❯",
+    retryTargetBtn: "Retry this Target",
   },
 };
 
@@ -800,63 +812,129 @@ export default function DashboardPage() {
   >({});
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
+
     const initDashboard = async () => {
-      let savedNickname = localStorage.getItem("scam_nickname");
-      let savedEmail = localStorage.getItem("scam_email");
-      let savedStep = localStorage.getItem("scam_step");
+      // 1. URLパラメータから PKCE 認証コードの交換を試行（OAuth完了時の処理）
+      try {
+        if (typeof window !== "undefined") {
+          const urlParams = new URLSearchParams(window.location.search);
+          const code = urlParams.get("code");
+          if (code) {
+            await supabase.auth.exchangeCodeForSession(code);
+            window.history.replaceState(
+              {},
+              document.title,
+              window.location.pathname,
+            );
+          }
+        }
+      } catch (e) {
+        console.warn("OAuth code exchange check:", e);
+      }
+
       const savedLang =
         (localStorage.getItem("scam_lang") as "ja" | "en") || "ja";
       const savedPremium = localStorage.getItem("scam_premium");
       const savedAds = localStorage.getItem("scam_ads");
+      let savedNickname = localStorage.getItem("scam_nickname");
+      let savedEmail = localStorage.getItem("scam_email");
 
-      let nicknameToSet = savedNickname || "";
-      let emailToSet = savedEmail || "";
+      const applyUserData = (name: string, mail: string) => {
+        if (!isMounted) return;
+        setNickname(name);
+        if (mail) setEmail(mail);
+        setLang(savedLang);
+        if (savedPremium === "true") setIsPremium(true);
+        if (savedAds) setAdWatchCount(Number(savedAds));
 
-      if (!savedNickname || savedStep !== "game") {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        if (user) {
-          nicknameToSet =
-            user.user_metadata?.full_name ||
-            user.user_metadata?.nickname ||
-            user.email?.split("@")[0] ||
-            "エージェント";
-          emailToSet = user.email || "";
-          localStorage.setItem("scam_nickname", nicknameToSet);
-          localStorage.setItem("scam_email", emailToSet);
-          localStorage.setItem("scam_step", "game");
-        } else {
-          router.push("/");
-          return;
-        }
+        const activeContacts = savedLang === "en" ? CONTACTS_EN : CONTACTS_JA;
+        setContacts(activeContacts);
+
+        setChatHistories((prev) => {
+          const initialHistories = { ...prev };
+          activeContacts.forEach((c) => {
+            if (!initialHistories[c.id]) {
+              initialHistories[c.id] = [
+                { sender: "scammer", text: c.initialMessage },
+              ];
+            }
+          });
+          return initialHistories;
+        });
+        setIsCheckingAuth(false);
+      };
+
+      // ローカルストレージに情報がすでにある場合
+      if (savedNickname) {
+        applyUserData(savedNickname, savedEmail || "agent@cyber.gov");
+        return;
       }
 
-      setNickname(nicknameToSet);
-      if (emailToSet) setEmail(emailToSet);
-      setLang(savedLang);
-      if (savedPremium === "true") setIsPremium(true);
-      if (savedAds) setAdWatchCount(Number(savedAds));
+      // Supabase セッションまたはユーザー取得
+      const { data: sessionData } = await supabase.auth.getSession();
+      const currentUser = sessionData.session?.user;
 
-      const activeContacts = savedLang === "en" ? CONTACTS_EN : CONTACTS_JA;
-      setContacts(activeContacts);
+      if (currentUser) {
+        const nicknameToSet =
+          currentUser.user_metadata?.full_name ||
+          currentUser.user_metadata?.nickname ||
+          currentUser.user_metadata?.name ||
+          currentUser.email?.split("@")[0] ||
+          "エージェント";
+        const emailToSet = currentUser.email || "agent@cyber.gov";
+        localStorage.setItem("scam_nickname", nicknameToSet);
+        localStorage.setItem("scam_email", emailToSet);
+        localStorage.setItem("scam_step", "game");
+        applyUserData(nicknameToSet, emailToSet);
+        return;
+      }
 
-      setChatHistories((prev) => {
-        const initialHistories = { ...prev };
-        activeContacts.forEach((c) => {
-          if (!initialHistories[c.id]) {
-            initialHistories[c.id] = [
-              { sender: "scammer", text: c.initialMessage },
-            ];
+      // 少し待機して onAuthStateChange からの復帰を試す
+      const timeoutId = setTimeout(() => {
+        if (isMounted) {
+          const checkAgain = localStorage.getItem("scam_nickname");
+          if (!checkAgain) {
+            router.push("/");
+          } else {
+            setIsCheckingAuth(false);
           }
-        });
-        return initialHistories;
-      });
+        }
+      }, 1500);
+
+      return () => clearTimeout(timeoutId);
     };
 
+    // Supabase auth state change listener (Google OAuth ログイン直後のセッション受信)
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (session?.user && isMounted) {
+        const nicknameToSet =
+          session.user.user_metadata?.full_name ||
+          session.user.user_metadata?.nickname ||
+          session.user.user_metadata?.name ||
+          session.user.email?.split("@")[0] ||
+          "エージェント";
+        const emailToSet = session.user.email || "agent@cyber.gov";
+        localStorage.setItem("scam_nickname", nicknameToSet);
+        localStorage.setItem("scam_email", emailToSet);
+        localStorage.setItem("scam_step", "game");
+        setNickname(nicknameToSet);
+        setEmail(emailToSet);
+        setIsCheckingAuth(false);
+      }
+    });
+
     initDashboard();
+
+    return () => {
+      isMounted = false;
+      subscription?.unsubscribe();
+    };
   }, [router]);
 
   const t = uiTexts[lang] || uiTexts.ja;
@@ -1456,7 +1534,37 @@ export default function DashboardPage() {
         return nc;
       });
     });
+
+    // 会話履歴の初期メッセージを新言語に同期（未チャットまたは開始直後の場合）
+    setChatHistories((prev) => {
+      const updated = { ...prev };
+      newContactsBase.forEach((nc) => {
+        const hist = updated[nc.id];
+        if (!hist || hist.length <= 1) {
+          updated[nc.id] = [{ sender: "scammer", text: nc.initialMessage }];
+        }
+      });
+      return updated;
+    });
   };
+
+  if (isCheckingAuth) {
+    return (
+      <div className="flex h-screen w-screen bg-gray-950 items-center justify-center text-gray-100 font-mono">
+        <div className="text-center space-y-4 p-8 border border-pink-500/40 rounded-2xl bg-gray-900/80 shadow-[0_0_50px_rgba(236,72,153,0.3)] max-w-sm mx-4">
+          <div className="w-10 h-10 border-4 border-pink-500 border-t-transparent rounded-full animate-spin mx-auto" />
+          <div className="text-base font-bold text-pink-400">
+            🚨 潜入捜査エージェント認証中...
+          </div>
+          <div className="text-xs text-gray-400">
+            {lang === "en"
+              ? "Establishing secure connection to police database..."
+              : "警察本部データベースと安全な接続を確立しています..."}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <main className="flex h-screen w-screen bg-gray-950 text-gray-100 overflow-hidden relative">

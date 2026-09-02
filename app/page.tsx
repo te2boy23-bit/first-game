@@ -136,6 +136,8 @@ export default function GeneralPortalPage() {
   };
 
   const handleSocialLogin = async (provider: "google" | "github") => {
+    localStorage.setItem("scam_step", "game");
+    localStorage.setItem("scam_lang", lang);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: provider,
       options: {
