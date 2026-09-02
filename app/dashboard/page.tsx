@@ -1458,9 +1458,32 @@ export default function DashboardPage() {
 
           return nextContacts;
         });
+      } else {
+        const errorReply =
+          lang === "en"
+            ? "⚠️ Connection error or server timeout. Please send again."
+            : "⚠️ 通信エラーが発生しました。もう一度メッセージを送信してください。";
+        setChatHistories((prev) => ({
+          ...prev,
+          [targetContactId]: [
+            ...(prev[targetContactId] || updatedMessages),
+            { sender: "scammer", text: errorReply },
+          ],
+        }));
       }
     } catch (error) {
       console.error("Chat Error:", error);
+      const errorReply =
+        lang === "en"
+          ? "⚠️ Network error. Please try sending again."
+          : "⚠️ ネットワークエラーが発生しました。もう一度お試しください。";
+      setChatHistories((prev) => ({
+        ...prev,
+        [targetContactId]: [
+          ...(prev[targetContactId] || []),
+          { sender: "scammer", text: errorReply },
+        ],
+      }));
     } finally {
       setIsLoading(false);
     }

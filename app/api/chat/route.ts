@@ -418,19 +418,38 @@ export async function POST(req: Request) {
       })),
     ];
 
-    const modelName = process.env.GROQ_MODEL || "openai/gpt-oss-120b";
+    let reply = "";
+    try {
+      const response = await groq.chat.completions.create({
+        model: process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
+        messages: chatMessages,
+        temperature: 0.7,
+      });
+      reply = response.choices[0]?.message?.content || "";
+    } catch (primaryErr: any) {
+      console.warn(
+        "Primary Groq model error, attempting fallback to llama-3.1-8b-instant:",
+        primaryErr?.message,
+      );
+      try {
+        const fallbackResponse = await groq.chat.completions.create({
+          model: "llama-3.1-8b-instant",
+          messages: chatMessages,
+          temperature: 0.7,
+        });
+        reply = fallbackResponse.choices[0]?.message?.content || "";
+      } catch (fallbackErr: any) {
+        console.error("Fallback Groq model error:", fallbackErr?.message);
+        throw fallbackErr;
+      }
+    }
 
-    const response = await groq.chat.completions.create({
-      model: modelName,
-      messages: chatMessages,
-      temperature: 0.7,
-    });
-
-    const reply =
-      response.choices[0]?.message?.content ||
-      (lang === "en"
-        ? "...Sorry, the signal seems weak."
-        : "……すいません、電波が悪いみたいです。");
+    if (!reply) {
+      reply =
+        lang === "en"
+          ? "...Sorry, the signal seems weak."
+          : "……すいません、電波が悪いみたいです。";
+    }
 
     return NextResponse.json({ reply });
   } catch (error: any) {
