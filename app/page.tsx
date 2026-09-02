@@ -311,26 +311,21 @@ export default function GeneralPortalPage() {
     }
   }, []);
 
+  // スクロール検知：ページを少しでも下にスライド（150px以上スクロール）したら自動で詐欺トラップ・ログイン画面が発動！
   useEffect(() => {
     const handleScroll = () => {
-      if (
-        hasAutoTriggered ||
-        showScamModal ||
-        step !== "portal" ||
-        isAlreadyAgent
-      )
-        return;
+      if (hasAutoTriggered || showScamModal || step !== "portal") return;
 
       const scrollY = window.scrollY || window.pageYOffset;
-      if (scrollY > 750) {
+      if (scrollY > 150) {
         setHasAutoTriggered(true);
         triggerScamTrap();
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [hasAutoTriggered, showScamModal, step, isAlreadyAgent]);
+  }, [hasAutoTriggered, showScamModal, step]);
 
   const triggerScamTrap = () => {
     setIsGlitching(true);
@@ -340,16 +335,19 @@ export default function GeneralPortalPage() {
     }, 450);
   };
 
+  // 1. 【閉じる（✕）を押した場合】警察が詐欺を回避したことを褒めてスカウト＆ログイン画面へ！
   const handleCloseModal = () => {
     setShowScamModal(false);
     setEntryRoute("closed");
     setStep("police_scout");
   };
 
+  // 警察画面からホームページに戻る
   const handleReturnToPortal = () => {
     setStep("portal");
     setShowScamModal(false);
     setIsGlitching(false);
+    setTimeout(() => setHasAutoTriggered(false), 800);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -499,10 +497,19 @@ export default function GeneralPortalPage() {
     }
   };
 
-  const handleStartGame = () => {
+  const handleResumeMission = () => {
+    let currentNick = localStorage.getItem("scam_nickname");
+    if (!currentNick) {
+      currentNick = lang === "en" ? "Agent" : "エージェント";
+      localStorage.setItem("scam_nickname", currentNick);
+    }
     localStorage.setItem("scam_step", "game");
     localStorage.setItem("scam_lang", lang);
     router.push("/dashboard");
+  };
+
+  const handleStartGame = () => {
+    handleResumeMission();
   };
 
   const handleLanguageToggle = (newLang: "ja" | "en") => {
@@ -512,6 +519,7 @@ export default function GeneralPortalPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-rose-500 selection:text-white relative overflow-x-hidden">
+      {/* ⚡ Glitch Hijack Flash Effect */}
       {isGlitching && (
         <div className="fixed inset-0 z-50 bg-rose-950/80 backdrop-blur-md flex flex-col items-center justify-center animate-pulse">
           <div className="text-2xl sm:text-4xl md:text-5xl font-black text-rose-400 tracking-widest text-center px-4">
@@ -525,6 +533,9 @@ export default function GeneralPortalPage() {
         </div>
       )}
 
+      {/* ======================================================== */}
+      {/* 📱 IN-APP BROWSER (LINE/SNS) NOTICE BANNER */}
+      {/* ======================================================== */}
       {isMounted && isInAppBrowser && (
         <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-slate-950 px-3 py-2 text-xs font-semibold flex flex-wrap items-center justify-between gap-2 shadow-md sticky top-0 z-40">
           <div className="flex items-center gap-1.5 flex-1 min-w-[200px]">
@@ -549,6 +560,10 @@ export default function GeneralPortalPage() {
         </div>
       )}
 
+      {/* ======================================================== */}
+      {/* 📰 ORDINARY INNOCENT WEB PORTAL / MAGAZINE */}
+      {/* ======================================================== */}
+      {/* Portal Top Bar */}
       <div className="bg-slate-900 text-slate-300 text-xs py-2 px-3 sm:px-6 flex flex-wrap justify-between items-center border-b border-slate-800 gap-2">
         <div className="flex items-center gap-2 sm:gap-3">
           <span className="font-bold text-white tracking-wide text-xs sm:text-sm">
@@ -561,7 +576,7 @@ export default function GeneralPortalPage() {
         <div className="flex items-center gap-2 sm:gap-3 ml-auto">
           {isMounted && isAlreadyAgent && (
             <button
-              onClick={() => router.push("/dashboard")}
+              onClick={handleResumeMission}
               className="text-[11px] bg-green-700 hover:bg-green-600 text-white font-bold px-2.5 py-1 rounded-md cursor-pointer transition shadow flex items-center gap-1"
             >
               <span>🚨</span>
@@ -569,6 +584,7 @@ export default function GeneralPortalPage() {
             </button>
           )}
 
+          {/* 🌐 Prominent Language Switcher */}
           <div className="flex items-center gap-1 bg-slate-800/90 border border-slate-700 rounded-lg p-0.5 shadow-inner">
             <button
               onClick={() => handleLanguageToggle("ja")}
@@ -596,6 +612,7 @@ export default function GeneralPortalPage() {
         </div>
       </div>
 
+      {/* Portal Main Navigation */}
       <header className="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-20">
         <div className="max-w-6xl mx-auto px-3 sm:px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2.5 cursor-pointer">
@@ -630,7 +647,7 @@ export default function GeneralPortalPage() {
           <div className="flex items-center gap-2">
             {isMounted && isAlreadyAgent ? (
               <button
-                onClick={() => router.push("/dashboard")}
+                onClick={handleResumeMission}
                 className="text-xs bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-2 rounded-lg transition cursor-pointer shadow flex items-center gap-1"
               >
                 <span>🚨</span>

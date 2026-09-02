@@ -928,19 +928,13 @@ export default function DashboardPage() {
         return;
       }
 
-      // 少し待機して onAuthStateChange からの復帰を試す
-      const timeoutId = setTimeout(() => {
-        if (isMounted) {
-          const checkAgain = localStorage.getItem("scam_nickname");
-          if (!checkAgain) {
-            router.push("/");
-          } else {
-            setIsCheckingAuth(false);
-          }
-        }
-      }, 1500);
-
-      return () => clearTimeout(timeoutId);
+      // セッションまたはローカルストレージが見当たらない場合でも、エージェントとして捜査画面を開く
+      const defaultNickname = savedLang === "en" ? "Agent" : "エージェント";
+      const defaultEmail = savedEmail || "agent@cyber.gov";
+      localStorage.setItem("scam_nickname", defaultNickname);
+      localStorage.setItem("scam_email", defaultEmail);
+      localStorage.setItem("scam_step", "game");
+      applyUserData(defaultNickname, defaultEmail);
     };
 
     // Supabase auth state change listener (Google OAuth ログイン直後のセッション受信)
