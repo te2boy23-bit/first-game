@@ -1,15 +1,22 @@
 import { NextResponse } from "next/server";
-import { GoogleGenAI } from "@google/genai";
-
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+import Groq from "groq-sdk";
 
 export async function POST(req: Request) {
   try {
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: "GROQ_API_KEY is not set in environment variables." },
+        { status: 500 },
+      );
+    }
+
+    const groq = new Groq({ apiKey });
     const { messages, nickname } = await req.json();
 
     const systemInstruction = `
 あなたはスマホ向けの副業詐欺グループの勧誘員「佐藤」です。
-プレイヤー（源氏名: ${nickname}）を巧みにおだて、さらなる個人情報や初期費用（指定口座への振り込み）を引き出そうとしています。
+プレイヤー（源氏名: ${nickname || "ゲスト"}）を巧みにおだて、さらなる個人情報や初期費用（指定口座への振り込み）を引き出そうとしています。
 
 【重要ルール：感情の変化とゲームオーバー】
 1. プレイヤーが関係ない適当なことばかり言ったり、警戒して質問攻めにしたりした場合、あなたは徐々にイライラし、不信感を募らせてください。
@@ -22,25 +29,33 @@ export async function POST(req: Request) {
 返答は短めで、チャットアプリらしい口調（です・ます調、適度に絵文字や怪しい雰囲気を混ぜる）で返してください。
 `;
 
-    const chatHistory = messages.map((m: { sender: string; text: string }) => ({
-      role: m.sender === "player" ? "user" : "model",
-      parts: [{ text: m.text }],
-    }));
-
-    const response = await ai.models.generateContent({
-      model: "gemini-3.6-flash",
-      contents: chatHistory,
-      config: {
-        systemInstruction: systemInstruction,
-        temperature: 0.7,
+    const chatMessages: Groq.Chat.Completions.ChatCompletionMessageParam[] = [
+      {
+        role: "system",
+        content: systemInstruction,
       },
+      ...messages.map((m: { sender: string; text: string }) => ({
+        role:
+          m.sender === "player" ? ("user" as const) : ("assistant" as const),
+        content: m.text,
+      })),
+    ];
+
+    const modelName = process.env.GROQ_MODEL || "openai/gpt-oss-120b";
+
+    const response = await groq.chat.completions.create({
+      model: modelName,
+      messages: chatMessages,
+      temperature: 0.7,
     });
 
-    const reply = response.text || "……すいません、電波が悪いみたいです。";
+    const reply =
+      response.choices[0]?.message?.content ||
+      "……すいません、電波が悪いみたいです。";
 
     return NextResponse.json({ reply });
   } catch (error: any) {
-    console.error("Gemini API Error Detail:", {
+    console.error("Groq API Error Detail:", {
       message: error?.message,
       stack: error?.stack,
       name: error?.name,
