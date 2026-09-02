@@ -852,18 +852,53 @@ export default function DashboardPage() {
         if (savedAds) setAdWatchCount(Number(savedAds));
 
         const activeContacts = savedLang === "en" ? CONTACTS_EN : CONTACTS_JA;
-        setContacts(activeContacts);
+        let loadedContacts = activeContacts;
+
+        // 保存された捜査進捗（クリア状態・証拠発見状況）の復元
+        const savedProgressStr = localStorage.getItem("scam_contacts_progress");
+        if (savedProgressStr) {
+          try {
+            const savedProgress = JSON.parse(savedProgressStr);
+            loadedContacts = activeContacts.map((ac) => {
+              const sp = savedProgress.find((p: any) => p.id === ac.id);
+              if (sp) {
+                return {
+                  ...ac,
+                  cleared: sp.cleared,
+                  failed: sp.failed,
+                  missions: ac.missions.map((m) => {
+                    const sm = sp.missions?.find((em: any) => em.id === m.id);
+                    return { ...m, found: sm ? sm.found : m.found };
+                  }),
+                };
+              }
+              return ac;
+            });
+          } catch (e) {
+            console.warn("Restore progress error:", e);
+          }
+        }
+        setContacts(loadedContacts);
+
+        // 保存されたチャット履歴の復元
+        let loadedChatHistories: Record<string, any[]> = {};
+        const savedHistoriesStr = localStorage.getItem("scam_chat_histories");
+        if (savedHistoriesStr) {
+          try {
+            loadedChatHistories = JSON.parse(savedHistoriesStr);
+          } catch (e) {
+            console.warn("Restore chat history error:", e);
+          }
+        }
 
         setChatHistories((prev) => {
-          const initialHistories = { ...prev };
-          activeContacts.forEach((c) => {
-            if (!initialHistories[c.id]) {
-              initialHistories[c.id] = [
-                { sender: "scammer", text: c.initialMessage },
-              ];
+          const merged = { ...loadedChatHistories, ...prev };
+          loadedContacts.forEach((c) => {
+            if (!merged[c.id] || merged[c.id].length === 0) {
+              merged[c.id] = [{ sender: "scammer", text: c.initialMessage }];
             }
           });
-          return initialHistories;
+          return merged;
         });
         setIsCheckingAuth(false);
       };
@@ -936,6 +971,40 @@ export default function DashboardPage() {
       subscription?.unsubscribe();
     };
   }, [router]);
+
+  // 捜査進捗のローカルストレージへの自動保存
+  useEffect(() => {
+    if (contacts.length > 0 && !isCheckingAuth) {
+      try {
+        const progress = contacts.map((c) => ({
+          id: c.id,
+          cleared: c.cleared,
+          failed: c.failed,
+          missions: c.missions,
+        }));
+        localStorage.setItem(
+          "scam_contacts_progress",
+          JSON.stringify(progress),
+        );
+      } catch (e) {
+        console.warn("Save progress error:", e);
+      }
+    }
+  }, [contacts, isCheckingAuth]);
+
+  // チャット履歴のローカルストレージへの自動保存
+  useEffect(() => {
+    if (Object.keys(chatHistories).length > 0 && !isCheckingAuth) {
+      try {
+        localStorage.setItem(
+          "scam_chat_histories",
+          JSON.stringify(chatHistories),
+        );
+      } catch (e) {
+        console.warn("Save chat error:", e);
+      }
+    }
+  }, [chatHistories, isCheckingAuth]);
 
   const t = uiTexts[lang] || uiTexts.ja;
 
