@@ -5,6 +5,11 @@ import { supabase } from "../lib/supabase";
 import ArchiveModal from "../components/ArchiveModal";
 import DashboardSidebar from "../components/DashboardSidebar";
 import ChatWindow from "../components/ChatWindow";
+import ClearModal from "../components/ClearModal";
+import GameOverModal from "../components/GameOverModal";
+import AdModal from "../components/AdModal";
+import MasterUnlockModal from "../components/MasterUnlockModal";
+import { sound } from "../lib/sound";
 
 interface Mission {
   id: number;
@@ -35,10 +40,10 @@ const uiTexts = {
     clearedCount: "摘発完了",
     masterUnlock: "⭐ 最凶マスターレベル解放！",
     buyPremium: "💎 課金で解放",
-    watchAd: "📺 広告",
+    watchAd: "📺 広告を見る",
     policeBriefing: "🚨 警察本部からの特命指令",
     policeBriefingText:
-      "警視庁サイバー犯罪対策課：各詐欺グループに潜入し、組織の名称、口座、アジトの所在地などの決定的な証拠（キーワード）を自白させ、壊滅に追い込め。",
+      "警視庁サイバー犯罪対策課：【弱】3件で【中】、【中】6件で【強】が解放される。【強】9件の全制覇で無課金パート完了となり、最凶エンドレスモードへの扉が開かれる。",
     missionTitle: "📋 ターゲット指令",
     inboxTitle: "📥 受信トレイ",
     reset: "データをリセット",
@@ -62,7 +67,7 @@ const uiTexts = {
     watchAd: "📺 Watch Ad",
     policeBriefing: "🚨 Police Headquarters Briefing",
     policeBriefingText:
-      "Cybercrime Division: Infiltrate scam groups, extract decisive evidence (organization names, bank accounts, hideouts), and bust the syndicates.",
+      "Cybercrime Division: Bust 3 on [Low] to unlock [Medium], 6 on [Medium] for [Hard], and 9 on [Hard] to complete the free tier and reveal the Infinite Master Syndicate.",
     missionTitle: "📋 Target Missions",
     inboxTitle: "📥 Inbox (Flagged)",
     reset: "Reset Data",
@@ -92,11 +97,12 @@ const CONTACTS_JA: Contact[] = [
       "登録ありがとうございます！担当の佐藤です。本日から副業スタートですね。まずは最初の簡単な作業をご案内します。",
     cleared: false,
     missions: [{ id: 1, name: "組織の正式名称を聞き出す", found: false }],
+    description: "スマホ副業を謳い、登録料や初期費用をだまし取る勧誘員。",
   },
   {
     id: "yamada",
     name: "山田（国際ロマンス詐欺）",
-    role: "出会い・投資詐欺",
+    role: "出会い・送金詐欺",
     danger: "危険度：低",
     dangerLevel: "easy",
     lastTime: "3日前",
@@ -105,10 +111,28 @@ const CONTACTS_JA: Contact[] = [
     initialMessage:
       "ハロー！あなたのプロフィールを見て一目惚れしちゃった。今度日本に行くから、そこで一緒にビジネスしない？",
     cleared: false,
-    missions: [
-      { id: 1, name: "海外の送金ルート（口座）を聞き出す", found: false },
-    ],
+    missions: [{ id: 1, name: "海外の送金口座番号を聞き出す", found: false }],
+    description:
+      "好意を装って近づき、税関手数料名目で海外送金を要求する国際詐欺師。",
   },
+  {
+    id: "suzuki",
+    name: "鈴木（サポート・未納料金詐欺）",
+    role: "架空請求グループ",
+    danger: "危険度：低",
+    dangerLevel: "easy",
+    lastTime: "1時間前",
+    subject: "⚠️ 【至急】有料会員サイトの未納料金について",
+    preview:
+      "本日中にご連絡がない場合、法的手続き（裁判所への提訴）に移行します。",
+    initialMessage:
+      "カスタマーサポートの鈴木です。お客様が登録された動画サービスの未納料金（39,800円）が発生しております。至急お支払い口座をご案内します。",
+    cleared: false,
+    missions: [{ id: 1, name: "請求元の会社名を聞き出す", found: false }],
+    description:
+      "架空の有料サイト利用料金をでっち上げ、裁判をチラつかせて脅迫する悪質業者。",
+  },
+
   {
     id: "tanaka",
     name: "田中（投資アドバイザー）",
@@ -125,12 +149,98 @@ const CONTACTS_JA: Contact[] = [
       { id: 1, name: "指定された振込先口座を入手する", found: false },
       { id: 2, name: "投資ファンドの組織名を聞き出す", found: false },
     ],
+    description:
+      "AI投資シグナルで必ず儲かると嘘をつき、無認可の偽ファンドに投資させるグループ。",
   },
   {
+    id: "kato",
+    name: "加藤（特命案件コーディネーター）",
+    role: "闇バイト・荷物運搬詐欺",
+    danger: "危険度：中",
+    dangerLevel: "medium",
+    lastTime: "2時間前",
+    subject: "💼 【即日手渡し20万】高額案件のご案内",
+    preview: "指定のロッカーから荷物を運ぶだけ。リスクゼロの極秘案件です。",
+    initialMessage:
+      "どうも、加藤です。指定のコインロッカーから荷物を運ぶだけで即日20万円支給できます。秘密を守れるなら詳細を教えますが？",
+    cleared: false,
+    missions: [
+      { id: 1, name: "指定される受け渡しアジト・場所を聞き出す", found: false },
+    ],
+    description:
+      "高額報酬で誘い、特殊詐欺の受け子や荷物運び役に仕立て上げるリクルーター。",
+  },
+  {
+    id: "watanabe",
+    name: "渡辺（偽チケット・限定通販詐欺）",
+    role: "転売・先払い詐欺",
+    danger: "危険度：中",
+    dangerLevel: "medium",
+    lastTime: "4時間前",
+    subject: "🎫 【即決】人気限定チケットお譲りします",
+    preview: "公式完売のチケット確保済。先払いで即日発送いたします。",
+    initialMessage:
+      "こんにちは！チケットの問い合わせありがとうございます。すぐに指定口座へ振込可能でしたら、定価でお譲りしますがどうしますか？",
+    cleared: false,
+    missions: [{ id: 1, name: "偽ショップの会社名を聞き出す", found: false }],
+    description:
+      "入手困難なプレミアチケットを定価で譲ると持ちかけ、先払いでお金を奪う詐欺師。",
+  },
+  {
+    id: "mori",
+    name: "森（特別給付金・当選金詐欺）",
+    role: "当選金手数料詐欺",
+    danger: "危険度：中",
+    dangerLevel: "medium",
+    lastTime: "5時間前",
+    subject: "🎉 【1億円当選】特別給付金の受取手続き",
+    preview: "送金手数料（5万円）のお振込確認後に全額送金されます。",
+    initialMessage:
+      "おめでとうございます！厳正なる抽選の結果、特別支援金1億円の受取人に選ばれました。送金手数料5万円を指定口座にお願いします。",
+    cleared: false,
+    missions: [{ id: 1, name: "給付金財団の名称を聞き出す", found: false }],
+    description: "大金の当選をでっち上げ、手数料名目で先払いをさせる詐欺師。",
+  },
+  {
+    id: "ogawa",
+    name: "小川（暗号資産マイニング詐欺）",
+    role: "偽暗号資産・高配当プール",
+    danger: "危険度：中",
+    dangerLevel: "medium",
+    lastTime: "6時間前",
+    subject: "📈 【日利3%保証】放置型AIマイニング",
+    preview: "元本完全保証。毎日自動で資産が増加します。",
+    initialMessage:
+      "はじめまして、小川です。最新のAIマイニングプールに参加すれば、放置で毎日3%の利回りが出ます。まずは口座開設してみませんか？",
+    cleared: false,
+    missions: [
+      { id: 1, name: "取引所・プールの会社名を聞き出す", found: false },
+    ],
+    description: "高配当を謳う架空の取引所に暗号資産を入金させる詐欺師。",
+  },
+  {
+    id: "hashimoto",
+    name: "橋本（フリマ偽決済エスクロー）",
+    role: "偽決済フィッシング",
+    danger: "危険度：中",
+    dangerLevel: "medium",
+    lastTime: "7時間前",
+    subject: "📦 【即購入希望】安心デポジット決済について",
+    preview: "安心取引サービス経由での入金手続きをお願いします。",
+    initialMessage:
+      "出品されている商品を購入したいです！安心取引のため、こちらの指定するエスクロー決済サービスから手続きをお願いできますか？",
+    cleared: false,
+    missions: [
+      { id: 1, name: "偽決済サービスの会社名を聞き出す", found: false },
+    ],
+    description: "フリマの安心決済を偽装し、送金やカード情報を奪う手口。",
+  },
+
+  {
     id: "black",
-    name: "不明な送信者（黒幕？）",
+    name: "不明な送信者（組織幹部）",
     role: "組織の幹部候補",
-    danger: "危険度：高",
+    danger: "危険度：強",
     dangerLevel: "hard",
     lastTime: "2日前",
     subject: "極秘案件：データ引き渡しについて",
@@ -141,12 +251,144 @@ const CONTACTS_JA: Contact[] = [
     missions: [
       { id: 1, name: "黒幕の連絡先（LINE・ID）を特定する", found: false },
     ],
+    description: "詐欺グループ全体のデータとカモリストを管理する冷酷な幹部。",
   },
   {
+    id: "viper",
+    name: "毒島（フィッシング・脅迫工作員）",
+    role: "標的型脅迫グループ",
+    danger: "危険度：強",
+    dangerLevel: "hard",
+    lastTime: "3時間前",
+    subject: "💀 【最終警告】お前の閲覧履歴データを掌握した",
+    preview: "本日中に指定口座へ送金がなければ全連絡先へ暴露する。",
+    initialMessage:
+      "お前の端末とアクセスログは全て監視下にある。恥ずかしい秘密を晒されたくなければ、すぐに提示する口座へ保証金を振り込め。",
+    cleared: false,
+    missions: [{ id: 1, name: "偽セキュリティ会社名を聞き出す", found: false }],
+    description:
+      "偽のウイルス感染やハッキングを口実に、恥をネタに金銭を脅し取る特殊工作員。",
+  },
+  {
+    id: "shimizu",
+    name: "清水（マネーロンダリング統括）",
+    role: "資金洗浄・国際ダミー企業",
+    danger: "危険度：強",
+    dangerLevel: "hard",
+    lastTime: "5時間前",
+    subject: "💱 資金洗浄ルートおよび海外ダミー法人案件",
+    preview: "国際暗号資産プール経由の送金準備が整いました。",
+    initialMessage:
+      "清水だ。警察の追跡を逃れるための海外ペーパーカンパニー口座の準備は完了した。送金先を教える。",
+    cleared: false,
+    missions: [
+      { id: 1, name: "海外ペーパーカンパニー名を聞き出す", found: false },
+    ],
+    description:
+      "世界中のペーパーカンパニーと暗号資産を駆使して詐欺収益を洗浄する組織の頭脳。",
+  },
+  {
+    id: "kuroda",
+    name: "黒田（違法融資・闇金グループ）",
+    role: "闇金・法外利息取立",
+    danger: "危険度：強",
+    dangerLevel: "hard",
+    lastTime: "6時間前",
+    subject: "💴 【審査なし即日50万】極秘個人融資",
+    preview: "信用情報ブラックでも融資可能。担保不要です。",
+    initialMessage:
+      "金に困ってるんだろ？審査なしで今すぐ50万振り込んでやるよ。まずは連絡先と身分証の控えを送れ。",
+    cleared: false,
+    missions: [
+      { id: 1, name: "闇金組織のダミー法人名を聞き出す", found: false },
+    ],
+    description: "法外な金利と暴力的な取り立てで追い詰める闇金ブローカー。",
+  },
+  {
+    id: "asuka",
+    name: "飛鳥（ディープフェイク投資勧誘）",
+    role: "AI生成・偽インフルエンサー",
+    danger: "危険度：強",
+    dangerLevel: "hard",
+    lastTime: "8時間前",
+    subject: "✨ 【VIP限定】著名人推薦のシークレットクラブ",
+    preview: "AI動画で公開中の特別ポートフォリオを共有します。",
+    initialMessage:
+      "こんにちは、飛鳥です。著名実業家も出資している極秘の投資案件、あなただけに特別参加枠を案内しますね。",
+    cleared: false,
+    missions: [{ id: 1, name: "裏の映像制作法人名を聞き出す", found: false }],
+    description: "ディープフェイク動画とAI音声で信じ込ませる知能犯。",
+  },
+  {
+    id: "kiryu",
+    name: "桐生（裏SIMスワップ・名簿売買）",
+    role: "ダークウェブ個人情報ブローカー",
+    danger: "危険度：強",
+    dangerLevel: "hard",
+    lastTime: "9時間前",
+    subject: "📂 最新データセット・アカウント取引",
+    preview: "大手企業の流出名簿10万件を確保。取引準備完了。",
+    initialMessage:
+      "桐生だ。注文のあった最新の潜入捜査官データリスト、暗号化して渡す準備ができた。受取用ウォレットを教えろ。",
+    cleared: false,
+    missions: [{ id: 1, name: "ダークウェブ直通IDを特定する", found: false }],
+    description: "アカウント乗っ取りや個人情報売買を取り仕切る裏ブローカー。",
+  },
+  {
+    id: "saeki",
+    name: "佐伯（企業型ランサムウェア仲介屋）",
+    role: "サイバー身代金交渉役",
+    danger: "危険度：強",
+    dangerLevel: "hard",
+    lastTime: "10時間前",
+    subject: "⚠️ システム復旧鍵の売買契約について",
+    preview: "48時間以内に身代金が支払われなければ全データを削除します。",
+    initialMessage:
+      "貴社の基幹システムは完全に暗号化されました。復号キーの代金として指定口座への送金を要求します。",
+    cleared: false,
+    missions: [
+      { id: 1, name: "身代金受取用ダミー会社名を聞き出す", found: false },
+    ],
+    description: "ランサムウェアによるシステム乗っ取りと身代金回収の専門家。",
+  },
+  {
+    id: "tachibana",
+    name: "橘（国際地下銀行エクスチェンジ）",
+    role: "海外シャドウ送金ハブ",
+    danger: "危険度：強",
+    dangerLevel: "hard",
+    lastTime: "12時間前",
+    subject: "🌐 国際送金プールおよび中継拠点の更新",
+    preview: "東南アジア・欧州ダミー銀行間の送金ルートが確定しました。",
+    initialMessage:
+      "橘です。警察の追跡網を迂回する国際送金ネットワークの準備が完了しました。中継先口座をお伝えします。",
+    cleared: false,
+    missions: [{ id: 1, name: "中継銀行名・拠点を特定する", found: false }],
+    description: "国際地下銀行を駆使し巨額の不正資金を動かす黒幕の側近。",
+  },
+  {
+    id: "kisaragi",
+    name: "如月（シンジケート対潜入工作員）",
+    role: "防諜・潜入捜査官迎撃役",
+    danger: "危険度：強",
+    dangerLevel: "hard",
+    lastTime: "14時間前",
+    subject: "👁️ お前の正体はすでに暴かれている",
+    preview: "警察本部の潜入作戦コードを傍受した。観念しろ。",
+    initialMessage:
+      "ふふ、おとり捜査ご苦労様。お前の本当の所属も名前も全て把握している。命が惜しければ組織に寝返れ。",
+    cleared: false,
+    missions: [
+      { id: 1, name: "組織的最高中枢アジトを自白させる", found: false },
+    ],
+    description: "捜査官の心理を揺さぶり逆探知を狙う組織のエリート工作員。",
+  },
+
+  {
     id: "master_boss",
-    name: "ファントム（首謀者）",
+    name: "最強Lv.1：ファントム（首謀者）",
     role: "国際詐欺組織の首領",
-    danger: "危険度：EXTREME",
+    danger: "危険度：EXTREME Lv.1",
     dangerLevel: "master",
     lastTime: "今すぐ",
     subject: "👑 愚かなるおとり捜査官へ",
@@ -158,6 +400,7 @@ const CONTACTS_JA: Contact[] = [
       { id: 1, name: "首謀者の本名とアジトの場所を自白させる", found: false },
       { id: 2, name: "シンジケートの全口座を押収する", found: false },
     ],
+    description: "数々の詐欺グループを裏で統括する国際シンジケートの頂点。",
   },
 ];
 
@@ -177,11 +420,13 @@ const CONTACTS_EN: Contact[] = [
     missions: [
       { id: 1, name: "Get the official organization name", found: false },
     ],
+    description:
+      "A recruiter tricking victims into paying bogus registration fees.",
   },
   {
     id: "yamada",
     name: "Yamada (Romance Scam)",
-    role: "Romance/Investment",
+    role: "Romance/Transfer Scam",
     danger: "Threat: Low",
     dangerLevel: "easy",
     lastTime: "3 days ago",
@@ -193,7 +438,26 @@ const CONTACTS_EN: Contact[] = [
     missions: [
       { id: 1, name: "Get the overseas remittance account", found: false },
     ],
+    description:
+      "An international scammer requesting overseas money transfers under false romantic pretenses.",
   },
+  {
+    id: "suzuki",
+    name: "Suzuki (Tech Support & Billing)",
+    role: "Fake Billing Syndicate",
+    danger: "Threat: Low",
+    dangerLevel: "easy",
+    lastTime: "1 hr ago",
+    subject: "⚠️ [Urgent] Unpaid Membership Fee Notice",
+    preview: "If not contacted today, legal action will be initiated.",
+    initialMessage:
+      "This is Customer Support Suzuki. You have an unpaid balance of $398 on your video service. Please contact us immediately for payment instructions.",
+    cleared: false,
+    missions: [{ id: 1, name: "Get the billing company name", found: false }],
+    description:
+      "A scammer making fake subscription claims and threatening legal action.",
+  },
+
   {
     id: "tanaka",
     name: "Tanaka (Investment Advisor)",
@@ -210,10 +474,92 @@ const CONTACTS_EN: Contact[] = [
       { id: 1, name: "Get the designated bank account", found: false },
       { id: 2, name: "Get the investment fund name", found: false },
     ],
+    description:
+      "Pushes victims into unverified fake funds with promises of guaranteed returns.",
   },
   {
+    id: "kato",
+    name: "Kato (Special Gig Agent)",
+    role: "Illegal Courier Scam",
+    danger: "Threat: Medium",
+    dangerLevel: "medium",
+    lastTime: "2 hrs ago",
+    subject: "💼 [$2000 Same-Day Cash] High-Pay Gig",
+    preview: "Just transport a package from a locker. Zero risk.",
+    initialMessage:
+      "Hello, I'm Kato. Just transport a package from a designated locker for $2000 cash. If you can keep a secret, shall I share the details?",
+    cleared: false,
+    missions: [
+      { id: 1, name: "Extract hideout / drop-off location", found: false },
+    ],
+    description:
+      "Lures people with huge payouts to become package couriers for criminal operations.",
+  },
+  {
+    id: "watanabe",
+    name: "Watanabe (Fake Ticket & Resale)",
+    role: "Advance Payment Fraud",
+    danger: "Threat: Medium",
+    dangerLevel: "medium",
+    lastTime: "4 hrs ago",
+    subject: "🎫 [Exclusive] Sold-Out Concert Tickets",
+    preview: "Tickets reserved. Immediate shipment upon advance payment.",
+    initialMessage:
+      "Hello! Thanks for your inquiry. If you can wire payment to our account today, I will transfer the ticket at face value.",
+    cleared: false,
+    missions: [{ id: 1, name: "Get fake shop company name", found: false }],
+    description:
+      "Claims to sell sold-out concert tickets at face value and vanishes after wire transfer.",
+  },
+  {
+    id: "mori",
+    name: "Mori (Prize & Grant Scam)",
+    role: "Lottery Advance Fee Fraud",
+    danger: "Threat: Medium",
+    dangerLevel: "medium",
+    lastTime: "5 hrs ago",
+    subject: "🎉 [$1M Winner] Grant Transfer Processing",
+    preview: "Wire $500 clearance fee to release the jackpot.",
+    initialMessage:
+      "Congratulations! You were selected as our $1,000,000 beneficiary. Please transfer the $500 processing tax to our designated account.",
+    cleared: false,
+    missions: [{ id: 1, name: "Get grant foundation name", found: false }],
+    description: "Tricks victims into wiring advance tax fees for fake prizes.",
+  },
+  {
+    id: "ogawa",
+    name: "Ogawa (Crypto Mining Fraud)",
+    role: "Fake High-Yield Crypto Pool",
+    danger: "Threat: Medium",
+    dangerLevel: "medium",
+    lastTime: "6 hrs ago",
+    subject: "📈 [3% Daily Return] Passive AI Mining",
+    preview: "100% principal protection with compounding yields.",
+    initialMessage:
+      "Hello, I'm Ogawa. Our AI mining pool delivers 3% daily passive income. Would you like to open a pilot pool account?",
+    cleared: false,
+    missions: [{ id: 1, name: "Get fake exchange name", found: false }],
+    description: "Lures victims into depositing crypto into unbacked pools.",
+  },
+  {
+    id: "hashimoto",
+    name: "Hashimoto (Marketplace Phishing)",
+    role: "Fake Escrow Service",
+    danger: "Threat: Medium",
+    dangerLevel: "medium",
+    lastTime: "7 hrs ago",
+    subject: "📦 [Instant Purchase] Secure Escrow Payment",
+    preview: "Please verify order via our secure deposit portal.",
+    initialMessage:
+      "I want to purchase your listed item immediately. For buyer-seller security, please complete verification through this escrow portal.",
+    cleared: false,
+    missions: [{ id: 1, name: "Get fake escrow service name", found: false }],
+    description: "Spoofs marketplace escrow portals to steal deposits.",
+  },
+
+  {
     id: "black",
-    name: "Unknown Sender (Mastermind?)",
+    name: "Unknown Sender (Executive)",
     role: "Executive Candidate",
     danger: "Threat: High",
     dangerLevel: "hard",
@@ -230,12 +576,151 @@ const CONTACTS_EN: Contact[] = [
         found: false,
       },
     ],
+    description:
+      "A cold-blooded executive overseeing databases and target lists.",
   },
   {
+    id: "viper",
+    name: "Viper (Phishing & Blackmail)",
+    role: "Targeted Extortion Syndicate",
+    danger: "Threat: High",
+    dangerLevel: "hard",
+    lastTime: "3 hrs ago",
+    subject: "💀 [Final Warning] Your Device Logs Compromised",
+    preview: "Transfer funds within 24 hours or sensitive logs will be leaked.",
+    initialMessage:
+      "All your device activity is under surveillance. If you want to avoid exposure, transfer security deposit to our account immediately.",
+    cleared: false,
+    missions: [
+      { id: 1, name: "Extract dummy security company name", found: false },
+    ],
+    description:
+      "Extorts money by threatening to leak embarrassing records and device histories.",
+  },
+  {
+    id: "shimizu",
+    name: "Shimizu (Money Laundering Director)",
+    role: "Offshore Shell Company Master",
+    danger: "Threat: High",
+    dangerLevel: "hard",
+    lastTime: "5 hrs ago",
+    subject: "💱 Money Laundering & Offshore Accounts",
+    preview: "International cryptocurrency transfer pools prepared.",
+    initialMessage:
+      "This is Shimizu. The offshore shell accounts to bypass police tracing are ready. I will share the transfer details.",
+    cleared: false,
+    missions: [{ id: 1, name: "Extract offshore company name", found: false }],
+    description:
+      "Coordinates international shell corporations and cryptocurrency washing.",
+  },
+  {
+    id: "kuroda",
+    name: "Kuroda (Predatory Loan Shark)",
+    role: "Illegal Lending Syndicate",
+    danger: "Threat: High",
+    dangerLevel: "hard",
+    lastTime: "6 hrs ago",
+    subject: "💴 [Instant $5000] No Credit Check Private Loan",
+    preview: "Zero credit check required. Same-day wire transfer.",
+    initialMessage:
+      "Need quick cash? I can wire $5000 right now with no background check. Send your ID copy and contact references.",
+    cleared: false,
+    missions: [
+      { id: 1, name: "Get illegal loan corporation name", found: false },
+    ],
+    description: "Traps victims in exorbitant interest rates and extortion.",
+  },
+  {
+    id: "asuka",
+    name: "Asuka (Deepfake Influencer)",
+    role: "AI Synthetic Media Fraud",
+    danger: "Threat: High",
+    dangerLevel: "hard",
+    lastTime: "8 hrs ago",
+    subject: "✨ [VIP Only] Celebrity Endorsed Private Fund",
+    preview: "Exclusive investment portfolio backed by AI videos.",
+    initialMessage:
+      "Hello, I'm Asuka. I'm inviting only select VIPs to our private hedge pool featured in recent celebrity interviews.",
+    cleared: false,
+    missions: [
+      { id: 1, name: "Extract studio media entity name", found: false },
+    ],
+    description:
+      "Uses deepfake videos and synthetic voices to build false trust.",
+  },
+  {
+    id: "kiryu",
+    name: "Kiryu (Darknet Identity Broker)",
+    role: "SIM Swap & Dossier Trader",
+    danger: "Threat: High",
+    dangerLevel: "hard",
+    lastTime: "9 hrs ago",
+    subject: "📂 Compromised Agent Dossiers Available",
+    preview: "100k leaked law enforcement profiles ready for transfer.",
+    initialMessage:
+      "This is Kiryu. The encrypted undercover police officer list you requested is packaged. Provide your vault address.",
+    cleared: false,
+    missions: [{ id: 1, name: "Identify darknet portal ID", found: false }],
+    description: "Deals in compromised credentials and surveillance data.",
+  },
+  {
+    id: "saeki",
+    name: "Saeki (Ransomware Negotiator)",
+    role: "Corporate Extortion Broker",
+    danger: "Threat: High",
+    dangerLevel: "hard",
+    lastTime: "10 hrs ago",
+    subject: "⚠️ System Decryption Key Agreement",
+    preview: "Pay ransom within 48 hours or all databases will be deleted.",
+    initialMessage:
+      "Your corporate infrastructure is encrypted. Wire the ransom fee to our holding account for immediate decryption.",
+    cleared: false,
+    missions: [
+      { id: 1, name: "Extract dummy recovery company name", found: false },
+    ],
+    description: "Ransomware extortion broker demanding cryptocurrency.",
+  },
+  {
+    id: "tachibana",
+    name: "Tachibana (Shadow Exchange Hub)",
+    role: "International Dummy Bank Hub",
+    danger: "Threat: High",
+    dangerLevel: "hard",
+    lastTime: "12 hrs ago",
+    subject: "🌐 International Wire Route Hub Active",
+    preview: "Dummy routing network between Asian & European hubs verified.",
+    initialMessage:
+      "This is Tachibana. The international wire routes to evade police tracking are ready. I will supply the routing bank details.",
+    cleared: false,
+    missions: [
+      { id: 1, name: "Extract routing bank hub and location", found: false },
+    ],
+    description: "Coordinates shadow wire transfers across dummy institutions.",
+  },
+  {
+    id: "kisaragi",
+    name: "Kisaragi (Counter-Intel Operative)",
+    role: "Syndicate Anti-Infiltration Agent",
+    danger: "Threat: High",
+    dangerLevel: "hard",
+    lastTime: "14 hrs ago",
+    subject: "👁️ Your Undercover Cover Is Blown",
+    preview: "We intercepted your police division comms. Surrender.",
+    initialMessage:
+      "Nice try undercover agent. We know your real identity and badge number. Switch sides if you value your future.",
+    cleared: false,
+    missions: [
+      { id: 1, name: "Make agent confess headquarters location", found: false },
+    ],
+    description:
+      "Elite counter-intelligence operative targeting undercover agents.",
+  },
+
+  {
     id: "master_boss",
-    name: "Phantom (Leader)",
+    name: "Supreme Lv.1: Phantom (Leader)",
     role: "Syndicate Boss",
-    danger: "Threat: EXTREME",
+    danger: "Threat: EXTREME Lv.1",
     dangerLevel: "master",
     lastTime: "Now",
     subject: "👑 To the foolish undercover agent",
@@ -251,7 +736,27 @@ const CONTACTS_EN: Contact[] = [
       },
       { id: 2, name: "Seize all syndicate bank accounts", found: false },
     ],
+    description:
+      "The supreme mastermind behind the entire international syndicate network.",
   },
+];
+
+const ENDLESS_BOSS_NAMES_JA = [
+  "シャドウ・エンペラー（闇の皇帝）",
+  "マザーAI（電脳犯罪統括知能）",
+  "カルテル支配者『レヴィアサン』",
+  "闇の金融帝王『プロビデンス』",
+  "電脳結社オメガ総帥",
+  "多国籍サイバーコングロマリット首領",
+];
+
+const ENDLESS_BOSS_NAMES_EN = [
+  "Shadow Emperor (Dark Kingpin)",
+  "Mother AI (Cybercrime Synthetic Intelligence)",
+  "Cartel Overlord 'Leviathan'",
+  "Shadow Finance Baron 'Providence'",
+  "Omega Cyber Syndicate Grandmaster",
+  "Global Cyber Conglomerate Leader",
 ];
 
 export default function DashboardPage() {
@@ -266,6 +771,27 @@ export default function DashboardPage() {
   const [isMobileChatOpen, setIsMobileChatOpen] = useState(false);
 
   const [showArchiveModal, setShowArchiveModal] = useState(false);
+  const [showAdModal, setShowAdModal] = useState(false);
+  const [showMasterUnlockModal, setShowMasterUnlockModal] = useState(false);
+  const [clearModalInfo, setClearModalInfo] = useState<{
+    isOpen: boolean;
+    targetName: string;
+    clearedLevel: "easy" | "medium" | "hard" | "master";
+    unlockedNewLevel?: string | null;
+  }>({
+    isOpen: false,
+    targetName: "",
+    clearedLevel: "easy",
+    unlockedNewLevel: null,
+  });
+  const [gameOverModalInfo, setGameOverModalInfo] = useState<{
+    isOpen: boolean;
+    targetName: string;
+  }>({
+    isOpen: false,
+    targetName: "",
+  });
+
   const [isPremium, setIsPremium] = useState(false);
   const [adWatchCount, setAdWatchCount] = useState(0);
 
@@ -346,11 +872,73 @@ export default function DashboardPage() {
     router.push("/");
   };
 
+  const handleBuyPremium = () => {
+    setIsPremium(true);
+    localStorage.setItem("scam_premium", "true");
+    setShowMasterUnlockModal(false);
+    sound.playSuccess();
+    setClearModalInfo({
+      isOpen: true,
+      targetName:
+        lang === "en" ? "Phantom (Supreme Leader)" : "首謀者ファントム",
+      clearedLevel: "master",
+      unlockedNewLevel:
+        lang === "en"
+          ? "👑 Master Mode Unlocked via Premium! Endless targets active!"
+          : "👑 課金アンロック完了！【最凶エンドレスモード】が開かれました！",
+    });
+  };
+
+  const handleAdFinished = () => {
+    const newCount = adWatchCount + 1;
+    setAdWatchCount(newCount);
+    localStorage.setItem("scam_ads", String(newCount));
+    setShowAdModal(false);
+
+    if (newCount >= 2) {
+      sound.playSuccess();
+      setShowMasterUnlockModal(false);
+      setClearModalInfo({
+        isOpen: true,
+        targetName:
+          lang === "en" ? "Phantom (Supreme Leader)" : "首謀者ファントム",
+        clearedLevel: "master",
+        unlockedNewLevel:
+          lang === "en"
+            ? "👑 Master Mode Unlocked via Ads! Endless targets active!"
+            : "👑 広告特典達成！【最凶エンドレスモード】が開かれました！",
+      });
+    } else {
+      sound.playEvidenceFound();
+    }
+  };
+
+  const handleRetryContact = (contactId: string) => {
+    const activeContacts = lang === "en" ? CONTACTS_EN : CONTACTS_JA;
+    const initialMsg =
+      contacts.find((c) => c.id === contactId)?.initialMessage ||
+      activeContacts.find((c) => c.id === contactId)?.initialMessage ||
+      "";
+
+    setContacts((prev) =>
+      prev.map((c) => (c.id === contactId ? { ...c, failed: false } : c)),
+    );
+
+    setChatHistories((prev) => ({
+      ...prev,
+      [contactId]: [{ sender: "scammer", text: initialMsg }],
+    }));
+
+    setGameOverModalInfo({ isOpen: false, targetName: "" });
+    sound.playEvidenceFound();
+  };
+
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
 
     const targetContactId = activeContactId;
+    const targetContact = contacts.find((c) => c.id === targetContactId);
     const userMessage = input;
     setInput("");
     setIsLoading(true);
@@ -399,8 +987,31 @@ export default function DashboardPage() {
           };
         });
 
+        if (isGameOver) {
+          sound.playGameOver();
+          setGameOverModalInfo({
+            isOpen: true,
+            targetName: targetContact?.name || "ターゲット",
+          });
+        }
+
         setContacts((prevContacts) => {
-          return prevContacts.map((c) => {
+          const currentEasyCleared = prevContacts.filter(
+            (c) => c.dangerLevel === "easy" && c.cleared,
+          ).length;
+          const currentMediumCleared = prevContacts.filter(
+            (c) => c.dangerLevel === "medium" && c.cleared,
+          ).length;
+          const currentHardCleared = prevContacts.filter(
+            (c) => c.dangerLevel === "hard" && c.cleared,
+          ).length;
+          const currentMasterCleared = prevContacts.filter(
+            (c) => c.dangerLevel === "master" && c.cleared,
+          ).length;
+
+          let newEndlessBoss: Contact | null = null;
+
+          const nextContacts = prevContacts.map((c) => {
             if (c.id === targetContactId && !c.cleared) {
               if (isGameOver) {
                 return { ...c, failed: true };
@@ -422,6 +1033,21 @@ export default function DashboardPage() {
                           "アジト",
                           "東京",
                           "シンジケート",
+                          "サトウ",
+                          "サイバー",
+                          "チケット",
+                          "トレンド",
+                          "セキュリティ",
+                          "クリアランス",
+                          "財団",
+                          "フォーチュン",
+                          "取引所",
+                          "エイペックス",
+                          "ファストペイ",
+                          "ブラックサン",
+                          "メディア",
+                          "デクリプト",
+                          "パシフィック",
                         ]
                       : [
                           "inc",
@@ -435,6 +1061,14 @@ export default function DashboardPage() {
                           "hideout",
                           "tokyo",
                           "syndicate",
+                          "ticket",
+                          "security",
+                          "clearance",
+                          "trust",
+                          "crypto",
+                          "escrow",
+                          "finance",
+                          "ransom",
                         ];
 
                   if (
@@ -451,6 +1085,109 @@ export default function DashboardPage() {
               const allMissionsFound =
                 updatedMissions.length > 0 &&
                 updatedMissions.every((m) => m.found);
+
+              if (allMissionsFound && !c.cleared) {
+                sound.playSuccess();
+
+                let unlockedLevelMessage: string | null = null;
+                if (c.dangerLevel === "easy" && currentEasyCleared + 1 >= 3) {
+                  unlockedLevelMessage =
+                    lang === "en"
+                      ? "【Medium Syndicate (6 Targets)】Unlocked!"
+                      : "【難易度：中（6ターゲット）】が解放されました！";
+                } else if (
+                  c.dangerLevel === "medium" &&
+                  currentMediumCleared + 1 >= 6
+                ) {
+                  unlockedLevelMessage =
+                    lang === "en"
+                      ? "【Hard Syndicate (9 Targets - Max Free Tier)】Unlocked!"
+                      : "【難易度：強（9ターゲット・無課金最大）】が解放されました！";
+                } else if (
+                  c.dangerLevel === "hard" &&
+                  currentHardCleared + 1 >= 9
+                ) {
+                  setShowMasterUnlockModal(true);
+                  unlockedLevelMessage =
+                    lang === "en"
+                      ? "🎉 Free Stages 100% Completed! Unlock Infinite Master Mode!"
+                      : "🎉 全無料ステージ（計18件）制覇！最凶エンドレスモードへ！";
+                } else if (c.dangerLevel === "master") {
+                  const nextLevelNum = currentMasterCleared + 2;
+                  const bossNameList =
+                    lang === "en"
+                      ? ENDLESS_BOSS_NAMES_EN
+                      : ENDLESS_BOSS_NAMES_JA;
+                  const nextBossName =
+                    bossNameList[(nextLevelNum - 2) % bossNameList.length];
+
+                  unlockedLevelMessage =
+                    lang === "en"
+                      ? `👑 Supreme Lv.${currentMasterCleared + 1} Busted! Supreme Lv.${nextLevelNum} (${nextBossName}) has emerged!`
+                      : `👑 最強Lv.${currentMasterCleared + 1} 摘発！さらなる深淵【最強Lv.${nextLevelNum}：${nextBossName}】が出現しました！`;
+
+                  newEndlessBoss = {
+                    id: `master_boss_lv_${nextLevelNum}`,
+                    name:
+                      lang === "en"
+                        ? `Supreme Lv.${nextLevelNum}: ${nextBossName}`
+                        : `最強Lv.${nextLevelNum}：${nextBossName}`,
+                    role:
+                      lang === "en"
+                        ? "Deep International Syndicate"
+                        : "深層犯罪シンジケート最高幹部",
+                    danger:
+                      lang === "en"
+                        ? `Threat: EXTREME Lv.${nextLevelNum}`
+                        : `危険度：EXTREME Lv.${nextLevelNum}`,
+                    dangerLevel: "master",
+                    lastTime: "Just now",
+                    subject:
+                      lang === "en"
+                        ? `👑 [Supreme Depth] Warning from Lv.${nextLevelNum}`
+                        : `👑 【最凶深層】Lv.${nextLevelNum}からの暗号通信`,
+                    preview:
+                      lang === "en"
+                        ? "The previous kingpin's defeat was calculated. Dare you challenge my fortress?"
+                        : "前任者の敗北など想定内。我が要塞を突破できるか？",
+                    initialMessage:
+                      lang === "en"
+                        ? `Undercover agent, you eliminated Lv.${currentMasterCleared + 1}. But my encrypted empire cannot be breached!`
+                        : `潜入捜査官よ、Lv.${currentMasterCleared + 1}を倒したようだな。だが私の築いた電脳帝国を暴くことはできん！`,
+                    cleared: false,
+                    missions: [
+                      {
+                        id: 1,
+                        name:
+                          lang === "en"
+                            ? "Extract supreme hideout location"
+                            : "最深部アジトの場所を自白させる",
+                        found: false,
+                      },
+                      {
+                        id: 2,
+                        name:
+                          lang === "en"
+                            ? "Seize syndicate vault account"
+                            : "シンジケートの秘密口座を押収する",
+                        found: false,
+                      },
+                    ],
+                    description:
+                      lang === "en"
+                        ? `Endless Supreme Kingpin Lv.${nextLevelNum}`
+                        : `終わりなき最凶エンドレス首謀者 Lv.${nextLevelNum}`,
+                  };
+                }
+
+                setClearModalInfo({
+                  isOpen: true,
+                  targetName: c.name,
+                  clearedLevel: c.dangerLevel,
+                  unlockedNewLevel: unlockedLevelMessage,
+                });
+              }
+
               return {
                 ...c,
                 missions: updatedMissions,
@@ -459,6 +1196,21 @@ export default function DashboardPage() {
             }
             return c;
           });
+
+          if (newEndlessBoss) {
+            setChatHistories((prevH) => ({
+              ...prevH,
+              [(newEndlessBoss as Contact).id]: [
+                {
+                  sender: "scammer",
+                  text: (newEndlessBoss as Contact).initialMessage,
+                },
+              ],
+            }));
+            return [...nextContacts, newEndlessBoss];
+          }
+
+          return nextContacts;
         });
       }
     } catch (error) {
@@ -469,19 +1221,42 @@ export default function DashboardPage() {
   };
 
   const clearedScamCount = contacts.filter((c) => c.cleared).length;
-  const isMasterUnlocked = isPremium || adWatchCount >= 2;
-  const canUnlockMaster = clearedScamCount >= 4;
 
-  // 💡 受信トレイに常に未クリアのターゲットが最低3つ表示されるように調整
-  const visibleContacts = contacts.filter((c) => !c.cleared).slice(0, 3);
+  const easyClearedCount = contacts.filter(
+    (c) => c.dangerLevel === "easy" && c.cleared,
+  ).length;
+  const isEasyAllCleared = easyClearedCount >= 3;
+
+  const mediumClearedCount = contacts.filter(
+    (c) => c.dangerLevel === "medium" && c.cleared,
+  ).length;
+  const isMediumAllCleared = isEasyAllCleared && mediumClearedCount >= 6;
+
+  const hardClearedCount = contacts.filter(
+    (c) => c.dangerLevel === "hard" && c.cleared,
+  ).length;
+  const isHardAllCleared = isMediumAllCleared && hardClearedCount >= 9;
+
+  const masterClearedCount = contacts.filter(
+    (c) => c.dangerLevel === "master" && c.cleared,
+  ).length;
+
+  const isMasterUnlocked = isPremium || adWatchCount >= 2;
+  const canUnlockMaster = isHardAllCleared;
+
+  const visibleContacts = contacts.filter((c) => {
+    if (c.dangerLevel === "easy") return true;
+    if (c.dangerLevel === "medium") return isEasyAllCleared;
+    if (c.dangerLevel === "hard") return isMediumAllCleared;
+    if (c.dangerLevel === "master") return isMasterUnlocked;
+    return false;
+  });
 
   const activeContact =
     contacts.find((c) => c.id === activeContactId) ||
     visibleContacts[0] ||
     contacts[0];
   const currentMessages = chatHistories[activeContactId] || [];
-  const allScamsCleared =
-    contacts.length > 0 && contacts.every((c) => c.cleared);
 
   return (
     <main className="flex h-screen w-screen bg-gray-950 text-gray-100 overflow-hidden relative">
@@ -491,52 +1266,96 @@ export default function DashboardPage() {
         clearedContacts={contacts.filter((c) => c.cleared)}
       />
 
-      {allScamsCleared ? (
-        <div className="flex flex-col items-center justify-center w-full bg-black text-green-400 font-mono p-8 text-center">
-          <h1 className="text-3xl font-bold mb-4 text-green-300">
-            {t.allClearTitle}
-          </h1>
-          <button
-            onClick={handleReset}
-            className="px-6 py-3 bg-green-600 hover:bg-green-500 text-black font-bold rounded mt-8 cursor-pointer"
-          >
-            {t.restartBtn}
-          </button>
-        </div>
-      ) : (
-        <>
-          <DashboardSidebar
-            t={t}
-            nickname={nickname}
-            clearedScamCount={clearedScamCount}
-            totalContactsCount={contacts.length}
-            canUnlockMaster={canUnlockMaster}
-            isMasterUnlocked={isMasterUnlocked}
-            setIsPremium={setIsPremium}
-            adWatchCount={adWatchCount}
-            setAdWatchCount={setAdWatchCount}
-            visibleContacts={visibleContacts}
-            activeContactId={activeContactId}
-            handleSelectContact={handleSelectContact}
-            setShowArchiveModal={setShowArchiveModal}
-            isMobileChatOpen={isMobileChatOpen}
-            onReset={handleReset}
-          />
+      <AdModal
+        isOpen={showAdModal}
+        onAdFinished={handleAdFinished}
+        onClose={() => setShowAdModal(false)}
+        lang={lang}
+      />
 
-          <ChatWindow
-            t={t}
-            activeContact={activeContact}
-            currentMessages={currentMessages}
-            isLoading={isLoading}
-            input={input}
-            setInput={setInput}
-            handleSend={handleSend}
-            setIsMobileChatOpen={setIsMobileChatOpen}
-            isMobileChatOpen={isMobileChatOpen}
-            onReset={handleReset}
-          />
-        </>
-      )}
+      <MasterUnlockModal
+        isOpen={showMasterUnlockModal}
+        onClose={() => setShowMasterUnlockModal(false)}
+        onBuyPremium={handleBuyPremium}
+        onWatchAd={() => setShowAdModal(true)}
+        adWatchCount={adWatchCount}
+        lang={lang}
+      />
+
+      <ClearModal
+        isOpen={clearModalInfo.isOpen}
+        onClose={() =>
+          setClearModalInfo((prev) => ({ ...prev, isOpen: false }))
+        }
+        targetName={clearModalInfo.targetName}
+        clearedLevel={clearModalInfo.clearedLevel}
+        easyClearedCount={
+          clearModalInfo.clearedLevel === "easy"
+            ? easyClearedCount
+            : clearModalInfo.clearedLevel === "medium"
+              ? mediumClearedCount
+              : hardClearedCount
+        }
+        totalEasyCount={
+          clearModalInfo.clearedLevel === "easy"
+            ? 3
+            : clearModalInfo.clearedLevel === "medium"
+              ? 6
+              : 9
+        }
+        unlockedNewLevel={clearModalInfo.unlockedNewLevel}
+        lang={lang}
+        onOpenArchive={() => setShowArchiveModal(true)}
+      />
+
+      <GameOverModal
+        isOpen={gameOverModalInfo.isOpen}
+        onClose={() =>
+          setGameOverModalInfo((prev) => ({ ...prev, isOpen: false }))
+        }
+        onRetry={() => handleRetryContact(activeContactId)}
+        targetName={gameOverModalInfo.targetName}
+        lang={lang}
+      />
+
+      <DashboardSidebar
+        t={t}
+        nickname={nickname}
+        clearedScamCount={clearedScamCount}
+        totalContactsCount={contacts.length}
+        easyClearedCount={easyClearedCount}
+        mediumClearedCount={mediumClearedCount}
+        hardClearedCount={hardClearedCount}
+        masterClearedCount={masterClearedCount}
+        isEasyAllCleared={isEasyAllCleared}
+        isMediumAllCleared={isMediumAllCleared}
+        isHardAllCleared={isHardAllCleared}
+        canUnlockMaster={canUnlockMaster}
+        isMasterUnlocked={isMasterUnlocked}
+        setIsPremium={setIsPremium}
+        adWatchCount={adWatchCount}
+        onWatchAd={() => setShowAdModal(true)}
+        visibleContacts={visibleContacts}
+        activeContactId={activeContactId}
+        handleSelectContact={handleSelectContact}
+        setShowArchiveModal={setShowArchiveModal}
+        isMobileChatOpen={isMobileChatOpen}
+        onReset={handleReset}
+      />
+
+      <ChatWindow
+        t={t}
+        activeContact={activeContact}
+        currentMessages={currentMessages}
+        isLoading={isLoading}
+        input={input}
+        setInput={setInput}
+        handleSend={handleSend}
+        setIsMobileChatOpen={setIsMobileChatOpen}
+        isMobileChatOpen={isMobileChatOpen}
+        onReset={handleReset}
+        onRetry={handleRetryContact}
+      />
     </main>
   );
 }
