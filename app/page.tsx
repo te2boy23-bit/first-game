@@ -17,6 +17,7 @@ export default function GeneralPortalPage() {
   );
   const [entryRoute, setEntryRoute] = useState<"closed" | "trapped">("trapped");
   const [isAlreadyAgent, setIsAlreadyAgent] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   // Form States
   const [nickname, setNickname] = useState("");
@@ -27,10 +28,15 @@ export default function GeneralPortalPage() {
   const articleTriggerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setIsMounted(true);
     // 既存のエージェントデータがあるか確認（自動リダイレクトはせず、ボタンを表示）
     const savedStep = localStorage.getItem("scam_step");
     if (savedStep === "game") {
       setIsAlreadyAgent(true);
+    }
+    const savedLang = localStorage.getItem("scam_lang") as "ja" | "en";
+    if (savedLang) {
+      setLang(savedLang);
     }
   }, []);
 
@@ -188,7 +194,7 @@ export default function GeneralPortalPage() {
           </span>
         </div>
         <div className="flex items-center gap-3">
-          {isAlreadyAgent && (
+          {isMounted && isAlreadyAgent && (
             <button
               onClick={() => router.push("/dashboard")}
               className="text-[11px] bg-green-700 hover:bg-green-600 text-white font-bold px-2.5 py-1 rounded-md cursor-pointer transition shadow flex items-center gap-1"
