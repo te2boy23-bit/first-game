@@ -1424,12 +1424,39 @@ export default function DashboardPage() {
     contacts.find((c) => c.id === activeContactId) ||
     visibleContacts[0] ||
     contacts[0];
+
   const currentMessages =
     chatHistories[activeContactId] && chatHistories[activeContactId].length > 0
       ? chatHistories[activeContactId]
       : activeContact
         ? [{ sender: "scammer", text: activeContact.initialMessage }]
         : [];
+
+  const handleLanguageChange = (newLang: "ja" | "en") => {
+    setLang(newLang);
+    localStorage.setItem("scam_lang", newLang);
+    const newContactsBase = newLang === "en" ? CONTACTS_EN : CONTACTS_JA;
+    setContacts((prevContacts) => {
+      return newContactsBase.map((nc) => {
+        const existing = prevContacts.find((p) => p.id === nc.id);
+        if (existing) {
+          return {
+            ...nc,
+            cleared: existing.cleared,
+            failed: existing.failed,
+            missions: nc.missions.map((m) => {
+              const existingM = existing.missions.find((em) => em.id === m.id);
+              return {
+                ...m,
+                found: existingM ? existingM.found : m.found,
+              };
+            }),
+          };
+        }
+        return nc;
+      });
+    });
+  };
 
   return (
     <main className="flex h-screen w-screen bg-gray-950 text-gray-100 overflow-hidden relative">
@@ -1512,6 +1539,8 @@ export default function DashboardPage() {
         setShowArchiveModal={setShowArchiveModal}
         isMobileChatOpen={isMobileChatOpen}
         onReset={handleReset}
+        lang={lang}
+        onLanguageChange={handleLanguageChange}
       />
 
       <ChatWindow

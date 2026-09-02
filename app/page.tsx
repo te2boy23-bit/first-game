@@ -174,12 +174,12 @@ export default function GeneralPortalPage() {
       {/* 📰 ORDINARY INNOCENT WEB PORTAL / MAGAZINE (普通のホームページ) */}
       {/* ======================================================== */}
       {/* Portal Top Bar */}
-      <div className="bg-slate-900 text-slate-300 text-xs py-2 px-6 flex justify-between items-center border-b border-slate-800">
-        <div className="flex items-center gap-4">
-          <span className="font-bold text-white">
+      <div className="bg-slate-900 text-slate-300 text-xs py-2 px-4 sm:px-6 flex justify-between items-center border-b border-slate-800">
+        <div className="flex items-center gap-3">
+          <span className="font-bold text-white tracking-wide">
             IT &amp; Lifestyle Web Magazine
           </span>
-          <span className="hidden sm:inline text-slate-400">
+          <span className="hidden md:inline text-slate-400">
             {lang === "ja"
               ? "暮らしとデジタルの最新トレンドメディア"
               : "Latest Tech & Life Digital Trends"}
@@ -189,32 +189,39 @@ export default function GeneralPortalPage() {
           {isAlreadyAgent && (
             <button
               onClick={() => router.push("/dashboard")}
-              className="text-[11px] bg-green-700 hover:bg-green-600 text-white font-bold px-2.5 py-0.5 rounded cursor-pointer transition"
+              className="text-[11px] bg-green-700 hover:bg-green-600 text-white font-bold px-2.5 py-1 rounded-md cursor-pointer transition shadow flex items-center gap-1"
             >
-              🚨 潜入捜査を再開する
+              <span>🚨</span>
+              <span>{lang === "ja" ? "潜入捜査を再開" : "Resume Mission"}</span>
             </button>
           )}
 
-          <div className="flex bg-slate-800 rounded p-0.5">
+          {/* 🌐 Prominent Language Switcher */}
+          <div className="flex items-center gap-1.5 bg-slate-800/90 border border-slate-700 rounded-lg p-1 shadow-inner">
+            <span className="text-[11px] text-slate-400 px-1 font-semibold hidden sm:inline">
+              🌐 言語:
+            </span>
             <button
               onClick={() => setLang("ja")}
-              className={`px-2 py-0.5 rounded text-[11px] font-bold ${
+              className={`px-2.5 py-1 rounded-md text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
                 lang === "ja"
-                  ? "bg-slate-700 text-white"
+                  ? "bg-indigo-600 text-white shadow"
                   : "text-slate-400 hover:text-white"
               }`}
             >
-              JP
+              <span>🇯🇵</span>
+              <span>日本語</span>
             </button>
             <button
               onClick={() => setLang("en")}
-              className={`px-2 py-0.5 rounded text-[11px] font-bold ${
+              className={`px-2.5 py-1 rounded-md text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
                 lang === "en"
-                  ? "bg-slate-700 text-white"
+                  ? "bg-indigo-600 text-white shadow"
                   : "text-slate-400 hover:text-white"
               }`}
             >
-              EN
+              <span>🇺🇸</span>
+              <span>English</span>
             </button>
           </div>
         </div>
@@ -222,7 +229,7 @@ export default function GeneralPortalPage() {
 
       {/* Portal Main Navigation */}
       <header className="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-20">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
           <div className="flex items-center gap-3 cursor-pointer">
             <div className="w-9 h-9 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-black text-xl shadow">
               M
@@ -252,12 +259,14 @@ export default function GeneralPortalPage() {
             </span>
           </nav>
 
-          <button
-            onClick={triggerScamTrap}
-            className="text-xs bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 py-2 rounded-lg transition cursor-pointer"
-          >
-            {lang === "ja" ? "ログイン / 会員登録" : "Login / Register"}
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={triggerScamTrap}
+              className="text-xs bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 py-2.5 rounded-lg transition cursor-pointer shadow-sm"
+            >
+              {lang === "ja" ? "ログイン / 会員登録" : "Login / Register"}
+            </button>
+          </div>
         </div>
       </header>
 
@@ -693,13 +702,6 @@ export default function GeneralPortalPage() {
                 </button>
               </div>
             </div>
-
-            <button
-              onClick={() => setStep("portal")}
-              className="w-full py-2 text-xs text-gray-400 hover:text-white transition text-center cursor-pointer"
-            >
-              ◀ ホームページに戻る
-            </button>
           </div>
         </div>
       )}

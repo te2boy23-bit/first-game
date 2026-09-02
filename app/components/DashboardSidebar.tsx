@@ -46,6 +46,8 @@ interface DashboardSidebarProps {
   setShowArchiveModal: (val: boolean) => void;
   isMobileChatOpen: boolean;
   onReset: () => void;
+  lang?: "ja" | "en";
+  onLanguageChange?: (val: "ja" | "en") => void;
 }
 
 export default function DashboardSidebar({
@@ -71,6 +73,8 @@ export default function DashboardSidebar({
   setShowArchiveModal,
   isMobileChatOpen,
   onReset,
+  lang = "ja",
+  onLanguageChange,
 }: DashboardSidebarProps) {
   // 次のレベルまでの進行度計算
   let currentRankText = "ランク：弱";
@@ -112,9 +116,39 @@ export default function DashboardSidebar({
       }`}
     >
       <div>
-        <h2 className="text-lg md:text-xl font-bold mb-4 text-white">
-          {t.dashTitle}
-        </h2>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2">
+          <h2 className="text-lg md:text-xl font-bold text-white leading-tight">
+            {t.dashTitle}
+          </h2>
+
+          {/* 🌐 Prominent Language Switcher in Dashboard */}
+          {onLanguageChange && (
+            <div className="flex items-center gap-1 bg-gray-800 border border-gray-700 rounded-lg p-0.5 shrink-0 shadow-sm self-start sm:self-auto">
+              <button
+                onClick={() => onLanguageChange("ja")}
+                className={`px-2 py-1 rounded text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
+                  lang === "ja"
+                    ? "bg-pink-600 text-white shadow"
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                <span>🇯🇵</span>
+                <span>日本語</span>
+              </button>
+              <button
+                onClick={() => onLanguageChange("en")}
+                className={`px-2 py-1 rounded text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
+                  lang === "en"
+                    ? "bg-pink-600 text-white shadow"
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                <span>🇺🇸</span>
+                <span>English</span>
+              </button>
+            </div>
+          )}
+        </div>
 
         {/* 警察からの特命指令 */}
         <div className="bg-blue-950/30 border border-blue-800/50 rounded-lg p-3 mb-4 text-xs space-y-1">
