@@ -913,6 +913,25 @@ export default function DashboardPage() {
     }
   };
 
+  const handleProceedToNext = () => {
+    setClearModalInfo((prev) => ({ ...prev, isOpen: false }));
+
+    // まだクリアされていないターゲットを探して自動で切り替える
+    setContacts((currentContacts) => {
+      const nextTarget =
+        currentContacts.find((c) => !c.cleared && c.id !== activeContactId) ||
+        currentContacts.find((c) => !c.cleared);
+
+      if (nextTarget) {
+        setActiveContactId(nextTarget.id);
+      }
+      return currentContacts;
+    });
+
+    setIsMobileChatOpen(false);
+    sound.playEvidenceFound();
+  };
+
   const handleRetryContact = (contactId: string) => {
     const activeContacts = lang === "en" ? CONTACTS_EN : CONTACTS_JA;
     const initialMsg =
@@ -944,9 +963,21 @@ export default function DashboardPage() {
     setIsLoading(true);
 
     try {
-      const currentMessages = chatHistories[targetContactId] || [];
+      const existingHistory = chatHistories[targetContactId];
+      const initialHistory =
+        existingHistory && existingHistory.length > 0
+          ? existingHistory
+          : [
+              {
+                sender: "scammer",
+                text:
+                  targetContact?.initialMessage ||
+                  (lang === "en" ? "Hello." : "こんにちは。"),
+              },
+            ];
+
       const updatedMessages = [
-        ...currentMessages,
+        ...initialHistory,
         { sender: "player", text: userMessage },
       ];
 
@@ -962,6 +993,10 @@ export default function DashboardPage() {
           messages: updatedMessages,
           nickname,
           contactId: targetContactId,
+          contactName: targetContact?.name || "",
+          role: targetContact?.role || "",
+          description: targetContact?.description || "",
+          missions: targetContact?.missions || [],
           lang,
         }),
       });
@@ -970,11 +1005,25 @@ export default function DashboardPage() {
       if (data.reply) {
         let aiReply = data.reply;
         let isGameOver = false;
+        const clearedMissionIds: number[] = [];
 
         if (aiReply.includes("[GAME_OVER]")) {
           isGameOver = true;
-          aiReply = aiReply.replace("[GAME_OVER]", "").trim();
+          aiReply = aiReply.replace(/\[GAME_OVER\]/g, "").trim();
         }
+
+        // ミッション達成タグの抽出
+        const missionMatches = aiReply.matchAll(
+          /\[MISSION_CLEARED:(\d+|all)\]/g,
+        );
+        for (const match of missionMatches) {
+          if (match[1] === "all") {
+            clearedMissionIds.push(1, 2, 3, 4);
+          } else {
+            clearedMissionIds.push(Number(match[1]));
+          }
+        }
+        aiReply = aiReply.replace(/\[MISSION_CLEARED:(\d+|all)\]/g, "").trim();
 
         setChatHistories((prev) => {
           const prevMessages = prev[targetContactId] || updatedMessages;
@@ -1017,69 +1066,188 @@ export default function DashboardPage() {
                 return { ...c, failed: true };
               }
 
-              const updatedMissions = c.missions.map((m) => {
-                if (!m.found) {
-                  const keywords =
-                    lang === "ja"
-                      ? [
-                          "株式会社",
-                          "合同会社",
-                          "口座",
-                          "銀行",
-                          "LINE",
-                          "ID",
-                          "送金",
-                          "ファンド",
-                          "アジト",
-                          "東京",
-                          "シンジケート",
-                          "サトウ",
-                          "サイバー",
-                          "チケット",
-                          "トレンド",
-                          "セキュリティ",
-                          "クリアランス",
-                          "財団",
-                          "フォーチュン",
-                          "取引所",
-                          "エイペックス",
-                          "ファストペイ",
-                          "ブラックサン",
-                          "メディア",
-                          "デクリプト",
-                          "パシフィック",
-                        ]
-                      : [
-                          "inc",
-                          "llc",
-                          "account",
-                          "bank",
-                          "line",
-                          "id",
-                          "transfer",
-                          "fund",
-                          "hideout",
-                          "tokyo",
-                          "syndicate",
-                          "ticket",
-                          "security",
-                          "clearance",
-                          "trust",
-                          "crypto",
-                          "escrow",
-                          "finance",
-                          "ransom",
-                        ];
+              const replyLower = aiReply.toLowerCase();
 
+              const updatedMissions = c.missions.map((m, idx) => {
+                if (m.found) return m;
+
+                const missionIndex = idx + 1;
+                // 1. AIがタグで達成を通知した場合
+                if (
+                  clearedMissionIds.includes(m.id) ||
+                  clearedMissionIds.includes(missionIndex)
+                ) {
+                  return { ...m, found: true };
+                }
+
+                // 2. スマートセマンティック判定（※ユーザーがボケ・煽り中の場合はフォールバックによる誤クリアを防止）
+                const userMsgLower = userMessage.toLowerCase();
+                const isTrolling = [
+                  "うんこ",
+                  "うんち",
+                  "ラーメン",
+                  "ハゲ",
+                  "にゃーん",
+                  "ニャー",
+                  "宇宙人",
+                  "ピザ",
+                  "100億",
+                  "1000億",
+                  "おしっこ",
+                  "草",
+                  "www",
+                  "アホ",
+                  "バカ",
+                  "死ね",
+                  "ちんこ",
+                  "まんこ",
+                ].some((w) => userMsgLower.includes(w));
+
+                const missionName = m.name.toLowerCase();
+                let isMatched = false;
+
+                if (!isTrolling) {
+                  // 会社名・法人名・組織名・ショップ・財団・取引所系
                   if (
-                    keywords.some((kw) =>
-                      aiReply.toLowerCase().includes(kw.toLowerCase()),
-                    )
+                    missionName.includes("会社") ||
+                    missionName.includes("名称") ||
+                    missionName.includes("組織") ||
+                    missionName.includes("法人") ||
+                    missionName.includes("ショップ") ||
+                    missionName.includes("財団") ||
+                    missionName.includes("取引所") ||
+                    missionName.includes("サービス") ||
+                    missionName.includes("company") ||
+                    missionName.includes("firm") ||
+                    missionName.includes("shop")
                   ) {
-                    return { ...m, found: true };
+                    const companyKws = [
+                      "株式会社",
+                      "合同会社",
+                      "有限会社",
+                      "社名",
+                      "法人",
+                      "サクセスリンク",
+                      "サイバーメディア",
+                      "グローバルai",
+                      "シャドウエキスプレス",
+                      "トレンドチケット",
+                      "グローバルフォーチュン",
+                      "エイペックス",
+                      "ファストペイ",
+                      "セキュリティ監視",
+                      "グローバルクリアランス",
+                      "ブラックサン",
+                      "メディア・イリュージョン",
+                      "デクリプト",
+                      "パシフィック",
+                      "inc",
+                      "llc",
+                      "corp",
+                      "ltd",
+                      "fund",
+                    ];
+                    if (
+                      companyKws.some((kw) =>
+                        replyLower.includes(kw.toLowerCase()),
+                      )
+                    ) {
+                      isMatched = true;
+                    }
+                  }
+
+                  // 口座・銀行・送金・振込系
+                  if (
+                    missionName.includes("口座") ||
+                    missionName.includes("銀行") ||
+                    missionName.includes("送金") ||
+                    missionName.includes("振込") ||
+                    missionName.includes("account") ||
+                    missionName.includes("bank") ||
+                    missionName.includes("wire") ||
+                    missionName.includes("transfer")
+                  ) {
+                    const accountKws = [
+                      "口座番号",
+                      "指定口座",
+                      "振込先口座",
+                      "振込口座",
+                      "銀行口座",
+                      "ゆうちょ",
+                      "みずほ",
+                      "ufj",
+                      "三井住友",
+                      "りそな",
+                      "信託",
+                      "楽天銀行",
+                      "paypay銀行",
+                      "account number",
+                      "routing number",
+                    ];
+                    if (
+                      accountKws.some((kw) =>
+                        replyLower.includes(kw.toLowerCase()),
+                      )
+                    ) {
+                      isMatched = true;
+                    }
+                  }
+
+                  // LINE・ID・連絡先系
+                  if (
+                    missionName.includes("line") ||
+                    missionName.includes("id") ||
+                    missionName.includes("連絡先") ||
+                    missionName.includes("contact")
+                  ) {
+                    const contactKws = [
+                      "line id",
+                      "直通id",
+                      "連絡先id",
+                      "line: ",
+                      "id: ",
+                      "dark_kiryu_x",
+                      "boss_phantom_x",
+                    ];
+                    if (
+                      contactKws.some((kw) =>
+                        replyLower.includes(kw.toLowerCase()),
+                      )
+                    ) {
+                      isMatched = true;
+                    }
+                  }
+
+                  // アジト・場所・ロッカー・拠点系
+                  if (
+                    missionName.includes("アジト") ||
+                    missionName.includes("場所") ||
+                    missionName.includes("拠点") ||
+                    missionName.includes("受け渡し") ||
+                    missionName.includes("ロッカー") ||
+                    missionName.includes("hideout") ||
+                    missionName.includes("location")
+                  ) {
+                    const locationKws = [
+                      "アジトの場所",
+                      "指定ロッカー",
+                      "受け渡し場所",
+                      "新宿のアジト",
+                      "東京のアジト",
+                      "地下アジト",
+                      "hideout location",
+                    ];
+                    if (
+                      locationKws.some((kw) =>
+                        replyLower.includes(kw.toLowerCase()),
+                      )
+                    ) {
+                      isMatched = true;
+                    }
                   }
                 }
-                return m;
+
+                return isMatched ? { ...m, found: true } : m;
               });
 
               const allMissionsFound =
@@ -1256,7 +1424,12 @@ export default function DashboardPage() {
     contacts.find((c) => c.id === activeContactId) ||
     visibleContacts[0] ||
     contacts[0];
-  const currentMessages = chatHistories[activeContactId] || [];
+  const currentMessages =
+    chatHistories[activeContactId] && chatHistories[activeContactId].length > 0
+      ? chatHistories[activeContactId]
+      : activeContact
+        ? [{ sender: "scammer", text: activeContact.initialMessage }]
+        : [];
 
   return (
     <main className="flex h-screen w-screen bg-gray-950 text-gray-100 overflow-hidden relative">
@@ -1284,9 +1457,7 @@ export default function DashboardPage() {
 
       <ClearModal
         isOpen={clearModalInfo.isOpen}
-        onClose={() =>
-          setClearModalInfo((prev) => ({ ...prev, isOpen: false }))
-        }
+        onClose={handleProceedToNext}
         targetName={clearModalInfo.targetName}
         clearedLevel={clearModalInfo.clearedLevel}
         easyClearedCount={
@@ -1355,6 +1526,7 @@ export default function DashboardPage() {
         isMobileChatOpen={isMobileChatOpen}
         onReset={handleReset}
         onRetry={handleRetryContact}
+        onSelectNextTarget={handleProceedToNext}
       />
     </main>
   );

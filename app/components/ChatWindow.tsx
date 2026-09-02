@@ -27,6 +27,7 @@ interface ChatWindowProps {
   isMobileChatOpen: boolean;
   onReset: () => void;
   onRetry: (contactId: string) => void;
+  onSelectNextTarget?: () => void;
 }
 
 export default function ChatWindow({
@@ -41,6 +42,7 @@ export default function ChatWindow({
   isMobileChatOpen,
   onReset,
   onRetry,
+  onSelectNextTarget,
 }: ChatWindowProps) {
   return (
     <div
@@ -136,7 +138,25 @@ export default function ChatWindow({
         {isLoading && <div className="text-gray-500 text-xs">{t.typing}</div>}
       </div>
 
-      {activeContact?.failed ? (
+      {activeContact?.cleared ? (
+        <div className="p-4 bg-green-950/80 border-t border-green-800/80 text-center space-y-2">
+          <div className="text-green-400 font-bold text-sm flex items-center justify-center gap-1.5">
+            <span>✔</span>
+            <span>このターゲットの捜査・摘発は完了しました</span>
+          </div>
+          <p className="text-xs text-gray-400">
+            決定的な証拠の押収に成功しました。次のターゲットの捜査へ進んでください。
+          </p>
+          {onSelectNextTarget && (
+            <button
+              onClick={onSelectNextTarget}
+              className="mt-1 px-5 py-2.5 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 text-black font-black text-xs rounded-xl cursor-pointer shadow-lg shadow-green-500/20 inline-flex items-center gap-1.5 transition"
+            >
+              <span>次の未解決ターゲットへ ❯</span>
+            </button>
+          )}
+        </div>
+      ) : activeContact?.failed ? (
         <div className="p-4 bg-red-950/90 border-t border-red-800 text-center space-y-2">
           <div className="text-red-400 font-bold text-base">
             {t.gameOverTitle}
