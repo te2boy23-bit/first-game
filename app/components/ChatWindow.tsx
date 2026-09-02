@@ -189,7 +189,7 @@ export default function ChatWindow({
             onChange={(e) => setInput(e.target.value)}
             placeholder={`${t.placeholder}${activeContact?.name}...`}
             disabled={isLoading}
-            className="flex-1 p-2 bg-gray-900 border border-gray-800 rounded text-white text-sm focus:outline-none focus:border-pink-500"
+            className="flex-1 p-2 bg-gray-900 border border-gray-800 rounded text-white text-base sm:text-sm focus:outline-none focus:border-pink-500"
           />
           <button
             type="submit"
