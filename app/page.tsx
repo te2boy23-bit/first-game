@@ -18,6 +18,9 @@ export default function GeneralPortalPage() {
   const [entryRoute, setEntryRoute] = useState<"closed" | "trapped">("trapped");
   const [isAlreadyAgent, setIsAlreadyAgent] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [isInAppBrowser, setIsInAppBrowser] = useState(false);
+  const [showInAppModal, setShowInAppModal] = useState(false);
+  const [copiedUrl, setCopiedUrl] = useState(false);
 
   // Form States
   const [nickname, setNickname] = useState("");
@@ -27,8 +30,61 @@ export default function GeneralPortalPage() {
 
   const articleTriggerRef = useRef<HTMLDivElement>(null);
 
+  const checkIsInAppBrowser = () => {
+    if (typeof window === "undefined")
+      return {
+        isInApp: false,
+        isLine: false,
+        isInstagram: false,
+        isTwitter: false,
+        isIOS: false,
+        isAndroid: false,
+      };
+    const ua =
+      navigator.userAgent || navigator.vendor || (window as any).opera || "";
+    const isLine = /Line\//i.test(ua);
+    const isInstagram = /Instagram/i.test(ua);
+    const isTwitter = /Twitter|Tweetbot/i.test(ua);
+    const isFB = /FBAN|FBAV/i.test(ua);
+    const isTikTok = /musical_ly|ByteDance|TikTok/i.test(ua);
+    const isInApp =
+      isLine ||
+      isInstagram ||
+      isTwitter ||
+      isFB ||
+      isTikTok ||
+      /MicroMessenger|webview/i.test(ua);
+    const isIOS = /iPhone|iPad|iPod/i.test(ua);
+    const isAndroid = /Android/i.test(ua);
+
+    return {
+      isInApp,
+      isLine,
+      isInstagram,
+      isTwitter,
+      isIOS,
+      isAndroid,
+      ua,
+    };
+  };
+
   useEffect(() => {
     setIsMounted(true);
+
+    const { isInApp, isLine } = checkIsInAppBrowser();
+    if (isInApp) {
+      setIsInAppBrowser(true);
+    }
+
+    // LINEアプリ内ブラウザの場合、URLに ?openExternalBrowser=1 を付加して自動でSafari/Chromeで開く
+    if (isLine && typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      if (!url.searchParams.has("openExternalBrowser")) {
+        url.searchParams.set("openExternalBrowser", "1");
+        window.location.replace(url.toString());
+      }
+    }
+
     // 既存のエージェントデータがあるか確認（自動リダイレクトはせず、ボタンを表示）
     const savedStep = localStorage.getItem("scam_step");
     if (savedStep === "game") {
@@ -141,7 +197,71 @@ export default function GeneralPortalPage() {
     }
   };
 
+  const handleOpenExternalBrowser = () => {
+    if (typeof window === "undefined") return;
+    const currentUrl = window.location.href;
+    const { isLine, isAndroid } = checkIsInAppBrowser();
+
+    if (isLine) {
+      const url = new URL(currentUrl);
+      url.searchParams.set("openExternalBrowser", "1");
+      window.location.href = url.toString();
+      return;
+    }
+
+    if (isAndroid) {
+      const cleanUrl = currentUrl.replace(/^https?:\/\//, "");
+      window.location.href = `intent://${cleanUrl}#Intent;scheme=https;package=com.android.chrome;end;`;
+      return;
+    }
+
+    // iOS Safari / other in-app: URLをコピーして案内
+    handleCopyUrl();
+    alert(
+      lang === "ja"
+        ? "URLをコピーしました！右下の共有アイコンまたは『Safariで開く』からアクセスしてください。"
+        : "URL copied! Please open Safari or Chrome to continue.",
+    );
+  };
+
+  const handleCopyUrl = () => {
+    if (typeof window === "undefined") return;
+    const url = new URL(window.location.href);
+    url.searchParams.set("openExternalBrowser", "1");
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url.toString());
+      setCopiedUrl(true);
+      setTimeout(() => setCopiedUrl(false), 3000);
+    }
+  };
+
+  const handleShareLine = () => {
+    if (typeof window === "undefined") return;
+    const shareUrl = new URL(window.location.origin);
+    shareUrl.searchParams.set("openExternalBrowser", "1");
+    const text = encodeURIComponent(
+      lang === "ja"
+        ? "🚨【潜入捜査ゲーム】怪しい副業詐欺グループを暴け！\n" +
+            shareUrl.toString()
+        : "🚨 Undercover Cyber Agent: Bust scam syndicates!\n" +
+            shareUrl.toString(),
+    );
+    window.open(`https://line.me/R/msg/text/?${text}`, "_blank");
+  };
+
   const handleSocialLogin = async (provider: "google" | "github") => {
+    const { isInApp, isLine } = checkIsInAppBrowser();
+
+    // Google OAuthはアプリ内ブラウザ（LINE/Instagram/Twitter等）ではセキュリティ制限（403）でブロックされるため検知して誘導
+    if (provider === "google" && isInApp) {
+      if (isLine) {
+        handleOpenExternalBrowser();
+        return;
+      }
+      setShowInAppModal(true);
+      return;
+    }
+
     localStorage.setItem("scam_step", "game");
     localStorage.setItem("scam_lang", lang);
     const { error } = await supabase.auth.signInWithOAuth({
@@ -174,6 +294,41 @@ export default function GeneralPortalPage() {
             {lang === "ja"
               ? "特別枠へ自動接続しています..."
               : "Connecting to secret terminal..."}
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* 📱 IN-APP BROWSER (LINE/SNS) NOTICE BANNER */}
+      {/* ======================================================== */}
+      {isMounted && isInAppBrowser && (
+        <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-slate-950 px-3 py-2 text-xs font-semibold flex flex-wrap items-center justify-between gap-2 shadow-md sticky top-0 z-40">
+          <div className="flex items-center gap-1.5">
+            <span className="text-base">📲</span>
+            <span>
+              {lang === "ja"
+                ? "LINE等のアプリ内ブラウザで開いています。Googleログインや快適な操作には外部ブラウザをご利用ください。"
+                : "Viewing in in-app browser. Open in external browser for Google login."}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleOpenExternalBrowser}
+              className="px-3 py-1 bg-black text-white text-[11px] font-bold rounded-md hover:bg-slate-900 transition cursor-pointer shadow flex items-center gap-1"
+            >
+              <span>🌐</span>
+              <span>
+                {lang === "ja"
+                  ? "Safari / Chromeで開く"
+                  : "Open in Safari / Chrome"}
+              </span>
+            </button>
+            <button
+              onClick={handleCopyUrl}
+              className="px-2.5 py-1 bg-amber-200/80 hover:bg-amber-100 text-slate-900 text-[11px] font-bold rounded-md transition cursor-pointer"
+            >
+              {copiedUrl ? "✔ コピー完了" : "📋 リンクコピー"}
+            </button>
           </div>
         </div>
       )}
@@ -765,10 +920,126 @@ export default function GeneralPortalPage() {
         </div>
       )}
 
+      {/* ======================================================== */}
+      {/* 📱 IN-APP BROWSER (LINE / SNS) HELPER MODAL */}
+      {/* ======================================================== */}
+      {showInAppModal && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl p-6 text-slate-100 shadow-2xl animate-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div className="flex items-center gap-2 font-bold text-amber-400 text-sm">
+                <span>📱</span>
+                <span>
+                  {lang === "ja"
+                    ? "外部ブラウザで開く案内"
+                    : "Open in External Browser"}
+                </span>
+              </div>
+              <button
+                onClick={() => setShowInAppModal(false)}
+                className="text-slate-400 hover:text-white text-lg font-bold px-2 cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="py-4 space-y-3 text-xs text-slate-300 leading-relaxed">
+              <p>
+                {lang === "ja"
+                  ? "Googleログインは、LINEやSNSアプリ内の制限（セキュリティ方針）によりブロックされる場合があります。"
+                  : "Google OAuth is restricted within in-app WebViews (LINE, Instagram, Twitter)."}
+              </p>
+              <div className="bg-slate-800/80 p-3 rounded-xl border border-slate-700 space-y-1.5">
+                <div className="font-bold text-white text-[11px]">
+                  {lang === "ja"
+                    ? "💡 外部ブラウザ（Safari / Chrome）で開く手順："
+                    : "💡 How to open in Safari / Chrome:"}
+                </div>
+                <div className="text-[11px] text-slate-300">
+                  {lang === "ja"
+                    ? "① 下の『Safari / Chromeで開く』ボタンをタップ\n② または画面右上の『…』メニューから『ブラウザで開く』を選択してください。"
+                    : "① Tap 'Open in Safari / Chrome' below\n② Or tap the '...' menu at the top-right and select 'Open in browser'."}
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-2 pt-2">
+              <button
+                type="button"
+                onClick={handleOpenExternalBrowser}
+                className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-xl text-xs cursor-pointer shadow-lg flex items-center justify-center gap-2 transition"
+              >
+                <span>🌐</span>
+                <span>
+                  {lang === "ja"
+                    ? "Safari / Chrome で開く"
+                    : "Open in Safari / Chrome"}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleCopyUrl}
+                className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl text-xs cursor-pointer border border-slate-700 flex items-center justify-center gap-2 transition"
+              >
+                <span>📋</span>
+                <span>
+                  {copiedUrl
+                    ? lang === "ja"
+                      ? "URLをコピーしました！"
+                      : "URL Copied!"
+                    : lang === "ja"
+                      ? "URLをコピーしてSafari/Chromeに貼り付け"
+                      : "Copy URL & Paste in Safari/Chrome"}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setShowInAppModal(false)}
+                className="w-full py-2 text-slate-400 hover:text-slate-200 text-[11px] font-medium cursor-pointer transition text-center"
+              >
+                {lang === "ja"
+                  ? "メールアドレスで登録・ログインする（そのままプレイ可能） ＞"
+                  : "Continue with Email Registration ＞"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Portal Footer */}
-      <footer className="bg-white border-t border-slate-200 py-8 text-center text-xs text-slate-400">
+      <footer className="bg-white border-t border-slate-200 py-8 text-center text-xs text-slate-500">
+        <div className="max-w-md mx-auto px-4 mb-6">
+          <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl flex flex-col items-center gap-2.5">
+            <span className="font-bold text-slate-700 text-xs flex items-center gap-1.5">
+              <span>📢</span>
+              <span>
+                {lang === "ja"
+                  ? "友達にシェアして捜査官を増やそう！"
+                  : "Share with friends & recruit agents!"}
+              </span>
+            </span>
+            <div className="flex gap-2 w-full">
+              <button
+                onClick={handleShareLine}
+                className="flex-1 py-2 bg-[#06C755] hover:bg-[#05b34c] text-white font-bold text-xs rounded-xl cursor-pointer shadow flex items-center justify-center gap-1.5 transition"
+              >
+                <span>💬</span>
+                <span>LINEでシェア</span>
+              </button>
+              <button
+                onClick={handleCopyUrl}
+                className="flex-1 py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-xl cursor-pointer shadow flex items-center justify-center gap-1.5 transition"
+              >
+                <span>📋</span>
+                <span>{copiedUrl ? "✔ コピー済" : "URLコピー"}</span>
+              </button>
+            </div>
+          </div>
+        </div>
         <p>© 2026 MEDIA TRENDS. All rights reserved.</p>
-        <p className="mt-1 text-slate-300">
+        <p className="mt-1 text-slate-400 text-[11px]">
           ※本サイトは防犯啓発を目的としたシミュレーションゲームです。
         </p>
       </footer>
