@@ -502,9 +502,16 @@ export default function GeneralPortalPage() {
     localStorage.setItem("scam_step", "game");
     localStorage.setItem("scam_lang", lang);
 
-    // スマホ実機・LAN環境でも安全に戻れるよう callback 経由でリダイレクト
-    const currentOrigin =
-      typeof window !== "undefined" ? window.location.origin : "";
+    // Vercel本番・スマホ環境で確実にVercelのURLへ戻れるようオリジンを判定
+    let currentOrigin = "";
+    if (typeof window !== "undefined" && window.location.origin) {
+      currentOrigin = window.location.origin;
+    } else if (process.env.NEXT_PUBLIC_SITE_URL) {
+      currentOrigin = process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
+    } else if (process.env.NEXT_PUBLIC_VERCEL_URL) {
+      currentOrigin = `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`;
+    }
+
     const redirectUrl = `${currentOrigin}/auth/callback?next=/dashboard`;
 
     const { error } = await supabase.auth.signInWithOAuth({
