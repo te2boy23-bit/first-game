@@ -300,6 +300,22 @@ export default function GeneralPortalPage() {
       }
     }
 
+    // URLにOAuthエラーやハッシュが含まれていた場合のクリーンアップ
+    if (typeof window !== "undefined") {
+      const currentUrl = new URL(window.location.href);
+      if (
+        currentUrl.searchParams.has("error") ||
+        currentUrl.searchParams.has("error_description") ||
+        window.location.hash.includes("error=")
+      ) {
+        window.history.replaceState(
+          {},
+          document.title,
+          window.location.pathname,
+        );
+      }
+    }
+
     const savedStep = localStorage.getItem("scam_step");
     const savedNickname = localStorage.getItem("scam_nickname");
     if (savedStep === "game" || savedNickname) {
@@ -485,10 +501,19 @@ export default function GeneralPortalPage() {
 
     localStorage.setItem("scam_step", "game");
     localStorage.setItem("scam_lang", lang);
+
+    // スマホ実機・LAN環境でも安全に戻れるよう callback 経由でリダイレクト
+    const currentOrigin =
+      typeof window !== "undefined" ? window.location.origin : "";
+    const redirectUrl = `${currentOrigin}/auth/callback?next=/dashboard`;
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: provider,
       options: {
-        redirectTo: `${window.location.origin}/dashboard`,
+        redirectTo: redirectUrl,
+        queryParams: {
+          prompt: "select_account",
+        },
       },
     });
 
