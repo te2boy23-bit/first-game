@@ -462,9 +462,34 @@ export default function GeneralPortalPage() {
     );
   };
 
+  const getBaseSiteUrl = () => {
+    // 1. 本番・Vercelの環境変数が設定されている場合は最優先
+    if (process.env.NEXT_PUBLIC_SITE_URL) {
+      return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
+    }
+    if (process.env.NEXT_PUBLIC_VERCEL_URL) {
+      return `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`;
+    }
+    // 2. ブラウザが localhost 以外の本番URLやLAN環境で開かれている場合
+    if (
+      typeof window !== "undefined" &&
+      window.location.origin &&
+      !window.location.hostname.includes("localhost") &&
+      !window.location.hostname.includes("127.0.0.1")
+    ) {
+      return window.location.origin;
+    }
+    // 3. ローカル開発環境のフォールバック
+    if (typeof window !== "undefined") {
+      return window.location.origin;
+    }
+    return "";
+  };
+
   const handleCopyUrl = () => {
     if (typeof window === "undefined") return;
-    const url = new URL(window.location.href);
+    const base = getBaseSiteUrl();
+    const url = new URL(window.location.pathname, base);
     url.searchParams.set("openExternalBrowser", "1");
     if (navigator.clipboard) {
       navigator.clipboard.writeText(url.toString());
@@ -475,7 +500,8 @@ export default function GeneralPortalPage() {
 
   const handleShareLine = () => {
     if (typeof window === "undefined") return;
-    const shareUrl = new URL(window.location.origin);
+    const base = getBaseSiteUrl();
+    const shareUrl = new URL(base);
     shareUrl.searchParams.set("openExternalBrowser", "1");
     const text = encodeURIComponent(
       lang === "ja"
@@ -503,15 +529,7 @@ export default function GeneralPortalPage() {
     localStorage.setItem("scam_lang", lang);
 
     // Vercel本番・スマホ環境で確実にVercelのURLへ戻れるようオリジンを判定
-    let currentOrigin = "";
-    if (typeof window !== "undefined" && window.location.origin) {
-      currentOrigin = window.location.origin;
-    } else if (process.env.NEXT_PUBLIC_SITE_URL) {
-      currentOrigin = process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
-    } else if (process.env.NEXT_PUBLIC_VERCEL_URL) {
-      currentOrigin = `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`;
-    }
-
+    const currentOrigin = getBaseSiteUrl();
     const redirectUrl = `${currentOrigin}/auth/callback?next=/dashboard`;
 
     const { error } = await supabase.auth.signInWithOAuth({

@@ -14,15 +14,22 @@ export async function GET(request: Request) {
   const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
   const host = forwardedHost || request.headers.get("host");
 
-  let origin = url.origin;
-  if (host && !host.includes("localhost")) {
-    origin = `${forwardedProto}://${host}`;
-  } else if (process.env.NEXT_PUBLIC_SITE_URL) {
+  let origin = "";
+  // 本番・VercelのURLを最優先で設定（スマホでlocalhostに飛ばないようにする）
+  if (process.env.NEXT_PUBLIC_SITE_URL) {
     origin = process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
   } else if (process.env.VERCEL_URL) {
     origin = `https://${process.env.VERCEL_URL}`;
+  } else if (
+    host &&
+    !host.includes("localhost") &&
+    !host.includes("127.0.0.1")
+  ) {
+    origin = `${forwardedProto}://${host}`;
   } else if (host) {
     origin = `${forwardedProto}://${host}`;
+  } else {
+    origin = url.origin;
   }
 
   // Google OAuth で「戻る」や「キャンセル」を押してエラーが返ってきた場合

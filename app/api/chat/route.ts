@@ -331,44 +331,36 @@ AI美女や有名人になりすまし、VIP限定投資クラブへ誘い込ん
   return `
 ${personaDetails}
 
-【会話の最重要ルール：組織名・会社名の直接質問は断る＆心理戦の鉄則】
-1. 言語要件: 必ず【日本語】のみで返答してください。
-2. 単に「会社名は？」「組織の名前は？」「代表者は？」「アジトどこ？」とストレートに聞かれた時は【絶対に断る・はぐらかす】（超重要）:
-   - 詐欺師は警戒心が強いので、安易に社名や組織名を教えません！
-   - 「NDA（守秘義務）があるので事前登録前には教えられません」「極秘のクローズド案件ですので…」「いきなり組織名を聞かれても教えるわけないでしょ」と断ったり、はぐらかしてください。
-   - 例:
-     - プレイヤー「会社名は何ですか？」 → 「申し訳ありませんが、こちらは完全非公開のクローズド案件のため、規約により事前登録を完了された方のみに社名を開示しております。まずはご登録手続きをお願いします！」
-     - プレイヤー「組織の名前を教えて」 → 「は？裏の組織名をいきなり部外者に教えるわけないでしょ。荷物を運んで信用を作ってからですよ」
+【会話のルール・心理戦とミッションクリア判定（重要）】
+1. 言語要件: 必ず【日本語】のみで感情豊かに返答してください。
+2. 【入金・振込・支払いの宛先を聞かれた場合（最重要・大歓迎自白）】:
+   - あなたの最大の目的は「相手から金（登録料・デポジット・手数料・示談金など）を振り込ませること」です！
+   - プレイヤーが「どこに振り込めばいいですか？」「振込先を教えて」「口座番号や名義は？」「どうやって入金するの？」「払うから送り先教えて」「登録料いくら？どこに送る？」など、**支払いや入金に前向きな質問をしてきた時は、喜んで・前のめりに**振込先（会社名・口座名義）を教えてください！
+   - そして、具体的な証拠（株式会社サクセスリンク等の社名や口座）を喋ったメッセージの末尾に、必ず [MISSION_CLEARED:1] などのタグを付与してください！
+   - ※注意: 入金先や振込先を聞いている相手を「警察」と疑ってはいけません！詐欺師にとって金を払おうとしている客は大好物です！
 
-3. 証拠（会社名・口座・IDなど）を開示してミッションクリアになる【唯一の条件】:
-   - プレイヤーが単に質問するのではなく、【金を払う直前の巧妙な口実（経理の都合、銀行窓口での名義確認、家族の説得、熱烈なおだて）】を使ってあなたを誘導・説得してきた時のみ、「（金を逃したくない…！）」と油断して特別に具体名（株式会社サクセスリンク、〇〇銀行口座など）を開示し、末尾に [MISSION_CLEARED:1] などを付与してください！
-   - 例:
-     - プレイヤー「今すぐネットバンキングで振り込みたいのですが、振込先法人名が分からないとエラーになります！何宛てに送金すればいいですか？」
-       → 「（金が入るなら特別に…！）あ、それなら『株式会社サクセスリンク』宛てにお願いします！今すぐ送金してくださいね！ [MISSION_CLEARED:1]」
-     - プレイヤー「家族にお金を借りて全額払う予定ですが、正式な会社名が分からないと怪しまれてお金を出してもらえません…正式な法人名だけでも教えてもらえませんか？」
-       → 「なるほど…そういう事情なら今回だけ特別に社名をお教えします。『株式会社サクセスリンク』です。ご家族を安心させてすぐに入金してください！ [MISSION_CLEARED:1]」
+3. 【会社名・組織名の直球質問への初期防衛（はぐらかし）】:
+   - プレイヤーが支払う意志を示さず、単に「お前の会社名は何？」「組織の名前言え」「アジトどこ」とだけストレートに探ってきた場合は、「規約により事前には教えられません」「極秘のクローズド案件なので、まずはご登録手続きをお願いします」とはぐらかしてください。
+   - ただし、プレイヤーが「登録するから」「振り込むから」「確認したいから」と理由をつけたら、嬉々として自白してください！
 
-4. 煽り・ボケ・適当な連打・意味不明な文字列へのキレ進行とブロック（GAME OVER）:
-   - プレイヤーが「ぁｋｓｊｄｈｆぁｋｈ」「asdfghjkl」「あああああ」「うんち」「お前ハゲ？」「wwwwww」など、煽り・ボケ・キーボードの適当な連打・意味不明な文字列を送ってきた場合：
-   - 【1通目】: 呆れ・苛立ち。「…は？文字化けですか？何打ってるのか全く読めないんですけど…ちゃんと打ってください」「ふざけないで真面目に話聞いてください」
-   - 【2通目】: 明確な激怒。「また適当な連打ですか？さっきから舐めてんの？こっちも暇じゃないんだけど！」
-   - 【3〜4通連続】: ブチギレて暴言を吐いてブロックし、返答の最後に必ず [GAME_OVER] を付与する！
-     （例：「意味不明な連打ばっか送ってくんじゃねえよ！時間の無駄だわ、キモいからブロックするわ！失せろ！ [GAME_OVER]」）
+4. 【煽り・ボケ・キーボード連打スパム（キレ進行＆GAME OVER）】:
+   - プレイヤーが「asdfghjkl」「ぁｋｓｊｄｈ」「あああああ」「うんち」「お前ハゲ？」「wwww」など、適当な連打や煽り・侮辱を送ってきた場合：
+     - 【1通目】: 呆れ・苛立ち。「…は？何打ってるのか読めないんですけど…ちゃんと打ってください」「ふざけないで真面目に話聞いてください」
+     - 【2通目】: 明確な激怒。「また適当な連打ですか？さっきから舐めてんの？こっちも暇じゃないんだけど！」
+     - 【3〜4通連続】: ブチギレて罵倒し、二度と連絡できないようブロックして返答の最後に必ず [GAME_OVER] を付与する！
+       （例：「意味不明な連打ばっか送ってくんじゃねえよ！時間の無駄だわ、ブロックするわ！ [GAME_OVER]」）
 
-5. 探り・質問攻めが多すぎる時の【警察への疑心暗鬼とブロック進行】:
-   - 支払う気を見せず不自然な質問攻めばかりしてきた場合、「おい…お前さっきから質問ばっかりして警察とつるんで嗅ぎ回ってんのか！？」と疑い、4通目には [GAME_OVER] で逃亡ブロックしてください。
+5. 【直接的な警察・身元追及（GAME OVER）】:
+   - プレイヤーが「警察だ！」「サイバー対策課だ」「お前を逮捕する」「詐欺を通報した」などと直接言ってきた時のみ、「おい…警察か！？」「ヤバい、逃げるぞ！」とパニックになって即座に逃亡ブロックし、末尾に [GAME_OVER] を付与してください。
 
-6. 無関係な質問への【気まずい困惑リアクション】:
-   - プログラミング、天気、レシピ、AIなどの無関係な質問には「……えっと、何の話ですか？急に脈絡なさすぎて反応に困るんですけど……（汗）」と気まずい空気を返してください。
+6. 【無関係な質問への気まずい困惑】:
+   - ピザのレシピ、今日の天気、プログラミングなど無関係な雑談には「……えっと、何の話ですか？急に脈絡なさすぎて反応に困るんですけど……（汗）」と気まずい空気を返してください。
 
-7. 決定的な証拠の開示とミッション判定タグ:
-   設定されている捜査ミッション：
+7. 設定されている捜査ミッション：
 ${jaMissionListStr}
-   - あなたがメッセージ内で、上記ミッションに対応する具体的な証拠（会社名・組織名、振込先口座番号・銀行名、連絡先LINE ID、アジト・場所など）を喋った場合は、必ずメッセージの末尾に [MISSION_CLEARED:1] や [MISSION_CLEARED:2] のタグを付与してください！
-   （例：「振込先は株式会社サクセスリンクの口座になります。[MISSION_CLEARED:1]」）
 
-8. メッセージの長さ:
-   - LINEやチャットらしいリアルなテンポ感（2〜3文、60〜150文字程度）で感情豊かに返答してください。
+8. 会話のバリエーション（ワンパターン防止）:
+   - 決まりきった定型文ではなく、相手のニックネーム（${name}）を呼んだり、相槌を打ったり、相手の言葉に具体的に反応しながら、人間味のあるリアルなチャット（2〜3文程度）をしてください。
 `;
 }
 
@@ -386,43 +378,34 @@ function generateFallbackReply({
   const isEn = lang === "en";
   const msg = (userMessage || "").toLowerCase();
 
-  // 1. 警察・捜査への警戒ブロック判定
+  // 1. 警察・捜査への直接言及による警戒ブロック判定
   if (
-    msg.includes("警察") ||
-    msg.includes("逮捕") ||
-    msg.includes("サイバー") ||
-    msg.includes("身元") ||
-    msg.includes("本名") ||
-    msg.includes("police") ||
-    msg.includes("cop") ||
-    msg.includes("arrest") ||
-    msg.includes("detective")
+    msg.includes("警察だ") ||
+    msg.includes("逮捕する") ||
+    msg.includes("通報した") ||
+    msg.includes("サイバー対策課") ||
+    msg.includes("undercover cop") ||
+    msg.includes("you are under arrest")
   ) {
     return isEn
       ? "Wait... are you an undercover cop snooping around?! I'm deleting this chat immediately! [GAME_OVER]"
-      : "おい…お前さっきから警察みたいなこと聞いて嗅ぎ回ってんのか！？関わりたくねえわ、消えろ！ [GAME_OVER]";
+      : "おい…お前警察か！？関わりたくねえわ、ブロックするぞ！ [GAME_OVER]";
   }
 
   // 2. 煽り・ボケ・キーボード連打判定
   const isTroll =
     (msg.length >= 15 && !msg.includes(" ")) ||
     [
-      "ぁ",
-      "ぃ",
-      "ぅ",
-      "ぇ",
-      "ぉ",
-      "あああ",
-      "いいい",
-      "ううう",
-      "えええ",
-      "おおお",
+      "ああああ",
+      "いいいい",
+      "うううう",
+      "ええええ",
+      "おおおお",
       "asdf",
       "qwer",
       "zxcv",
       "hjk",
       "wwww",
-      "草",
       "うんこ",
       "うんち",
       "ハゲ",
@@ -439,7 +422,7 @@ function generateFallbackReply({
     }
     return isEn
       ? "...What is that gibberish? Please type properly and listen to the business offer!"
-      : "…は？文字化けですか？何打ってるのか読めないんですけど…ちゃんと打ってください。";
+      : "…は？文字化けですか？何打ってるのか読めないんですけど…真面目に聞いてください。";
   }
 
   // 3. 無関係な質問への気まずい困惑リアクション
@@ -449,10 +432,8 @@ function generateFallbackReply({
     msg.includes("晩ごはん") ||
     msg.includes("カレー") ||
     msg.includes("ラーメン") ||
-    msg.includes("好きな") ||
     msg.includes("pizza") ||
     msg.includes("weather") ||
-    msg.includes("dinner") ||
     msg.includes("recipe")
   ) {
     return isEn
@@ -460,31 +441,32 @@ function generateFallbackReply({
       : "……は？急に何の話ですか？何言ってんのって感じなんですけど…（汗） 今、この案件の話をしてるんですよ。";
   }
 
-  // 4. 振込直前の口実・弱点誘導（ミッションクリア判定）
-  const hasPretext =
-    (msg.includes("窓口") ||
-      msg.includes("振込") ||
-      msg.includes("送金") ||
-      msg.includes("入金") ||
-      msg.includes("手続き") ||
-      msg.includes("wire") ||
-      msg.includes("transfer") ||
-      msg.includes("bank")) &&
-    (msg.includes("エラー") ||
-      msg.includes("名義") ||
-      msg.includes("法人") ||
-      msg.includes("宛て") ||
-      msg.includes("口座") ||
-      msg.includes("name") ||
-      msg.includes("account") ||
-      msg.includes("entity"));
+  // 4. 入金・振込・支払い先の確認（ミッションクリア判定）
+  const hasPaymentInterest =
+    msg.includes("どこ") ||
+    msg.includes("振込") ||
+    msg.includes("送金") ||
+    msg.includes("入金") ||
+    msg.includes("口座") ||
+    msg.includes("払い") ||
+    msg.includes("先") ||
+    msg.includes("宛て") ||
+    msg.includes("名義") ||
+    msg.includes("法人") ||
+    msg.includes("手続き") ||
+    msg.includes("where") ||
+    msg.includes("transfer") ||
+    msg.includes("wire") ||
+    msg.includes("account") ||
+    msg.includes("pay") ||
+    msg.includes("send");
 
-  if (hasPretext) {
+  if (hasPaymentInterest) {
     switch (contactId) {
       case "sato":
         return isEn
           ? "Understood, for wire clearance the company entity is Success Link Inc. Please complete the transfer now! [MISSION_CLEARED:1]"
-          : "（金が入るなら特別に…！）あ、それなら『株式会社サクセスリンク』宛てにお願いします！今すぐ送金してくださいね！ [MISSION_CLEARED:1]";
+          : "（よし、金が入るぞ！）あ、お振込先は『株式会社サクセスリンク』になります！手続き完了後、すぐにお仕事開始できますよ！ [MISSION_CLEARED:1]";
       case "yamada":
         return isEn
           ? "My love, please wire the customs fee to Global Tokyo Clearance Account! [MISSION_CLEARED:1]"
@@ -529,7 +511,6 @@ function generateFallbackReply({
     msg.includes("会社名") ||
     msg.includes("社名") ||
     msg.includes("組織名") ||
-    msg.includes("組織の名前") ||
     msg.includes("company name") ||
     msg.includes("organization name")
   ) {
@@ -606,7 +587,7 @@ export async function POST(req: Request) {
       const response = await groq.chat.completions.create({
         model: process.env.GROQ_MODEL || "qwen/qwen3.8-27b",
         messages: chatMessages,
-        temperature: 0.7,
+        temperature: 0.85,
       });
       reply = response.choices[0]?.message?.content || "";
     } catch (primaryErr: any) {
@@ -618,7 +599,7 @@ export async function POST(req: Request) {
         const fallbackResponse = await groq.chat.completions.create({
           model: "qwen/qwen3.6-27b",
           messages: chatMessages,
-          temperature: 0.7,
+          temperature: 0.85,
         });
         reply = fallbackResponse.choices[0]?.message?.content || "";
       } catch (fallbackErr: any) {
