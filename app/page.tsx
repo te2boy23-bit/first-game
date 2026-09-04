@@ -12,6 +12,7 @@ import { ScamTrapModal } from "./components/portal/ScamTrapModal";
 import { PoliceScoutModal } from "./components/portal/PoliceScoutModal";
 import { PoliceInterceptModal } from "./components/portal/PoliceInterceptModal";
 import { InAppBrowserNoticeModal } from "./components/portal/InAppBrowserNoticeModal";
+import { AgentResumeModal } from "./components/portal/AgentResumeModal";
 import { PortalFooter } from "./components/portal/PortalFooter";
 
 export default function GeneralPortalPage() {
@@ -23,9 +24,9 @@ export default function GeneralPortalPage() {
   const [isGlitching, setIsGlitching] = useState(false);
   const [hasAutoTriggered, setHasAutoTriggered] = useState(false);
   const [isLoginMode, setIsLoginMode] = useState(false);
-  const [step, setStep] = useState<"portal" | "police_scout" | "hacked">(
-    "portal",
-  );
+  const [step, setStep] = useState<
+    "portal" | "police_scout" | "hacked" | "agent_resume"
+  >("portal");
   const [, setEntryRoute] = useState<"closed" | "trapped">("trapped");
   const [isAlreadyAgent, setIsAlreadyAgent] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -97,8 +98,11 @@ export default function GeneralPortalPage() {
 
     const savedStep = localStorage.getItem("scam_step");
     const savedNickname = localStorage.getItem("scam_nickname");
+    const savedEmail = localStorage.getItem("scam_email");
     if (savedStep === "game" || savedNickname) {
       setIsAlreadyAgent(true);
+      if (savedNickname) setNickname(savedNickname);
+      if (savedEmail) setEmail(savedEmail);
     }
     const savedLang = localStorage.getItem("scam_lang") as Language;
     if (savedLang) {
@@ -120,14 +124,23 @@ export default function GeneralPortalPage() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [hasAutoTriggered, showScamModal, step]);
+  }, [hasAutoTriggered, showScamModal, step, isAlreadyAgent]);
 
   const triggerScamTrap = () => {
     setIsGlitching(true);
     setTimeout(() => {
       setIsGlitching(false);
-      setShowScamModal(true);
+      if (isAlreadyAgent) {
+        setStep("agent_resume");
+      } else {
+        setShowScamModal(true);
+      }
     }, 450);
+  };
+
+  const handleSwitchAccount = () => {
+    setStep("portal");
+    setShowScamModal(true);
   };
 
   const handleCloseModal = () => {
@@ -366,6 +379,17 @@ export default function GeneralPortalPage() {
           nickname={nickname}
           email={email}
           onStartGame={handleStartGame}
+        />
+      )}
+
+      {step === "agent_resume" && (
+        <AgentResumeModal
+          t={t}
+          nickname={nickname}
+          email={email}
+          onResumeMission={handleResumeMission}
+          onSwitchAccount={handleSwitchAccount}
+          onClose={handleReturnToPortal}
         />
       )}
 

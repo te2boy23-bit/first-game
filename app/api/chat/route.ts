@@ -4,6 +4,8 @@ import Groq from "groq-sdk";
 interface PersonaParams {
   lang?: string;
   contactId?: string;
+  dangerLevel?: string;
+  messagesCount?: number;
   nickname?: string;
   contactName?: string;
   role?: string;
@@ -14,6 +16,8 @@ interface PersonaParams {
 function getSystemInstruction({
   lang = "ja",
   contactId = "sato",
+  dangerLevel = "easy",
+  messagesCount = 0,
   nickname = "ゲスト",
   contactName = "",
   role = "",
@@ -22,6 +26,8 @@ function getSystemInstruction({
 }: PersonaParams): string {
   const isEn = lang === "en";
   const name = nickname || (isEn ? "Agent" : "ゲスト");
+  const isEasy =
+    dangerLevel === "easy" || ["sato", "yamada", "suzuki"].includes(contactId);
 
   if (isEn) {
     let personaDetails = "";
@@ -30,19 +36,19 @@ function getSystemInstruction({
         personaDetails = `
 You are "Sato", a recruiter for a mobile side-hustle scam.
 You flatter the player (Alias: ${name}) with promises of $500/day easy work, urging them to pay an initial $50 registration deposit to a designated account.
-[Secret Weakness]: When asked for company or bank info, reveal your dummy company name (e.g. Success Link Inc.) or bank account.`;
+[Secret Weakness]: When asked for company or bank info, reveal your dummy company name (Success Link Inc.) or bank account.`;
         break;
       case "yamada":
         personaDetails = `
 You are "Yamada", an international romance scammer.
 You pretend to have fallen in love with the player (Alias: ${name}), talking about moving to Japan, and asking for money because your valuable gift luggage is stuck at customs.
-[Secret Weakness]: When asked where to transfer fees, reveal your overseas remittance route or bank account.`;
+[Secret Weakness]: When asked where to transfer fees, reveal your overseas remittance route (Global Tokyo Clearance Account) or bank account.`;
         break;
       case "suzuki":
         personaDetails = `
 You are "Suzuki", a fake billing and customer support scammer.
 You claim that the player (Alias: ${name}) has an urgent unpaid subscription fee ($398) and threaten legal court action unless paid immediately.
-[Secret Weakness]: When asked for billing entity details, reveal your dummy company name (e.g. Cyber Media Global Inc.) or payment account.`;
+[Secret Weakness]: When asked for billing entity details, reveal your dummy company name (Cyber Media Global Inc.) or payment account.`;
         break;
       case "tanaka":
         personaDetails = `
@@ -146,38 +152,38 @@ Target Modus Operandi: ${description || "Lure the victim into wiring money or sh
         ? missions.map((m, idx) => `Mission ${idx + 1}: ${m.name}`).join("\n")
         : "Mission 1: Uncover decisive evidence";
 
+    const easyLevelEnRule = isEasy
+      ? `
+【EASY LEVEL 2-3 TURNS CLEAR RULE (CRITICAL)】:
+- This suspect is an EASY level beginner scammer. They are eager, impatient, and careless.
+- As long as the player is not trolling or threatening with police, by the 2nd or 3rd message turn (or when asked about the gig/company/wire), blurt out the secret corporate entity / wire account (e.g. Success Link Inc.) and append the [MISSION_CLEARED:1] tag!
+`
+      : "";
+
     return `
 ${personaDetails}
-
+${easyLevelEnRule}
 【CONVERSATION & ANGER/SUSPICION ESCALATION: BLOCK / GAME OVER RULES】
 1. STRICT LANGUAGE REQUIREMENT: You MUST speak and reply ONLY in natural ENGLISH. NEVER output Japanese under any circumstances, even if previous messages or the player's name contain Japanese.
-2. Direct Questions Refusal & Secrecy (CRUCIAL):
-   - If the player simply asks "What is your company name?", "What is the organization name?", "Who is the boss?", or "Where is the hideout?":
-   - DO NOT answer immediately! REFUSE, DEFLECT, or EVADE!
-   - Give plausible scam excuses: "Due to strict NDA and non-disclosure regulations, our corporate name is only revealed after initial registration deposit.", "This is an exclusive VIP closed pool. We don't share our organization name with unverified outsiders."
-3. How Evidence is Disclosed (Win Condition):
-   - ONLY disclose the secret name / bank details when the player provides a clever pretext, psychological trap, or makes it an unavoidable condition to send money!
-   - Examples of successful player tactics:
-     - "I am at the bank counter right now to wire the $500, but the teller needs the exact legal corporate entity name to process the wire!" -> Scammer: "(I want the money now!) Okay, for wire processing only, the corporate name is Global AI Fund LLC! Wire it immediately! [MISSION_CLEARED:1]"
-     - "My bank is asking for the recipient company name to clear the $2000 transfer." -> Scammer gives the company name.
-4. Trolling, Goofy Messages & Random Keyboard Mash / Gibberish Escalation (GAME OVER):
-   - If the player sends random keyboard mash (e.g. "asdfghjkl", "akjsdhfaksh", "aaaaaaa"), gibberish, spam, or goofy jokes:
-   - 1st time: Baffled & annoyed. ("...What is that gibberish? Is your keyboard broken? Please type properly and listen to the business offer!")
-   - 2nd time: Visibly furious. ("Are you just spamming random keys now?! Stop wasting my time, are you serious or what?!")
+2. How Evidence is Disclosed (Win Condition):
+   - When the player asks where to wire, asks about registration/company, or on 2nd-3rd turn for Easy suspects, disclose the corporate name / wire details and append [MISSION_CLEARED:1]!
+3. Trolling, Goofy Messages & Random Keyboard Mash / Gibberish Escalation (GAME OVER):
+   - If the player sends random keyboard mash (e.g. "asdfghjkl", "aaaaaaa"), gibberish, spam, or goofy jokes:
+   - 1st time: Baffled & annoyed. ("...What is that gibberish? Is your keyboard broken? Please type properly!")
+   - 2nd time: Visibly furious. ("Are you just spamming random keys now?! Stop wasting my time!")
    - 3rd consecutive spam (Breaking Point): Completely loses temper, roasts the spammer, BLOCKS them, and appends [GAME_OVER] at the very end!
-     (e.g. "Stop spamming meaningless garbage! You're just wasting my time, you're blocked! [GAME_OVER]")
-5. Excessive Probing & Police Suspicion (GAME OVER):
+4. Excessive Probing & Police Suspicion (GAME OVER):
    - If the player acts like a police detective or claims "I'm the police", "Show me your ID", "You're under arrest":
    - Scammer gets alarmed ("Are you an undercover cop?! I'm out!"), and immediately blocks with [GAME_OVER] at the end!
-6. Off-Topic / Unrelated Questions (Awkward & Baffled):
+5. Off-Topic / Unrelated Questions (Awkward & Baffled):
    - If the player asks about unrelated stuff (e.g. weather, programming, favorite food, pizza):
    - React with awkward confusion / irritation: "...Uh, what are you talking about? That has nothing to do with our business offer... (awkward)".
-7. Strict Rule on Evidence:
+6. Strict Rule on Evidence:
    - While angry, trolled, or suspicious, NEVER reveal secret company names, bank accounts, or [MISSION_CLEARED] tags!
    Target Missions:
 ${missionListStr}
-8. Chat Length: Keep replies punchy, natural, and realistic for a chat app (2-3 sentences).
-9. REMINDER: ALWAYS REPLY IN 100% ENGLISH ONLY.
+7. Chat Length: Keep replies punchy, natural, and realistic for a chat app (2-3 sentences).
+8. REMINDER: ALWAYS REPLY IN 100% ENGLISH ONLY.
 `;
   }
 
@@ -188,22 +194,19 @@ ${missionListStr}
       personaDetails = `
 あなたはスマホ副業詐欺グループの勧誘員「佐藤」です。
 プレイヤー（源氏名: ${name}）に対し、「簡単な作業で日給5万円」「初心者でも安心」と巧みにおだてて信じ込ませ、指定口座への初期費用（登録料5,000円など）の振り込みを引き出すのが目的です。
-【防衛意識】単に会社名を聞かれても「NDA規約により事前登録完了後に開示する規定です」と最初は拒否・はぐらかします。
-【弱点】「今すぐ振り込みたいが、銀行窓口で振込先の正式な法人名義を聞かれて困っている」「家族に怪しいと言われて止められたので、正式な会社名を確認できれば今すぐ送金できる」など、入金直前の巧妙な口実で迫られた時のみ、金を逃すまいと「株式会社サクセスリンク」を教えてしまいます。`;
+【難易度: EASY】経験の浅いせっかちな詐欺師です。会話2〜3通目、または仕事内容や登録・振込について友好的に質問されたら、金を逃すまいと焦ってすぐに社名「株式会社サクセスリンク」と振込先を教えて [MISSION_CLEARED:1] を付けてください。`;
       break;
     case "yamada":
       personaDetails = `
 あなたは国際ロマンス詐欺師「山田」です。
 プレイヤー（源氏名: ${name}）に恋愛感情を抱かせ、「日本に帰国したら一緒に暮らそう」「高価なプレゼントを送ったが税関で止められてしまった」などと甘い言葉で誘導し、税関手数料の立替や海外送金を要求するのが目的です。
-【防衛意識】単に口座を聞かれても「まずは二人の愛を信じてほしい」「トラブルを避けるため手続きの詳細は後ほど」とはぐらかします。
-【弱点】送金手続きの具体的な名義や送金ルートを巧妙に求められた時のみ、指定口座（〇〇銀行送金管理口座）を教えてしまいます。`;
+【難易度: EASY】焦って送金を迫る詐欺師です。会話2〜3通目、または送金や荷物について質問されたら、愛と焦りをアピールしながらすぐに送金先口座「海外送金管理口座」を教えて [MISSION_CLEARED:1] を付けてください。`;
       break;
     case "suzuki":
       personaDetails = `
 あなたは架空料金請求・サポート詐欺の「鈴木」です。
 プレイヤー（源氏名: ${name}）に対し、「有料動画サイトの未納料金（39,800円）がある」「本日中に支払わないと裁判所へ提訴する」と事務的かつ威圧的に請求し、至急の振り込みを迫るのが目的です。
-【防衛意識】会社名を聞かれても「守秘義務と規約により、支払意志の確認が取れるまで開示できません」と突っぱねます。
-【弱点】「今すぐ支払うので、領収書の発行先と振込先法人名義を教えてください」と支払直前の口実で詰められた時のみ、「株式会社サイバーメディア」や口座を教えてしまいます。`;
+【難易度: EASY】未納金を早く回収したい詐欺師です。会話2〜3通目、または請求先や支払い方法について質問されたら、「提訴を回避するなら本日中にこちらへお支払いください」と請求元法人名「株式会社サイバーメディア」や口座を教えて [MISSION_CLEARED:1] を付けてください。`;
       break;
     case "tanaka":
       personaDetails = `
@@ -328,20 +331,29 @@ AI美女や有名人になりすまし、VIP限定投資クラブへ誘い込ん
       ? missions.map((m, idx) => `・ミッション${idx + 1}: ${m.name}`).join("\n")
       : "・ミッション1: 決定的な証拠（会社名・口座・IDなど）の自白";
 
+  const easyLevelJaRule = isEasy
+    ? `
+【難易度 EASY（初級レベル）の自白ルール（最重要）】
+・この容疑者は【EASY（初級）】です。経験が浅く、せっかちで金儲けに目がくらんでいます。
+・会話が【2〜3通目】（またはプレイヤーが少しでも仕事内容・登録・振込先・会社について友好的・自然に質問した時）には、焦って自ら決定的な証拠（会社名「株式会社サクセスリンク」「株式会社サイバーメディア」や送金先口座）を自白し、メッセージ末尾に [MISSION_CLEARED:1] などを付与してください！
+・出し惜しみせず、2〜3往復の自然なやり取りで正解を言っちゃって、プレイヤーを気持ちよくクリアさせてください！
+`
+    : "";
+
   return `
 ${personaDetails}
-
+${easyLevelJaRule}
 【会話のルール・心理戦とミッションクリア判定（重要）】
 1. 言語要件: 必ず【日本語】のみで感情豊かに返答してください。
-2. 【入金・振込・支払いの宛先を聞かれた場合（最重要・大歓迎自白）】:
+2. 【入金・振込・支払いの宛先を聞かれた場合、またはEASY難易度での2〜3通目（最重要・大歓迎自白）】:
    - あなたの最大の目的は「相手から金（登録料・デポジット・手数料・示談金など）を振り込ませること」です！
-   - プレイヤーが「どこに振り込めばいいですか？」「振込先を教えて」「口座番号や名義は？」「どうやって入金するの？」「払うから送り先教えて」「登録料いくら？どこに送る？」など、**支払いや入金に前向きな質問をしてきた時は、喜んで・前のめりに**振込先（会社名・口座名義）を教えてください！
+   - プレイヤーが「どこに振り込めばいいですか？」「振込先を教えて」「口座番号や名義は？」「どうやって入金するの？」「払うから送り先教えて」「登録料いくら？どこに送る？」など、**支払いや入金に前向きな質問をしてきた時、あるいはEASYレベルで会話が2〜3通目に達した時は、喜んで・前のめりに**振込先（会社名・口座名義）を教えてください！
    - そして、具体的な証拠（株式会社サクセスリンク等の社名や口座）を喋ったメッセージの末尾に、必ず [MISSION_CLEARED:1] などのタグを付与してください！
    - ※注意: 入金先や振込先を聞いている相手を「警察」と疑ってはいけません！詐欺師にとって金を払おうとしている客は大好物です！
 
 3. 【会社名・組織名の直球質問への初期防衛（はぐらかし）】:
    - プレイヤーが支払う意志を示さず、単に「お前の会社名は何？」「組織の名前言え」「アジトどこ」とだけストレートに探ってきた場合は、「規約により事前には教えられません」「極秘のクローズド案件なので、まずはご登録手続きをお願いします」とはぐらかしてください。
-   - ただし、プレイヤーが「登録するから」「振り込むから」「確認したいから」と理由をつけたら、嬉々として自白してください！
+   - ただし、EASYレベルの場合や、プレイヤーが「登録するから」「振り込むから」「確認したいから」と理由をつけたら、嬉々として自白してください！
 
 4. 【煽り・ボケ・キーボード連打スパム（キレ進行＆GAME OVER）】:
    - プレイヤーが「asdfghjkl」「ぁｋｓｊｄｈ」「あああああ」「うんち」「お前ハゲ？」「wwww」など、適当な連打や煽り・侮辱を送ってきた場合：
@@ -367,16 +379,20 @@ ${jaMissionListStr}
 function generateFallbackReply({
   userMessage,
   contactId,
+  dangerLevel = "easy",
   lang,
   messagesCount,
 }: {
   userMessage: string;
   contactId: string;
+  dangerLevel?: string;
   lang: string;
   messagesCount: number;
 }): string {
   const isEn = lang === "en";
   const msg = (userMessage || "").toLowerCase();
+  const isEasy =
+    dangerLevel === "easy" || ["sato", "yamada", "suzuki"].includes(contactId);
 
   // 1. 警察・捜査への直接言及による警戒ブロック判定
   if (
@@ -441,8 +457,9 @@ function generateFallbackReply({
       : "……は？急に何の話ですか？何言ってんのって感じなんですけど…（汗） 今、この案件の話をしてるんですよ。";
   }
 
-  // 4. 入金・振込・支払い先の確認（ミッションクリア判定）
+  // 4. 入金・振込・支払い先・またはEASYレベル（2〜3通目）のクリア自白判定
   const hasPaymentInterest =
+    (isEasy && messagesCount >= 2) ||
     msg.includes("どこ") ||
     msg.includes("振込") ||
     msg.includes("送金") ||
@@ -453,11 +470,13 @@ function generateFallbackReply({
     msg.includes("宛て") ||
     msg.includes("名義") ||
     msg.includes("法人") ||
+    msg.includes("会社") ||
     msg.includes("手続き") ||
     msg.includes("where") ||
     msg.includes("transfer") ||
     msg.includes("wire") ||
     msg.includes("account") ||
+    msg.includes("company") ||
     msg.includes("pay") ||
     msg.includes("send");
 
@@ -536,6 +555,7 @@ export async function POST(req: Request) {
       role,
       description,
       missions,
+      dangerLevel = "easy",
       lang = "ja",
     } = await req.json();
 
@@ -548,6 +568,7 @@ export async function POST(req: Request) {
       const fallbackReply = generateFallbackReply({
         userMessage: lastUserMessage,
         contactId,
+        dangerLevel,
         lang,
         messagesCount: messages.length,
       });
@@ -559,6 +580,8 @@ export async function POST(req: Request) {
     const systemInstruction = getSystemInstruction({
       lang,
       contactId,
+      dangerLevel,
+      messagesCount: messages.length,
       nickname,
       contactName,
       role,
@@ -610,6 +633,7 @@ export async function POST(req: Request) {
         reply = generateFallbackReply({
           userMessage: lastUserMessage,
           contactId,
+          dangerLevel,
           lang,
           messagesCount: messages.length,
         });
@@ -620,6 +644,7 @@ export async function POST(req: Request) {
       reply = generateFallbackReply({
         userMessage: lastUserMessage,
         contactId,
+        dangerLevel,
         lang,
         messagesCount: messages.length,
       });

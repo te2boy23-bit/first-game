@@ -1138,6 +1138,7 @@ export default function DashboardPage() {
           role: targetContact?.role || "",
           description: targetContact?.description || "",
           missions: targetContact?.missions || [],
+          dangerLevel: targetContact?.dangerLevel || "easy",
           lang,
         }),
       });
