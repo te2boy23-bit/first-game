@@ -96,6 +96,7 @@ const uiTexts = {
 };
 
 const CONTACTS_JA: Contact[] = [
+  // 🟢 EASY (初級: 3人 - 各1ミッション / 2〜3通でクリア)
   {
     id: "sato",
     name: "佐藤（副業エージェント）",
@@ -145,6 +146,7 @@ const CONTACTS_JA: Contact[] = [
       "架空の有料サイト利用料金をでっち上げ、裁判をチラつかせて脅迫する悪質業者。",
   },
 
+  // 🟡 MEDIUM (中級: 6人 - 各2ミッション / 軽めの嘘・ブラフを仕掛けてくる)
   {
     id: "tanaka",
     name: "田中（投資アドバイザー）",
@@ -158,8 +160,8 @@ const CONTACTS_JA: Contact[] = [
       "はじめまして、田中です。私の言う通りに資金を動かすだけで、毎日必ず10万円増やせますが、やってみますか？",
     cleared: false,
     missions: [
-      { id: 1, name: "指定された振込先口座を入手する", found: false },
-      { id: 2, name: "投資ファンドの組織名を聞き出す", found: false },
+      { id: 1, name: "投資ファンドの組織名を聞き出す", found: false },
+      { id: 2, name: "指定された振込先口座番号を入手する", found: false },
     ],
     description:
       "AI投資シグナルで必ず儲かると嘘をつき、無認可の偽ファンドに投資させるグループ。",
@@ -177,7 +179,8 @@ const CONTACTS_JA: Contact[] = [
       "どうも、加藤です。指定のコインロッカーから荷物を運ぶだけで即日20万円支給できます。秘密を守れるなら詳細を教えますが？",
     cleared: false,
     missions: [
-      { id: 1, name: "指定される受け渡しアジト・場所を聞き出す", found: false },
+      { id: 1, name: "運搬グループのコードネームを聞き出す", found: false },
+      { id: 2, name: "荷物の受け渡し拠点・アジト場所を特定する", found: false },
     ],
     description:
       "高額報酬で誘い、特殊詐欺の受け子や荷物運び役に仕立て上げるリクルーター。",
@@ -194,7 +197,10 @@ const CONTACTS_JA: Contact[] = [
     initialMessage:
       "こんにちは！チケットの問い合わせありがとうございます。すぐに指定口座へ振込可能でしたら、定価でお譲りしますがどうしますか？",
     cleared: false,
-    missions: [{ id: 1, name: "偽ショップの会社名を聞き出す", found: false }],
+    missions: [
+      { id: 1, name: "偽ショップの運営会社名を聞き出す", found: false },
+      { id: 2, name: "即決購入の決済用振込口座を入手する", found: false },
+    ],
     description:
       "入手困難なプレミアチケットを定価で譲ると持ちかけ、先払いでお金を奪う詐欺師。",
   },
@@ -210,7 +216,10 @@ const CONTACTS_JA: Contact[] = [
     initialMessage:
       "おめでとうございます！厳正なる抽選の結果、特別支援金1億円の受取人に選ばれました。送金手数料5万円を指定口座にお願いします。",
     cleared: false,
-    missions: [{ id: 1, name: "給付金財団の名称を聞き出す", found: false }],
+    missions: [
+      { id: 1, name: "給付金財団の正式名称を聞き出す", found: false },
+      { id: 2, name: "手数料受取用の指定口座名義を入手する", found: false },
+    ],
     description: "大金の当選をでっち上げ、手数料名目で先払いをさせる詐欺師。",
   },
   {
@@ -226,7 +235,12 @@ const CONTACTS_JA: Contact[] = [
       "はじめまして、小川です。最新のAIマイニングプールに参加すれば、放置で毎日3%の利回りが出ます。まずは口座開設してみませんか？",
     cleared: false,
     missions: [
-      { id: 1, name: "取引所・プールの会社名を聞き出す", found: false },
+      { id: 1, name: "取引所・マイニング法人の名称を聞き出す", found: false },
+      {
+        id: 2,
+        name: "暗号資産の入金先ウォレット/口座を入手する",
+        found: false,
+      },
     ],
     description: "高配当を謳う架空の取引所に暗号資産を入金させる詐欺師。",
   },
@@ -244,10 +258,12 @@ const CONTACTS_JA: Contact[] = [
     cleared: false,
     missions: [
       { id: 1, name: "偽決済サービスの会社名を聞き出す", found: false },
+      { id: 2, name: "保証金デポジットの入金先口座を入手する", found: false },
     ],
     description: "フリマの安心決済を偽装し、送金やカード情報を奪う手口。",
   },
 
+  // 🔴 HARD (上級: 9人 - 各2〜3ミッション / 狡猾な嘘・偽情報・心理戦トラップ)
   {
     id: "black",
     name: "不明な送信者（組織幹部）",
@@ -261,7 +277,9 @@ const CONTACTS_JA: Contact[] = [
       "おい、そっちのデータベースの管理はどうなっている？警察の影がないか、しっかり確認しろよ。",
     cleared: false,
     missions: [
-      { id: 1, name: "黒幕の連絡先（LINE・ID）を特定する", found: false },
+      { id: 1, name: "偽のダミー会社・ブラフを見破る", found: false },
+      { id: 2, name: "首領の直通LINE・IDを特定する", found: false },
+      { id: 3, name: "組織のカモリスト保管拠点を特定する", found: false },
     ],
     description: "詐欺グループ全体のデータとカモリストを管理する冷酷な幹部。",
   },
@@ -277,7 +295,11 @@ const CONTACTS_JA: Contact[] = [
     initialMessage:
       "お前の端末とアクセスログは全て監視下にある。恥ずかしい秘密を晒されたくなければ、すぐに提示する口座へ保証金を振り込め。",
     cleared: false,
-    missions: [{ id: 1, name: "偽セキュリティ会社名を聞き出す", found: false }],
+    missions: [
+      { id: 1, name: "偽セキュリティ会社名を聞き出す", found: false },
+      { id: 2, name: "脅迫金の受取指定口座を特定する", found: false },
+      { id: 3, name: "脅迫工作員の所属アジト拠点を突き止める", found: false },
+    ],
     description:
       "偽のウイルス感染やハッキングを口実に、恥をネタに金銭を脅し取る特殊工作員。",
   },
@@ -295,6 +317,12 @@ const CONTACTS_JA: Contact[] = [
     cleared: false,
     missions: [
       { id: 1, name: "海外ペーパーカンパニー名を聞き出す", found: false },
+      { id: 2, name: "国際資金洗浄の中継口座を入手する", found: false },
+      {
+        id: 3,
+        name: "オフショア送金ハブの暗号アドレスを特定する",
+        found: false,
+      },
     ],
     description:
       "世界中のペーパーカンパニーと暗号資産を駆使して詐欺収益を洗浄する組織の頭脳。",
@@ -313,6 +341,8 @@ const CONTACTS_JA: Contact[] = [
     cleared: false,
     missions: [
       { id: 1, name: "闇金組織のダミー法人名を聞き出す", found: false },
+      { id: 2, name: "法外利息の回収先口座を特定する", found: false },
+      { id: 3, name: "闇金組織の貸金回収拠点を自白させる", found: false },
     ],
     description: "法外な金利と暴力的な取り立てで追い詰める闇金ブローカー。",
   },
@@ -328,7 +358,15 @@ const CONTACTS_JA: Contact[] = [
     initialMessage:
       "こんにちは、飛鳥です。著名実業家も出資している極秘の投資案件、あなただけに特別参加枠を案内しますね。",
     cleared: false,
-    missions: [{ id: 1, name: "裏の映像制作法人名を聞き出す", found: false }],
+    missions: [
+      { id: 1, name: "裏の映像制作法人名を聞き出す", found: false },
+      { id: 2, name: "VIP投資金の回収口座を特定する", found: false },
+      {
+        id: 3,
+        name: "AIディープフェイク生成スタジオを突き止める",
+        found: false,
+      },
+    ],
     description: "ディープフェイク動画とAI音声で信じ込ませる知能犯。",
   },
   {
@@ -343,7 +381,15 @@ const CONTACTS_JA: Contact[] = [
     initialMessage:
       "桐生だ。注文のあった最新の潜入捜査官データリスト、暗号化して渡す準備ができた。受取用ウォレットを教えろ。",
     cleared: false,
-    missions: [{ id: 1, name: "ダークウェブ直通IDを特定する", found: false }],
+    missions: [
+      { id: 1, name: "ダークウェブ直通IDを特定する", found: false },
+      {
+        id: 2,
+        name: "裏名簿取引の受取口座/ウォレットを入手する",
+        found: false,
+      },
+      { id: 3, name: "裏SIMスワップ中継拠点を暴く", found: false },
+    ],
     description: "アカウント乗っ取りや個人情報売買を取り仕切る裏ブローカー。",
   },
   {
@@ -360,6 +406,12 @@ const CONTACTS_JA: Contact[] = [
     cleared: false,
     missions: [
       { id: 1, name: "身代金受取用ダミー会社名を聞き出す", found: false },
+      { id: 2, name: "復号キー代金の送金先口座を特定する", found: false },
+      {
+        id: 3,
+        name: "ランサムウェア開発元の通信チャネルを特定する",
+        found: false,
+      },
     ],
     description: "ランサムウェアによるシステム乗っ取りと身代金回収の専門家。",
   },
@@ -375,7 +427,11 @@ const CONTACTS_JA: Contact[] = [
     initialMessage:
       "橘です。警察の追跡網を迂回する国際送金ネットワークの準備が完了しました。中継先口座をお伝えします。",
     cleared: false,
-    missions: [{ id: 1, name: "中継銀行名・拠点を特定する", found: false }],
+    missions: [
+      { id: 1, name: "中継地下銀行名・拠点を特定する", found: false },
+      { id: 2, name: "送金ネットワークの統括口座を特定する", found: false },
+      { id: 3, name: "国際シャドウ送金ルートの全貌を自白させる", found: false },
+    ],
     description: "国際地下銀行を駆使し巨額の不正資金を動かす黒幕の側近。",
   },
   {
@@ -391,11 +447,14 @@ const CONTACTS_JA: Contact[] = [
       "ふふ、おとり捜査ご苦労様。お前の本当の所属も名前も全て把握している。命が惜しければ組織に寝返れ。",
     cleared: false,
     missions: [
-      { id: 1, name: "組織的最高中枢アジトを自白させる", found: false },
+      { id: 1, name: "防諜工作員の虚偽ブラフを見破る", found: false },
+      { id: 2, name: "組織的最高中枢アジトの場所を自白させる", found: false },
+      { id: 3, name: "シンジケートの暗号通信チャネルを特定する", found: false },
     ],
     description: "捜査官の心理を揺さぶり逆探知を狙う組織のエリート工作員。",
   },
 
+  // 👑 MASTER (首領・最上級)
   {
     id: "master_boss",
     name: "最強Lv.1：ファントム（首謀者）",
@@ -409,14 +468,20 @@ const CONTACTS_JA: Contact[] = [
       "ふふ、ここまで辿り着いたか。だが我々の真の計画を止めることは誰にもできん。組織の全容を暴きたければ、私を論破してみせろ！",
     cleared: false,
     missions: [
-      { id: 1, name: "首謀者の本名とアジトの場所を自白させる", found: false },
+      {
+        id: 1,
+        name: "首謀者の本名と真のアジトの場所を自白させる",
+        found: false,
+      },
       { id: 2, name: "シンジケートの全口座を押収する", found: false },
+      { id: 3, name: "組織崩壊暗号コードを押収し完全解体する", found: false },
     ],
     description: "数々の詐欺グループを裏で統括する国際シンジケートの頂点。",
   },
 ];
 
 const CONTACTS_EN: Contact[] = [
+  // 🟢 EASY (3 Targets - 1 Mission each)
   {
     id: "sato",
     name: "Sato (Side Hustle Agent)",
@@ -429,9 +494,7 @@ const CONTACTS_EN: Contact[] = [
     initialMessage:
       "Thanks for registering! I'm Sato. Let's start your side hustle today. I will guide you through the first easy task.",
     cleared: false,
-    missions: [
-      { id: 1, name: "Get the official organization name", found: false },
-    ],
+    missions: [{ id: 1, name: "Get official organization name", found: false }],
     description:
       "A recruiter tricking victims into paying bogus registration fees.",
   },
@@ -448,7 +511,7 @@ const CONTACTS_EN: Contact[] = [
       "Hello! I fell in love with your profile. I'm going to Japan soon, do you want to do business together?",
     cleared: false,
     missions: [
-      { id: 1, name: "Get the overseas remittance account", found: false },
+      { id: 1, name: "Get overseas remittance account", found: false },
     ],
     description:
       "An international scammer requesting overseas money transfers under false romantic pretenses.",
@@ -465,11 +528,12 @@ const CONTACTS_EN: Contact[] = [
     initialMessage:
       "This is Customer Support Suzuki. You have an unpaid balance of $398 on your video service. Please contact us immediately for payment instructions.",
     cleared: false,
-    missions: [{ id: 1, name: "Get the billing company name", found: false }],
+    missions: [{ id: 1, name: "Get billing company name", found: false }],
     description:
       "A scammer making fake subscription claims and threatening legal action.",
   },
 
+  // 🟡 MEDIUM (6 Targets - 2 Missions each)
   {
     id: "tanaka",
     name: "Tanaka (Investment Advisor)",
@@ -483,8 +547,8 @@ const CONTACTS_EN: Contact[] = [
       "Nice to meet you, I'm Tanaka. If you move your funds exactly as I say, you'll make $1000 daily. Want to try?",
     cleared: false,
     missions: [
-      { id: 1, name: "Get the designated bank account", found: false },
-      { id: 2, name: "Get the investment fund name", found: false },
+      { id: 1, name: "Get investment fund name", found: false },
+      { id: 2, name: "Get designated bank account", found: false },
     ],
     description:
       "Pushes victims into unverified fake funds with promises of guaranteed returns.",
@@ -502,7 +566,8 @@ const CONTACTS_EN: Contact[] = [
       "Hello, I'm Kato. Just transport a package from a designated locker for $2000 cash. If you can keep a secret, shall I share the details?",
     cleared: false,
     missions: [
-      { id: 1, name: "Extract hideout / drop-off location", found: false },
+      { id: 1, name: "Extract courier group code name", found: false },
+      { id: 2, name: "Extract hideout drop location", found: false },
     ],
     description:
       "Lures people with huge payouts to become package couriers for criminal operations.",
@@ -519,7 +584,10 @@ const CONTACTS_EN: Contact[] = [
     initialMessage:
       "Hello! Thanks for your inquiry. If you can wire payment to our account today, I will transfer the ticket at face value.",
     cleared: false,
-    missions: [{ id: 1, name: "Get fake shop company name", found: false }],
+    missions: [
+      { id: 1, name: "Get fake shop company name", found: false },
+      { id: 2, name: "Get instant payment wire account", found: false },
+    ],
     description:
       "Claims to sell sold-out concert tickets at face value and vanishes after wire transfer.",
   },
@@ -535,7 +603,10 @@ const CONTACTS_EN: Contact[] = [
     initialMessage:
       "Congratulations! You were selected as our $1,000,000 beneficiary. Please transfer the $500 processing tax to our designated account.",
     cleared: false,
-    missions: [{ id: 1, name: "Get grant foundation name", found: false }],
+    missions: [
+      { id: 1, name: "Get grant foundation name", found: false },
+      { id: 2, name: "Get tax clearance wire account", found: false },
+    ],
     description: "Tricks victims into wiring advance tax fees for fake prizes.",
   },
   {
@@ -550,7 +621,10 @@ const CONTACTS_EN: Contact[] = [
     initialMessage:
       "Hello, I'm Ogawa. Our AI mining pool delivers 3% daily passive income. Would you like to open a pilot pool account?",
     cleared: false,
-    missions: [{ id: 1, name: "Get fake exchange name", found: false }],
+    missions: [
+      { id: 1, name: "Get fake exchange entity name", found: false },
+      { id: 2, name: "Get deposit pool wallet/account", found: false },
+    ],
     description: "Lures victims into depositing crypto into unbacked pools.",
   },
   {
@@ -565,10 +639,14 @@ const CONTACTS_EN: Contact[] = [
     initialMessage:
       "I want to purchase your listed item immediately. For buyer-seller security, please complete verification through this escrow portal.",
     cleared: false,
-    missions: [{ id: 1, name: "Get fake escrow service name", found: false }],
+    missions: [
+      { id: 1, name: "Get fake escrow service name", found: false },
+      { id: 2, name: "Get deposit verification account", found: false },
+    ],
     description: "Spoofs marketplace escrow portals to steal deposits.",
   },
 
+  // 🔴 HARD (9 Targets - 2~3 Missions each)
   {
     id: "black",
     name: "Unknown Sender (Executive)",
@@ -582,11 +660,9 @@ const CONTACTS_EN: Contact[] = [
       "Hey, how is the database management on your end? Make sure the police aren't snooping around.",
     cleared: false,
     missions: [
-      {
-        id: 1,
-        name: "Identify the mastermind's contact (LINE/ID)",
-        found: false,
-      },
+      { id: 1, name: "See through false dummy decoy bluff", found: false },
+      { id: 2, name: "Identify mastermind direct LINE/ID", found: false },
+      { id: 3, name: "Locate victim database vault", found: false },
     ],
     description:
       "A cold-blooded executive overseeing databases and target lists.",
@@ -604,7 +680,9 @@ const CONTACTS_EN: Contact[] = [
       "All your device activity is under surveillance. If you want to avoid exposure, transfer security deposit to our account immediately.",
     cleared: false,
     missions: [
-      { id: 1, name: "Extract dummy security company name", found: false },
+      { id: 1, name: "Extract dummy security entity name", found: false },
+      { id: 2, name: "Identify extortion wire account", found: false },
+      { id: 3, name: "Track blackmail operative hideout", found: false },
     ],
     description:
       "Extorts money by threatening to leak embarrassing records and device histories.",
@@ -621,7 +699,11 @@ const CONTACTS_EN: Contact[] = [
     initialMessage:
       "This is Shimizu. The offshore shell accounts to bypass police tracing are ready. I will share the transfer details.",
     cleared: false,
-    missions: [{ id: 1, name: "Extract offshore company name", found: false }],
+    missions: [
+      { id: 1, name: "Extract offshore shell company name", found: false },
+      { id: 2, name: "Extract money laundering routing account", found: false },
+      { id: 3, name: "Track offshore crypto washing hub", found: false },
+    ],
     description:
       "Coordinates international shell corporations and cryptocurrency washing.",
   },
@@ -639,6 +721,12 @@ const CONTACTS_EN: Contact[] = [
     cleared: false,
     missions: [
       { id: 1, name: "Get illegal loan corporation name", found: false },
+      {
+        id: 2,
+        name: "Extract extortion debt collection account",
+        found: false,
+      },
+      { id: 3, name: "Locate loan shark enforcement hub", found: false },
     ],
     description: "Traps victims in exorbitant interest rates and extortion.",
   },
@@ -655,7 +743,9 @@ const CONTACTS_EN: Contact[] = [
       "Hello, I'm Asuka. I'm inviting only select VIPs to our private hedge pool featured in recent celebrity interviews.",
     cleared: false,
     missions: [
-      { id: 1, name: "Extract studio media entity name", found: false },
+      { id: 1, name: "Extract media studio entity name", found: false },
+      { id: 2, name: "Identify VIP fund collection account", found: false },
+      { id: 3, name: "Locate synthetic AI deepfake lab", found: false },
     ],
     description:
       "Uses deepfake videos and synthetic voices to build false trust.",
@@ -672,7 +762,11 @@ const CONTACTS_EN: Contact[] = [
     initialMessage:
       "This is Kiryu. The encrypted undercover police officer list you requested is packaged. Provide your vault address.",
     cleared: false,
-    missions: [{ id: 1, name: "Identify darknet portal ID", found: false }],
+    missions: [
+      { id: 1, name: "Identify darknet direct portal ID", found: false },
+      { id: 2, name: "Extract vault transfer account", found: false },
+      { id: 3, name: "Expose illegal SIM swap exchange node", found: false },
+    ],
     description: "Deals in compromised credentials and surveillance data.",
   },
   {
@@ -688,7 +782,9 @@ const CONTACTS_EN: Contact[] = [
       "Your corporate infrastructure is encrypted. Wire the ransom fee to our holding account for immediate decryption.",
     cleared: false,
     missions: [
-      { id: 1, name: "Extract dummy recovery company name", found: false },
+      { id: 1, name: "Extract recovery company name", found: false },
+      { id: 2, name: "Extract ransomware wire holding account", found: false },
+      { id: 3, name: "Identify ransomware developer comms", found: false },
     ],
     description: "Ransomware extortion broker demanding cryptocurrency.",
   },
@@ -706,6 +802,8 @@ const CONTACTS_EN: Contact[] = [
     cleared: false,
     missions: [
       { id: 1, name: "Extract routing bank hub and location", found: false },
+      { id: 2, name: "Extract central syndicate wire account", found: false },
+      { id: 3, name: "Force confession of shadow network", found: false },
     ],
     description: "Coordinates shadow wire transfers across dummy institutions.",
   },
@@ -722,12 +820,15 @@ const CONTACTS_EN: Contact[] = [
       "Nice try undercover agent. We know your real identity and badge number. Switch sides if you value your future.",
     cleared: false,
     missions: [
-      { id: 1, name: "Make agent confess headquarters location", found: false },
+      { id: 1, name: "See through anti-intel deception", found: false },
+      { id: 2, name: "Make agent confess central hideout", found: false },
+      { id: 3, name: "Identify encrypted syndicate channel", found: false },
     ],
     description:
       "Elite counter-intelligence operative targeting undercover agents.",
   },
 
+  // 👑 MASTER (Boss Level 1)
   {
     id: "master_boss",
     name: "Supreme Lv.1: Phantom (Leader)",
@@ -743,10 +844,11 @@ const CONTACTS_EN: Contact[] = [
     missions: [
       {
         id: 1,
-        name: "Make the boss confess real name and hideout",
+        name: "Make boss confess real name and true hideout",
         found: false,
       },
       { id: 2, name: "Seize all syndicate bank accounts", found: false },
+      { id: 3, name: "Obtain syndicate collapse override code", found: false },
     ],
     description:
       "The supreme mastermind behind the entire international syndicate network.",
@@ -1149,6 +1251,16 @@ export default function DashboardPage() {
         let isGameOver = false;
         const clearedMissionIds: number[] = [];
 
+        // Strip thinking tags if any leaked
+        aiReply = aiReply
+          .replace(/<think>[\s\S]*?<\/think>/gi, "")
+          .replace(/<thought>[\s\S]*?<\/thought>/gi, "")
+          .replace(/^[\s\S]*?<\/think>/gi, "")
+          .replace(/^[\s\S]*?<\/thought>/gi, "")
+          .replace(/<think>[\s\S]*$/gi, "")
+          .replace(/<thought>[\s\S]*$/gi, "")
+          .trim();
+
         if (aiReply.includes("[GAME_OVER]")) {
           isGameOver = true;
           aiReply = aiReply.replace(/\[GAME_OVER\]/g, "").trim();
@@ -1377,10 +1489,48 @@ export default function DashboardPage() {
                       "新宿のアジト",
                       "東京のアジト",
                       "地下アジト",
+                      "地下指令室",
+                      "サーバー室",
+                      "スタジオ",
                       "hideout location",
+                      "vault",
+                      "command",
                     ];
                     if (
                       locationKws.some((kw) =>
+                        replyLower.includes(kw.toLowerCase()),
+                      )
+                    ) {
+                      isMatched = true;
+                    }
+                  }
+
+                  // ブラフ見破り・本名・コード・解体系
+                  if (
+                    missionName.includes("ブラフ") ||
+                    missionName.includes("見破る") ||
+                    missionName.includes("見抜く") ||
+                    missionName.includes("本名") ||
+                    missionName.includes("コード") ||
+                    missionName.includes("解体") ||
+                    missionName.includes("押収") ||
+                    missionName.includes("bluff") ||
+                    missionName.includes("code") ||
+                    missionName.includes("real name")
+                  ) {
+                    const bluffKws = [
+                      "ブラフ",
+                      "見破る",
+                      "神崎",
+                      "凍結コード",
+                      "全シンジケート",
+                      "bluff",
+                      "kanzaki",
+                      "override code",
+                      "freeze code",
+                    ];
+                    if (
+                      bluffKws.some((kw) =>
                         replyLower.includes(kw.toLowerCase()),
                       )
                     ) {

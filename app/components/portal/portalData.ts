@@ -88,6 +88,12 @@ export interface PortalContentData {
   inAppModalOpenBtn: string;
   inAppModalCopyBtn: string;
   inAppModalEmailChoice: string;
+  agentVerifiedBadge: string;
+  agentWelcomeBack: string;
+  agentResumeDesc: string;
+  agentStartGameBtn: string;
+  agentSwitchAccountBtn: string;
+  agentBackToArticle: string;
 }
 
 export const portalContent: Record<Language, PortalContentData> = {
@@ -196,6 +202,13 @@ export const portalContent: Record<Language, PortalContentData> = {
     inAppModalCopyBtn: "URLをコピーしてSafari/Chromeに貼り付け",
     inAppModalEmailChoice:
       "メールアドレスで登録・ログインする（そのままプレイ可能） ＞",
+    agentVerifiedBadge: "🚨 警視庁サイバー対策課 捜査官認証済",
+    agentWelcomeBack: "おとり捜査官 認証完了",
+    agentResumeDesc:
+      "アクティブな潜入捜査セッションが保持されています。捜査本部（チャット端末）へ接続し、任務を開始してください！",
+    agentStartGameBtn: "🚨 ゲームを始める（捜査画面へ進む）",
+    agentSwitchAccountBtn: "🔄 別のアカウントでログイン / 新規登録",
+    agentBackToArticle: "◀ マガジン記事に戻る",
   },
   en: {
     topTag: "IT & Lifestyle Web Magazine",
@@ -302,5 +315,12 @@ export const portalContent: Record<Language, PortalContentData> = {
     inAppModalOpenBtn: "Open in Safari / Chrome",
     inAppModalCopyBtn: "Copy URL & Paste in Safari / Chrome",
     inAppModalEmailChoice: "Continue with Email Registration ＞",
+    agentVerifiedBadge: "🚨 Cyber Crime Division Agent Verified",
+    agentWelcomeBack: "Undercover Agent Verified",
+    agentResumeDesc:
+      "Your undercover session is active. Connect to the investigation terminal now to start your mission!",
+    agentStartGameBtn: "🚨 Start Game (Go to Investigation)",
+    agentSwitchAccountBtn: "🔄 Login with Another Account / Register",
+    agentBackToArticle: "◀ Back to Magazine Homepage",
   },
 };
