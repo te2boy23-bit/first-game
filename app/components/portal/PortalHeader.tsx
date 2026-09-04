@@ -43,10 +43,10 @@ export function PortalHeader({
           )}
 
           {/* 🌐 Prominent Language Switcher */}
-          <div className="flex items-center gap-1 bg-slate-800/90 border border-slate-700 rounded-lg p-0.5 shadow-inner">
+          <div className="flex items-center gap-1 bg-slate-800/90 border border-slate-700 rounded-lg p-0.5 shadow-inner flex-wrap sm:flex-nowrap">
             <button
               onClick={() => onLanguageToggle("ja")}
-              className={`px-2 py-0.5 rounded text-[11px] font-bold transition cursor-pointer flex items-center gap-1 ${
+              className={`px-1.5 sm:px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-bold transition cursor-pointer flex items-center gap-0.5 sm:gap-1 ${
                 lang === "ja"
                   ? "bg-indigo-600 text-white shadow"
                   : "text-slate-400 hover:text-white"
@@ -57,7 +57,7 @@ export function PortalHeader({
             </button>
             <button
               onClick={() => onLanguageToggle("en")}
-              className={`px-2 py-0.5 rounded text-[11px] font-bold transition cursor-pointer flex items-center gap-1 ${
+              className={`px-1.5 sm:px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-bold transition cursor-pointer flex items-center gap-0.5 sm:gap-1 ${
                 lang === "en"
                   ? "bg-indigo-600 text-white shadow"
                   : "text-slate-400 hover:text-white"
@@ -65,6 +65,28 @@ export function PortalHeader({
             >
               <span>🇺🇸</span>
               <span>English</span>
+            </button>
+            <button
+              onClick={() => onLanguageToggle("my")}
+              className={`px-1.5 sm:px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-bold transition cursor-pointer flex items-center gap-0.5 sm:gap-1 ${
+                lang === "my"
+                  ? "bg-indigo-600 text-white shadow"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              <span>🇲🇲</span>
+              <span>မြန်မာ</span>
+            </button>
+            <button
+              onClick={() => onLanguageToggle("ne")}
+              className={`px-1.5 sm:px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-bold transition cursor-pointer flex items-center gap-0.5 sm:gap-1 ${
+                lang === "ne"
+                  ? "bg-indigo-600 text-white shadow"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              <span>🇳🇵</span>
+              <span>नेपाली</span>
             </button>
           </div>
         </div>

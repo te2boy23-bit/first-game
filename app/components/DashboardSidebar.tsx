@@ -46,8 +46,8 @@ interface DashboardSidebarProps {
   setShowArchiveModal: (val: boolean) => void;
   isMobileChatOpen: boolean;
   onReset: () => void;
-  lang?: "ja" | "en";
-  onLanguageChange?: (val: "ja" | "en") => void;
+  lang?: "ja" | "en" | "my" | "ne";
+  onLanguageChange?: (val: "ja" | "en" | "my" | "ne") => void;
 }
 
 export default function DashboardSidebar({
@@ -77,35 +77,147 @@ export default function DashboardSidebar({
   onLanguageChange,
 }: DashboardSidebarProps) {
   // 次のレベルまでの進行度計算
-  let currentRankText = "ランク：弱";
-  let nextLevelLabel = "次のレベル【中】まで:";
-  let nextLevelProgress = `あと ${3 - easyClearedCount} 件 (${easyClearedCount}/3)`;
+  const isEn = lang === "en";
+  const isMy = lang === "my";
+  const isNe = lang === "ne";
+
+  let currentRankText = isEn
+    ? "Rank: Easy"
+    : isMy
+      ? "အဆင့် - လွယ်"
+      : isNe
+        ? "तह: सजिलो"
+        : "ランク：弱";
+  let nextLevelLabel = isEn
+    ? "To Medium Level:"
+    : isMy
+      ? "အလယ်အဆင့်သို့:"
+      : isNe
+        ? "मध्यम तहसम्म:"
+        : "次のレベル【中】まで:";
+  let nextLevelProgress = isEn
+    ? `${Math.max(0, 3 - easyClearedCount)} left (${easyClearedCount}/3)`
+    : isMy
+      ? `ကျန် ${Math.max(0, 3 - easyClearedCount)} ခု (${easyClearedCount}/3)`
+      : isNe
+        ? `बाँकी ${Math.max(0, 3 - easyClearedCount)} (${easyClearedCount}/3)`
+        : `あと ${Math.max(0, 3 - easyClearedCount)} 件 (${easyClearedCount}/3)`;
   let progressPercent = Math.min(100, Math.round((easyClearedCount / 3) * 100));
 
   if (!isEasyAllCleared) {
-    currentRankText = "ランク：弱";
-    nextLevelLabel = "次のレベル【中】まで:";
-    nextLevelProgress = `あと ${Math.max(0, 3 - easyClearedCount)} 件 (${easyClearedCount}/3)`;
+    currentRankText = isEn
+      ? "Rank: Easy"
+      : isMy
+        ? "အဆင့် - လွယ်"
+        : isNe
+          ? "तह: सजिलो"
+          : "ランク：弱";
+    nextLevelLabel = isEn
+      ? "To Medium Level:"
+      : isMy
+        ? "အလယ်အဆင့်သို့:"
+        : isNe
+          ? "मध्यम तहसम्म:"
+          : "次のレベル【中】まで:";
+    nextLevelProgress = isEn
+      ? `${Math.max(0, 3 - easyClearedCount)} left (${easyClearedCount}/3)`
+      : isMy
+        ? `ကျန် ${Math.max(0, 3 - easyClearedCount)} ခု (${easyClearedCount}/3)`
+        : isNe
+          ? `बाँकी ${Math.max(0, 3 - easyClearedCount)} (${easyClearedCount}/3)`
+          : `あと ${Math.max(0, 3 - easyClearedCount)} 件 (${easyClearedCount}/3)`;
     progressPercent = Math.min(100, Math.round((easyClearedCount / 3) * 100));
   } else if (!isMediumAllCleared) {
-    currentRankText = "ランク：中";
-    nextLevelLabel = "次のレベル【強】まで:";
-    nextLevelProgress = `あと ${Math.max(0, 6 - mediumClearedCount)} 件 (${mediumClearedCount}/6)`;
+    currentRankText = isEn
+      ? "Rank: Medium"
+      : isMy
+        ? "အဆင့် - အလယ်"
+        : isNe
+          ? "तह: मध्यम"
+          : "ランク：中";
+    nextLevelLabel = isEn
+      ? "To Hard Level:"
+      : isMy
+        ? "အဆင့်ခက်သို့:"
+        : isNe
+          ? "कठिन तहसम्म:"
+          : "次のレベル【強】まで:";
+    nextLevelProgress = isEn
+      ? `${Math.max(0, 6 - mediumClearedCount)} left (${mediumClearedCount}/6)`
+      : isMy
+        ? `ကျန် ${Math.max(0, 6 - mediumClearedCount)} ခု (${mediumClearedCount}/6)`
+        : isNe
+          ? `बाँकी ${Math.max(0, 6 - mediumClearedCount)} (${mediumClearedCount}/6)`
+          : `あと ${Math.max(0, 6 - mediumClearedCount)} 件 (${mediumClearedCount}/6)`;
     progressPercent = Math.min(100, Math.round((mediumClearedCount / 6) * 100));
   } else if (!isHardAllCleared) {
-    currentRankText = "ランク：強";
-    nextLevelLabel = "最凶モード解放まで:";
-    nextLevelProgress = `あと ${Math.max(0, 9 - hardClearedCount)} 件 (${hardClearedCount}/9)`;
+    currentRankText = isEn
+      ? "Rank: Hard"
+      : isMy
+        ? "အဆင့် - ခက်"
+        : isNe
+          ? "तह: कठिन"
+          : "ランク：強";
+    nextLevelLabel = isEn
+      ? "To Master Mode:"
+      : isMy
+        ? "မဟာမုဒ်ဖွင့်ရန်:"
+        : isNe
+          ? "मास्टर मोड अनलकसम्म:"
+          : "最凶モード解放まで:";
+    nextLevelProgress = isEn
+      ? `${Math.max(0, 9 - hardClearedCount)} left (${hardClearedCount}/9)`
+      : isMy
+        ? `ကျန် ${Math.max(0, 9 - hardClearedCount)} ခု (${hardClearedCount}/9)`
+        : isNe
+          ? `बाँकी ${Math.max(0, 9 - hardClearedCount)} (${hardClearedCount}/9)`
+          : `あと ${Math.max(0, 9 - hardClearedCount)} 件 (${hardClearedCount}/9)`;
     progressPercent = Math.min(100, Math.round((hardClearedCount / 9) * 100));
   } else if (!isMasterUnlocked) {
-    currentRankText = "無料全制覇";
-    nextLevelLabel = "最凶モード解放待機:";
-    nextLevelProgress = "広告/課金で解放可能";
+    currentRankText = isEn
+      ? "Standard Cleared"
+      : isMy
+        ? "အခမဲ့အဆင့်များပြီးစီး"
+        : isNe
+          ? "निःशुल्क तह सम्पन्न"
+          : "無料全制覇";
+    nextLevelLabel = isEn
+      ? "Master Mode Ready:"
+      : isMy
+        ? "မဟာမုဒ်ဖွင့်ရန်အသင့်:"
+        : isNe
+          ? "मास्टर मोड तयार:"
+          : "最凶モード解放待機:";
+    nextLevelProgress = isEn
+      ? "Unlock with Ad / Upgrade"
+      : isMy
+        ? "ကြော်ငြာကြည့်/အဆင့်မြှင့်ပါ"
+        : isNe
+          ? "विज्ञापन/अपग्रेडबाट खोल्नुहोस्"
+          : "広告/課金で解放可能";
     progressPercent = 100;
   } else {
-    currentRankText = "最凶エンドレス";
-    nextLevelLabel = "最凶首謀者 摘発実績:";
-    nextLevelProgress = `${masterClearedCount} 組織 壊滅`;
+    currentRankText = isEn
+      ? "Master Endless"
+      : isMy
+        ? "အဆုံးမဲ့မဟာမုဒ်"
+        : isNe
+          ? "मास्टर अन्तहीन"
+          : "最凶エンドレス";
+    nextLevelLabel = isEn
+      ? "Master Bosses Busted:"
+      : isMy
+        ? "ဖမ်းဆီးရမိသောဂိုဏ်းချုပ်:"
+        : isNe
+          ? "पक्राउ परेका मुख्य नाइके:"
+          : "最凶首謀者 摘発実績:";
+    nextLevelProgress = isEn
+      ? `${masterClearedCount} Syndicates Busted`
+      : isMy
+        ? `${masterClearedCount} ခု ဖျက်ဆီးပြီး`
+        : isNe
+          ? `${masterClearedCount} गिरोह नष्ट`
+          : `${masterClearedCount} 組織 壊滅`;
     progressPercent = 100;
   }
 
@@ -123,10 +235,10 @@ export default function DashboardSidebar({
 
           {/* 🌐 Prominent Language Switcher in Dashboard */}
           {onLanguageChange && (
-            <div className="flex items-center gap-1 bg-gray-800 border border-gray-700 rounded-lg p-0.5 shrink-0 shadow-sm self-start sm:self-auto">
+            <div className="flex items-center gap-1 bg-gray-800 border border-gray-700 rounded-lg p-0.5 shrink-0 shadow-sm self-start sm:self-auto flex-wrap">
               <button
                 onClick={() => onLanguageChange("ja")}
-                className={`px-2 py-1 rounded text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
+                className={`px-1.5 py-1 rounded text-xs font-bold transition cursor-pointer flex items-center gap-0.5 ${
                   lang === "ja"
                     ? "bg-pink-600 text-white shadow"
                     : "text-gray-400 hover:text-white"
@@ -137,7 +249,7 @@ export default function DashboardSidebar({
               </button>
               <button
                 onClick={() => onLanguageChange("en")}
-                className={`px-2 py-1 rounded text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
+                className={`px-1.5 py-1 rounded text-xs font-bold transition cursor-pointer flex items-center gap-0.5 ${
                   lang === "en"
                     ? "bg-pink-600 text-white shadow"
                     : "text-gray-400 hover:text-white"
@@ -145,6 +257,28 @@ export default function DashboardSidebar({
               >
                 <span>🇺🇸</span>
                 <span>English</span>
+              </button>
+              <button
+                onClick={() => onLanguageChange("my")}
+                className={`px-1.5 py-1 rounded text-xs font-bold transition cursor-pointer flex items-center gap-0.5 ${
+                  lang === "my"
+                    ? "bg-pink-600 text-white shadow"
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                <span>🇲🇲</span>
+                <span>မြန်မာ</span>
+              </button>
+              <button
+                onClick={() => onLanguageChange("ne")}
+                className={`px-1.5 py-1 rounded text-xs font-bold transition cursor-pointer flex items-center gap-0.5 ${
+                  lang === "ne"
+                    ? "bg-pink-600 text-white shadow"
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                <span>🇳🇵</span>
+                <span>नेपाली</span>
               </button>
             </div>
           )}
