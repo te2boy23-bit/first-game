@@ -28,6 +28,8 @@ interface ChatWindowProps {
   onReset: () => void;
   onRetry: (contactId: string) => void;
   onSelectNextTarget?: () => void;
+  lang?: "ja" | "en" | "my" | "ne";
+  onLanguageChange?: (val: "ja" | "en" | "my" | "ne") => void;
 }
 
 export default function ChatWindow({
@@ -43,6 +45,8 @@ export default function ChatWindow({
   onReset,
   onRetry,
   onSelectNextTarget,
+  lang = "ja",
+  onLanguageChange,
 }: ChatWindowProps) {
   return (
     <div
@@ -50,7 +54,7 @@ export default function ChatWindow({
         !isMobileChatOpen ? "hidden md:flex" : "flex"
       }`}
     >
-      <div className="p-3 md:p-4 border-b border-gray-800 bg-gray-900/30 flex items-center justify-between">
+      <div className="p-3 md:p-4 border-b border-gray-800 bg-gray-900/30 flex items-center justify-between gap-2">
         <div className="flex items-center min-w-0">
           <button
             onClick={() => setIsMobileChatOpen(false)}
@@ -73,15 +77,79 @@ export default function ChatWindow({
           </div>
         </div>
 
-        {activeContact?.failed && (
-          <button
-            onClick={() => onRetry(activeContact.id)}
-            className="px-3 py-1.5 bg-red-600/80 hover:bg-red-500 text-white font-bold text-xs rounded-lg transition cursor-pointer flex items-center gap-1 shrink-0"
-          >
-            <span>🔄</span>
-            <span>リトライ</span>
-          </button>
-        )}
+        <div className="flex items-center gap-2 shrink-0">
+          {/* 🌐 Compact Language Switcher in Chat Header */}
+          {onLanguageChange && (
+            <div className="flex items-center gap-0.5 bg-gray-800 border border-gray-700 rounded-lg p-0.5 shadow-sm">
+              <button
+                onClick={() => onLanguageChange("ja")}
+                className={`px-1.5 py-0.5 rounded text-[11px] font-bold transition cursor-pointer flex items-center gap-0.5 ${
+                  lang === "ja"
+                    ? "bg-pink-600 text-white shadow"
+                    : "text-gray-400 hover:text-white"
+                }`}
+                title="日本語"
+              >
+                <span>🇯🇵</span>
+                <span className="hidden sm:inline">日本語</span>
+              </button>
+              <button
+                onClick={() => onLanguageChange("en")}
+                className={`px-1.5 py-0.5 rounded text-[11px] font-bold transition cursor-pointer flex items-center gap-0.5 ${
+                  lang === "en"
+                    ? "bg-pink-600 text-white shadow"
+                    : "text-gray-400 hover:text-white"
+                }`}
+                title="English"
+              >
+                <span>🇺🇸</span>
+                <span className="hidden sm:inline">EN</span>
+              </button>
+              <button
+                onClick={() => onLanguageChange("my")}
+                className={`px-1.5 py-0.5 rounded text-[11px] font-bold transition cursor-pointer flex items-center gap-0.5 ${
+                  lang === "my"
+                    ? "bg-pink-600 text-white shadow"
+                    : "text-gray-400 hover:text-white"
+                }`}
+                title="မြန်မာ"
+              >
+                <span>🇲🇲</span>
+                <span className="hidden sm:inline">MY</span>
+              </button>
+              <button
+                onClick={() => onLanguageChange("ne")}
+                className={`px-1.5 py-0.5 rounded text-[11px] font-bold transition cursor-pointer flex items-center gap-0.5 ${
+                  lang === "ne"
+                    ? "bg-pink-600 text-white shadow"
+                    : "text-gray-400 hover:text-white"
+                }`}
+                title="नेपाली"
+              >
+                <span>🇳🇵</span>
+                <span className="hidden sm:inline">NE</span>
+              </button>
+            </div>
+          )}
+
+          {activeContact?.failed && (
+            <button
+              onClick={() => onRetry(activeContact.id)}
+              className="px-3 py-1.5 bg-red-600/80 hover:bg-red-500 text-white font-bold text-xs rounded-lg transition cursor-pointer flex items-center gap-1 shrink-0"
+            >
+              <span>🔄</span>
+              <span>
+                {lang === "en"
+                  ? "Retry"
+                  : lang === "my"
+                    ? "ပြန်စ"
+                    : lang === "ne"
+                      ? "पुनः"
+                      : "リトライ"}
+              </span>
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4 relative">
