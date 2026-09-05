@@ -259,7 +259,7 @@ export default function ChatWindow({
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={`${t.placeholder}${activeContact?.name}...`}
+            placeholder={t.placeholder || "メッセージを入力..."}
             disabled={isLoading}
             className="flex-1 p-2 bg-gray-900 border border-gray-800 rounded text-white text-base sm:text-sm focus:outline-none focus:border-pink-500"
           />
