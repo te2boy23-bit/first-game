@@ -50,6 +50,28 @@ interface DashboardSidebarProps {
   onLanguageChange?: (val: "ja" | "en" | "my" | "ne") => void;
 }
 
+const AVATAR_MAP: Record<string, string> = {
+  sato: "/images/avatars/sato.jpg",
+  yamada: "/images/avatars/yamada.jpg",
+  suzuki: "/images/avatars/suzuki.jpg",
+  tanaka: "/images/avatars/tanaka.jpg",
+  kato: "/images/avatars/kato.jpg",
+  watanabe: "/images/avatars/watanabe.jpg",
+  mori: "/images/avatars/mori.jpg",
+  ogawa: "/images/avatars/ogawa.jpg",
+  hashimoto: "/images/avatars/hashimoto.jpg",
+  black: "/images/avatars/black.jpg",
+  viper: "/images/avatars/viper.jpg",
+  shimizu: "/images/avatars/shimizu.jpg",
+  kuroda: "/images/avatars/kuroda.svg",
+  asuka: "/images/avatars/asuka.svg",
+  kiryu: "/images/avatars/kiryu.svg",
+  saeki: "/images/avatars/saeki.svg",
+  tachibana: "/images/avatars/tachibana.svg",
+  kisaragi: "/images/avatars/kisaragi.svg",
+  master_boss: "/images/avatars/master_boss.svg",
+};
+
 export default function DashboardSidebar({
   t,
   nickname,
@@ -223,19 +245,20 @@ export default function DashboardSidebar({
 
   return (
     <div
-      className={`w-full md:w-1/3 border-r border-gray-800 p-4 md:p-6 flex-col justify-between bg-gray-900/50 overflow-y-auto ${
+      className={`w-full md:w-1/3 border-r border-gray-800 p-4 md:p-5 flex-col justify-between bg-gray-900/60 backdrop-blur-md overflow-y-auto ${
         isMobileChatOpen ? "hidden md:flex" : "flex"
       }`}
     >
       <div>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2">
-          <h2 className="text-lg md:text-xl font-bold text-white leading-tight">
-            {t.dashTitle}
+          <h2 className="text-lg md:text-xl font-black text-white leading-tight flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span>{t.dashTitle}</span>
           </h2>
 
           {/* 🌐 Prominent Language Switcher in Dashboard */}
           {onLanguageChange && (
-            <div className="flex items-center gap-1 bg-gray-800 border border-gray-700 rounded-lg p-0.5 shrink-0 shadow-sm self-start sm:self-auto flex-wrap">
+            <div className="flex items-center gap-1 bg-gray-800/90 border border-gray-700 rounded-lg p-0.5 shrink-0 shadow-sm self-start sm:self-auto flex-wrap">
               <button
                 onClick={() => onLanguageChange("ja")}
                 className={`px-1.5 py-1 rounded text-xs font-bold transition cursor-pointer flex items-center gap-0.5 ${
@@ -285,44 +308,64 @@ export default function DashboardSidebar({
         </div>
 
         {/* 警察からの特命指令 */}
-        <div className="bg-blue-950/30 border border-blue-800/50 rounded-lg p-3 mb-4 text-xs space-y-1">
-          <div className="text-blue-400 font-bold mb-1">{t.policeBriefing}</div>
-          <p className="text-gray-300 leading-relaxed">
+        <div className="bg-blue-950/40 border border-blue-800/60 rounded-xl p-3 mb-4 text-xs space-y-1 shadow-inner">
+          <div className="text-blue-400 font-bold mb-1 flex items-center gap-1.5">
+            <span>🚨</span>
+            <span>{t.policeBriefing}</span>
+          </div>
+          <p className="text-gray-300 leading-relaxed text-[11px]">
             {t.policeBriefingText}
           </p>
         </div>
 
-        {/* エージェント情報（次のレベルまでの進行度） */}
+        {/* 👤 エージェント情報（アバターアイコン付き） */}
         <div
           onClick={() => setShowArchiveModal(true)}
-          className="bg-gray-900 border border-gray-800 rounded-lg p-3 mb-4 text-xs space-y-2.5 cursor-pointer hover:border-pink-500 transition shadow-sm"
+          className="bg-gray-900 border border-gray-800 hover:border-pink-500 rounded-xl p-3 mb-4 text-xs space-y-2.5 cursor-pointer transition shadow-md group"
         >
           <div className="text-gray-400 font-semibold flex justify-between items-center">
-            <span>{t.agentInfo}</span>
-            <span className="text-pink-400 text-[11px] hover:underline">
+            <span className="flex items-center gap-1.5">
+              <span>{t.agentInfo}</span>
+            </span>
+            <span className="text-pink-400 text-[11px] group-hover:underline">
               {t.openArchive}
             </span>
           </div>
 
-          <div className="flex justify-between items-center">
-            <div>
-              Name: <span className="text-white font-bold">{nickname}</span>
+          <div className="flex items-center gap-3">
+            {/* Agent HUD Avatar */}
+            <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-sky-400 shadow-md shadow-sky-950/50 shrink-0 bg-gray-950">
+              <img
+                src="/images/avatars/agent.svg"
+                alt="Agent Avatar"
+                className="w-full h-full object-cover"
+              />
             </div>
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase border bg-gray-950 border-gray-700 text-yellow-400">
-              {currentRankText}
-            </span>
+            <div className="flex-1 min-w-0">
+              <div className="flex justify-between items-center gap-1">
+                <div className="font-bold text-white text-sm truncate">
+                  {nickname}
+                </div>
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase border bg-gray-950 border-gray-700 text-yellow-400 shrink-0">
+                  {currentRankText}
+                </span>
+              </div>
+              <div className="text-[11px] text-gray-400 font-mono mt-0.5">
+                STATUS: UNDERCOVER ONLINE
+              </div>
+            </div>
           </div>
 
           <div className="pt-2 border-t border-gray-800 space-y-1.5">
             <div className="flex justify-between items-center text-[11px]">
               <span className="text-gray-400">{nextLevelLabel}</span>
-              <span className="text-green-400 font-bold font-mono">
+              <span className="text-emerald-400 font-bold font-mono">
                 {nextLevelProgress}
               </span>
             </div>
-            <div className="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden">
+            <div className="w-full bg-gray-800 h-2 rounded-full overflow-hidden">
               <div
-                className="bg-gradient-to-r from-blue-500 via-teal-400 to-green-400 h-full transition-all duration-300 rounded-full"
+                className="bg-gradient-to-r from-blue-500 via-teal-400 to-emerald-400 h-full transition-all duration-500 rounded-full"
                 style={{ width: `${progressPercent}%` }}
               />
             </div>
@@ -330,9 +373,10 @@ export default function DashboardSidebar({
         </div>
 
         {canUnlockMaster && !isMasterUnlocked && (
-          <div className="mb-4 bg-yellow-950/20 border border-yellow-800/60 p-3 rounded-lg">
-            <div className="text-yellow-400 font-bold mb-2 text-xs">
-              {t.masterUnlock}
+          <div className="mb-4 bg-yellow-950/30 border-2 border-yellow-500/60 p-3 rounded-xl shadow-lg shadow-yellow-950/30 animate-pulse">
+            <div className="text-yellow-400 font-black mb-2 text-xs flex items-center gap-1.5">
+              <span>⭐</span>
+              <span>{t.masterUnlock}</span>
             </div>
             <div className="flex gap-2">
               <button
@@ -340,13 +384,13 @@ export default function DashboardSidebar({
                   setIsPremium(true);
                   localStorage.setItem("scam_premium", "true");
                 }}
-                className="flex-1 py-2 bg-yellow-600 text-black font-bold rounded text-xs cursor-pointer"
+                className="flex-1 py-2 bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 text-black font-black rounded-lg text-xs cursor-pointer shadow-md transition"
               >
                 {t.buyPremium}
               </button>
               <button
                 onClick={onWatchAd}
-                className="flex-1 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded text-xs cursor-pointer transition shadow-md"
+                className="flex-1 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg text-xs cursor-pointer transition shadow-md"
               >
                 {t.watchAd} ({adWatchCount}/2)
               </button>
@@ -354,16 +398,34 @@ export default function DashboardSidebar({
           </div>
         )}
 
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 mb-4">
+        {/* 📥 受信トレイ（容疑者アバター付き） */}
+        <div className="bg-gray-900/90 border border-gray-800 rounded-xl p-3 sm:p-4 mb-4 shadow-sm">
           <div className="flex justify-between items-center mb-3">
-            <h3 className="text-sm font-bold text-gray-200">{t.inboxTitle}</h3>
-            <span className="text-[10px] bg-pink-950 text-pink-400 border border-pink-800 px-2 py-0.5 rounded font-mono">
+            <h3 className="text-sm font-bold text-gray-200 flex items-center gap-1.5">
+              <span>{t.inboxTitle}</span>
+            </h3>
+            <span className="text-[10px] bg-pink-950 text-pink-400 border border-pink-800 px-2 py-0.5 rounded-full font-mono font-bold">
               TARGETS: {visibleContacts.length}
             </span>
           </div>
 
           <div className="space-y-2 text-xs">
             {visibleContacts.map((c) => {
+              const avatarSrc =
+                AVATAR_MAP[c.id] ||
+                (c.id.startsWith("master_boss")
+                  ? "/images/avatars/master_boss.svg"
+                  : "/images/avatars/sato.jpg");
+
+              const levelBorderColor =
+                c.dangerLevel === "easy"
+                  ? "border-blue-500"
+                  : c.dangerLevel === "medium"
+                    ? "border-yellow-500"
+                    : c.dangerLevel === "hard"
+                      ? "border-orange-500"
+                      : "border-red-500";
+
               const levelBadgeColor =
                 c.dangerLevel === "easy"
                   ? "text-blue-400 bg-blue-950/60 border-blue-800"
@@ -377,36 +439,54 @@ export default function DashboardSidebar({
                 <div
                   key={c.id}
                   onClick={() => handleSelectContact(c)}
-                  className={`p-3 rounded-lg border transition cursor-pointer ${
+                  className={`p-2.5 sm:p-3 rounded-xl border transition-all cursor-pointer flex items-center gap-3 ${
                     activeContactId === c.id
-                      ? "bg-pink-950/40 border-pink-500 shadow-md shadow-pink-950/30"
+                      ? "bg-pink-950/40 border-pink-500 shadow-md shadow-pink-950/30 ring-1 ring-pink-500/50"
                       : c.cleared
-                        ? "bg-gray-950/60 border-gray-800/80 hover:border-gray-700 opacity-90"
-                        : "bg-gray-950 border-gray-800 hover:border-gray-700"
+                        ? "bg-gray-950/60 border-gray-800/80 hover:border-gray-700 opacity-80"
+                        : "bg-gray-950 border-gray-800 hover:border-gray-700 hover:bg-gray-900/60"
                   }`}
                 >
-                  <div className="font-bold text-gray-200 flex justify-between items-center gap-1">
-                    <span className="truncate">{c.name}</span>
-                    <div className="flex items-center gap-1 shrink-0">
-                      <span
-                        className={`text-[9px] px-1.5 py-0.5 rounded border uppercase font-mono ${levelBadgeColor}`}
-                      >
-                        {c.dangerLevel}
-                      </span>
-                      {c.cleared && (
-                        <span className="text-green-400 text-[9px] bg-green-950 border border-green-700 px-1.5 py-0.5 rounded font-bold">
-                          ✔ BUSTED
-                        </span>
-                      )}
-                      {c.failed && (
-                        <span className="text-red-400 text-[9px] bg-red-950 border border-red-800 px-1.5 py-0.5 rounded font-bold">
-                          BLOCKED
-                        </span>
-                      )}
+                  {/* 🖼️ Suspect Avatar Thumbnail */}
+                  <div className="relative shrink-0">
+                    <div
+                      className={`w-10 h-10 rounded-full overflow-hidden border-2 ${levelBorderColor} bg-gray-900 shadow-sm`}
+                    >
+                      <img
+                        src={avatarSrc}
+                        alt={c.name}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
+                    {c.cleared && (
+                      <span className="absolute -bottom-1 -right-1 text-[9px] bg-green-600 border border-gray-950 rounded-full w-4 h-4 flex items-center justify-center text-white font-bold shadow">
+                        ✔
+                      </span>
+                    )}
+                    {c.failed && (
+                      <span className="absolute -bottom-1 -right-1 text-[9px] bg-red-600 border border-gray-950 rounded-full w-4 h-4 flex items-center justify-center text-white font-bold shadow">
+                        ✕
+                      </span>
+                    )}
                   </div>
-                  <div className="text-gray-500 truncate mt-1 text-[11px]">
-                    {c.subject}
+
+                  {/* Suspect Meta */}
+                  <div className="flex-1 min-w-0">
+                    <div className="font-bold text-gray-200 flex justify-between items-center gap-1">
+                      <span className="truncate text-xs sm:text-sm">
+                        {c.name}
+                      </span>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <span
+                          className={`text-[9px] px-1.5 py-0.5 rounded border uppercase font-mono ${levelBadgeColor}`}
+                        >
+                          {c.dangerLevel}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="text-gray-400 truncate mt-0.5 text-[11px] leading-tight">
+                      {c.subject}
+                    </div>
                   </div>
                 </div>
               );
@@ -416,9 +496,10 @@ export default function DashboardSidebar({
       </div>
       <button
         onClick={onReset}
-        className="text-red-400 text-xs mt-4 hover:underline text-left cursor-pointer"
+        className="text-red-400 text-xs mt-3 hover:underline text-left cursor-pointer flex items-center gap-1"
       >
-        {t.reset}
+        <span>🗑️</span>
+        <span>{t.reset}</span>
       </button>
     </div>
   );

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <linearGradient id="bgKisaragi" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4c0519"/>
+      <stop offset="50%" stop-color="#311042"/>
+      <stop offset="100%" stop-color="#030712"/>
+    </linearGradient>
+  </defs>
+  <rect width="500" height="500" fill="url(#bgKisaragi)"/>
+  <circle cx="250" cy="250" r="220" stroke="#f43f5e" stroke-width="2" stroke-dasharray="10 6" fill="none" opacity="0.4"/>
+  <path d="M110 480 L180 270 L320 270 L390 480 Z" fill="#1e1b4b" stroke="#f43f5e" stroke-width="2"/>
+  <ellipse cx="250" cy="180" rx="65" ry="75" fill="#fce7f3"/>
+  <path d="M170 150 Q250 80 330 150 Q250 120 170 150 Z" fill="#831843"/>
+  <!-- Tactical Holographic Eyepiece -->
+  <circle cx="225" cy="180" r="16" fill="#f43f5e" opacity="0.9"/>
+  <circle cx="275" cy="180" r="14" fill="#374151"/>
+  <line x1="225" y1="180" x2="180" y2="160" stroke="#f43f5e" stroke-width="3"/>
+  <rect x="130" y="430" width="240" height="40" rx="8" fill="#4c0519" stroke="#f43f5e" stroke-width="2"/>
+  <text x="250" y="457" fill="#fda4af" font-family="sans-serif" font-weight="900" font-size="18" text-anchor="middle" letter-spacing="2">KISARAGI • INTEL COMMAND</text>
+</svg>

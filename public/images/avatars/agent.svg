@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <linearGradient id="bgAgent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="50%" stop-color="#1e3a8a"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+    <filter id="hudGlow">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="500" height="500" fill="url(#bgAgent)"/>
+  <!-- Radar circles -->
+  <circle cx="250" cy="250" r="220" stroke="#38bdf8" stroke-width="2" stroke-dasharray="10 5" fill="none" opacity="0.6"/>
+  <circle cx="250" cy="250" r="140" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="6 3" fill="none" opacity="0.4"/>
+  <line x1="250" y1="30" x2="250" y2="470" stroke="#38bdf8" stroke-width="1" opacity="0.3"/>
+  <line x1="30" y1="250" x2="470" y2="250" stroke="#38bdf8" stroke-width="1" opacity="0.3"/>
+  <!-- Detective Jacket -->
+  <path d="M110 480 L170 280 L330 280 L390 480 Z" fill="#09090b" stroke="#0ea5e9" stroke-width="3"/>
+  <path d="M210 280 L250 360 L290 280 Z" fill="#ffffff"/>
+  <path d="M245 280 L250 430 L255 280 Z" fill="#0284c7"/>
+  <!-- Head -->
+  <ellipse cx="250" cy="190" rx="65" ry="75" fill="#fbcfe8" opacity="0.9"/>
+  <path d="M175 170 Q250 90 325 170 Q250 130 175 170 Z" fill="#0f172a"/>
+  <!-- Tactical HUD Visor -->
+  <polygon points="180,170 320,170 305,210 250,225 195,210" fill="#0284c7" stroke="#38bdf8" stroke-width="3" filter="url(#hudGlow)" opacity="0.9"/>
+  <text x="250" y="195" fill="#e0f2fe" font-family="monospace" font-weight="bold" font-size="12" text-anchor="middle">POLICE HUD // SCANNING</text>
+  <!-- Gold Cyber Badge -->
+  <polygon points="250,330 275,345 265,375 250,385 235,375 225,345" fill="#eab308" stroke="#fde047" stroke-width="2" filter="url(#hudGlow)"/>
+  <rect x="110" y="430" width="280" height="42" rx="8" fill="#0369a1" stroke="#38bdf8" stroke-width="2" filter="url(#hudGlow)"/>
+  <text x="250" y="457" fill="#ffffff" font-family="sans-serif" font-weight="900" font-size="16" text-anchor="middle" letter-spacing="2">🚨 POLICE AGENT (YOU)</text>
+</svg>

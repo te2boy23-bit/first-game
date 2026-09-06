@@ -155,9 +155,19 @@ export default function ClearModal({
         {/* 背景のグリッド＆スキャンライン装飾 */}
         <div className="absolute inset-0 bg-[radial-gradient(#22c55e_1px,transparent_1px)] [background-size:16px_16px] opacity-10 pointer-events-none" />
 
-        {/* スタンプ風バッジ */}
-        <div className="inline-block transform -rotate-6 mb-4 px-4 py-1.5 bg-green-500/20 border-2 border-green-400 text-green-300 font-extrabold text-sm md:text-base tracking-widest rounded shadow-lg animate-bounce">
-          {getBustedBadge()}
+        {/* 摘発シーン画像バナー */}
+        <div className="relative w-full h-32 md:h-36 rounded-xl overflow-hidden mb-4 border border-green-500/50 shadow-[0_0_25px_rgba(34,197,94,0.3)] bg-gray-950">
+          <img
+            src="/images/scenes/arrest_scene.svg"
+            alt="Arrest Scene"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent" />
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
+            <div className="inline-block transform -rotate-3 px-3 py-1 bg-green-500/90 border border-green-300 text-black font-black text-xs md:text-sm tracking-wider rounded shadow-xl animate-bounce">
+              {getBustedBadge()}
+            </div>
+          </div>
         </div>
 
         <h2 className="text-2xl md:text-3xl font-black text-white mb-2 tracking-wide">

@@ -134,14 +134,19 @@ export default function GameOverModal({
         {/* 背景の警告ストライプ装飾 */}
         <div className="absolute -top-12 -left-12 -right-12 h-16 bg-red-600/20 rotate-12 blur-xl pointer-events-none" />
 
-        {/* 警告アイコン */}
-        <div className="w-16 h-16 mx-auto mb-3 bg-red-600/20 border-2 border-red-500 rounded-full flex items-center justify-center text-3xl text-red-400 animate-pulse">
-          ⚠️
-        </div>
-
-        {/* 警告バッジ */}
-        <div className="inline-block mb-3 px-3 py-1 bg-red-600 text-white font-extrabold text-xs tracking-widest rounded-full uppercase shadow-md">
-          {getFailedBadge()}
+        {/* 警告・切断シーン画像バナー */}
+        <div className="relative w-full h-32 md:h-36 rounded-xl overflow-hidden mb-4 border border-red-600/60 shadow-[0_0_30px_rgba(220,38,38,0.4)] bg-gray-950">
+          <img
+            src="/images/scenes/game_over_scene.svg"
+            alt="Game Over Scene"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent" />
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
+            <div className="inline-block px-3 py-1 bg-red-600 text-white font-extrabold text-xs tracking-widest rounded-full uppercase shadow-lg animate-pulse">
+              {getFailedBadge()}
+            </div>
+          </div>
         </div>
 
         <h2 className="text-2xl md:text-3xl font-black text-red-400 mb-2 tracking-wide">

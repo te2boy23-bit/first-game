@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <linearGradient id="bgAsuka" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2e1065"/>
+      <stop offset="50%" stop-color="#4c1d95"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="neonCyan" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <filter id="glowNeon">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="500" height="500" fill="url(#bgAsuka)"/>
+  <!-- Cyber grids -->
+  <circle cx="250" cy="250" r="220" stroke="#a855f7" stroke-width="2" stroke-dasharray="15 5" fill="none" opacity="0.4"/>
+  <!-- Holographic frames -->
+  <rect x="40" y="80" width="110" height="80" rx="6" fill="#1e1b4b" stroke="#06b6d4" stroke-width="2" opacity="0.8"/>
+  <text x="95" y="125" fill="#38bdf8" font-family="monospace" font-size="12" text-anchor="middle">SYNTH_AI: 99%</text>
+  <rect x="350" y="80" width="110" height="80" rx="6" fill="#1e1b4b" stroke="#ec4899" stroke-width="2" opacity="0.8"/>
+  <text x="405" y="125" fill="#f472b6" font-family="monospace" font-size="12" text-anchor="middle">DEEPFAKE_ON</text>
+  <!-- Character -->
+  <path d="M120 480 Q250 300 380 480 Z" fill="#18181b" stroke="#ec4899" stroke-width="2"/>
+  <ellipse cx="250" cy="210" rx="65" ry="80" fill="#fde047" opacity="0.85"/>
+  <path d="M175 190 Q250 110 325 190 Q250 150 175 190 Z" fill="#3b0764"/>
+  <!-- Hair Twin tails / High tech style -->
+  <path d="M175 180 Q130 260 140 340" stroke="#a855f7" stroke-width="20" fill="none" stroke-linecap="round"/>
+  <path d="M325 180 Q370 260 360 340" stroke="#a855f7" stroke-width="20" fill="none" stroke-linecap="round"/>
+  <!-- Cyber Eye & Visor -->
+  <circle cx="225" cy="210" r="14" fill="#06b6d4" filter="url(#glowNeon)"/>
+  <circle cx="275" cy="210" r="14" fill="#ec4899" filter="url(#glowNeon)"/>
+  <path d="M235 245 Q250 255 265 245" stroke="#db2777" stroke-width="4" fill="none"/>
+  <!-- Glitch overlay lines -->
+  <line x1="80" y1="210" x2="420" y2="210" stroke="#06b6d4" stroke-width="1.5" stroke-dasharray="20 10 5 15" opacity="0.7"/>
+  <!-- Badge -->
+  <rect x="130" y="430" width="240" height="40" rx="8" fill="#3b0764" stroke="#ec4899" stroke-width="2"/>
+  <text x="250" y="457" fill="#f472b6" font-family="sans-serif" font-weight="900" font-size="18" text-anchor="middle" letter-spacing="2">ASUKA • DEEPFAKE AI</text>
+</svg>

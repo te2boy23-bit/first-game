@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <linearGradient id="bgKiryu" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#022c22"/>
+      <stop offset="50%" stop-color="#064e3b"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+  </defs>
+  <rect width="500" height="500" fill="url(#bgKiryu)"/>
+  <circle cx="250" cy="250" r="220" stroke="#10b981" stroke-width="2" stroke-dasharray="8 6" fill="none" opacity="0.4"/>
+  <!-- SIM cards in background -->
+  <rect x="50" y="100" width="60" height="90" rx="6" fill="#047857" stroke="#34d399" stroke-width="2"/>
+  <rect x="390" y="100" width="60" height="90" rx="6" fill="#047857" stroke="#34d399" stroke-width="2"/>
+  <!-- Body -->
+  <path d="M120 480 L180 290 L320 290 L380 480 Z" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+  <!-- Head -->
+  <ellipse cx="250" cy="190" rx="65" ry="75" fill="#fef08a" opacity="0.8"/>
+  <path d="M175 170 Q250 100 325 170 Q250 130 175 170 Z" fill="#0f172a"/>
+  <!-- Green Neon Glasses -->
+  <rect x="195" y="170" width="45" height="30" rx="4" fill="#022c22" stroke="#10b981" stroke-width="2"/>
+  <rect x="260" y="170" width="45" height="30" rx="4" fill="#022c22" stroke="#10b981" stroke-width="2"/>
+  <line x1="240" y1="185" x2="260" y2="185" stroke="#10b981" stroke-width="3"/>
+  <!-- Dual smartphones -->
+  <rect x="140" y="320" width="50" height="90" rx="8" fill="#1e293b" stroke="#34d399" stroke-width="2"/>
+  <rect x="310" y="320" width="50" height="90" rx="8" fill="#1e293b" stroke="#34d399" stroke-width="2"/>
+  <rect x="130" y="430" width="240" height="40" rx="8" fill="#064e3b" stroke="#10b981" stroke-width="2"/>
+  <text x="250" y="457" fill="#6ee7b7" font-family="sans-serif" font-weight="900" font-size="18" text-anchor="middle" letter-spacing="2">KIRYU • DARKWEB BROKER</text>
+</svg>

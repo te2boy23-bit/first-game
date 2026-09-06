@@ -140,9 +140,18 @@ export default function MasterUnlockModal({
         {/* 背景の光沢エフェクト */}
         <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-80 bg-yellow-500/10 rounded-full blur-3xl pointer-events-none" />
 
-        {/* トロフィー・バッジ */}
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-yellow-500/20 border border-yellow-400 text-3xl mb-4 shadow-lg shadow-yellow-500/30 animate-bounce">
-          👑
+        {/* マスターボスの肖像画＆クラウンバッジ */}
+        <div className="relative inline-block mb-4">
+          <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-yellow-400 shadow-[0_0_35px_rgba(234,179,8,0.5)] mx-auto bg-gray-950">
+            <img
+              src="/images/avatars/master_boss.svg"
+              alt="Master Boss"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-yellow-500 border border-yellow-200 text-black font-black text-sm flex items-center justify-center shadow-lg animate-bounce">
+            👑
+          </div>
         </div>
 
         {/* タイトル */}

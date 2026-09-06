@@ -48,6 +48,16 @@ export function PoliceScoutModal({
           </button>
         </div>
 
+        {/* 警察司令部本部バナー */}
+        <div className="relative w-full h-28 sm:h-32 rounded-xl overflow-hidden mb-3 border border-blue-500/50 shadow-[0_0_20px_rgba(59,130,246,0.3)] bg-gray-950">
+          <img
+            src="/images/scenes/police_hq.svg"
+            alt="Police Headquarters"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent" />
+        </div>
+
         <h2 className="text-lg sm:text-2xl font-black text-blue-400 mb-2.5 leading-snug">
           {t.policeTitle}
         </h2>

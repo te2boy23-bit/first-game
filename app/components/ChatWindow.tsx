@@ -32,6 +32,28 @@ interface ChatWindowProps {
   onLanguageChange?: (val: "ja" | "en" | "my" | "ne") => void;
 }
 
+const AVATAR_MAP: Record<string, string> = {
+  sato: "/images/avatars/sato.jpg",
+  yamada: "/images/avatars/yamada.jpg",
+  suzuki: "/images/avatars/suzuki.jpg",
+  tanaka: "/images/avatars/tanaka.jpg",
+  kato: "/images/avatars/kato.jpg",
+  watanabe: "/images/avatars/watanabe.jpg",
+  mori: "/images/avatars/mori.jpg",
+  ogawa: "/images/avatars/ogawa.jpg",
+  hashimoto: "/images/avatars/hashimoto.jpg",
+  black: "/images/avatars/black.jpg",
+  viper: "/images/avatars/viper.jpg",
+  shimizu: "/images/avatars/shimizu.jpg",
+  kuroda: "/images/avatars/kuroda.svg",
+  asuka: "/images/avatars/asuka.svg",
+  kiryu: "/images/avatars/kiryu.svg",
+  saeki: "/images/avatars/saeki.svg",
+  tachibana: "/images/avatars/tachibana.svg",
+  kisaragi: "/images/avatars/kisaragi.svg",
+  master_boss: "/images/avatars/master_boss.svg",
+};
+
 export default function ChatWindow({
   t,
   activeContact,
@@ -48,31 +70,78 @@ export default function ChatWindow({
   lang = "ja",
   onLanguageChange,
 }: ChatWindowProps) {
+  const targetAvatarSrc =
+    AVATAR_MAP[activeContact?.id] ||
+    (activeContact?.id?.startsWith("master_boss")
+      ? "/images/avatars/master_boss.svg"
+      : "/images/avatars/sato.jpg");
+  const agentAvatarSrc = "/images/avatars/agent.svg";
+
   return (
     <div
       className={`w-full md:w-2/3 flex-col justify-between bg-gray-950 ${
         !isMobileChatOpen ? "hidden md:flex" : "flex"
       }`}
     >
-      <div className="p-3 md:p-4 border-b border-gray-800 bg-gray-900/30 flex items-center justify-between gap-2">
-        <div className="flex items-center min-w-0">
+      <div className="p-3 md:p-4 border-b border-gray-800 bg-gray-900/40 backdrop-blur-md flex items-center justify-between gap-2 shadow-sm">
+        <div className="flex items-center min-w-0 gap-3">
           <button
             onClick={() => setIsMobileChatOpen(false)}
-            className="md:hidden text-pink-500 font-bold mr-3 text-sm px-2 py-1 bg-gray-800 rounded cursor-pointer shrink-0"
+            className="md:hidden text-pink-500 font-bold mr-1 text-sm px-2.5 py-1.5 bg-gray-800 hover:bg-gray-700 rounded-lg cursor-pointer shrink-0 transition"
           >
             {t.backBtn}
           </button>
+
+          {/* 👤 Suspect Header Avatar with animated status indicator */}
+          <div className="relative shrink-0">
+            <div
+              className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden border-2 transition-all ${
+                isLoading
+                  ? "border-pink-500 ring-2 ring-pink-500/50 animate-pulse scale-105"
+                  : activeContact?.cleared
+                    ? "border-green-500 ring-2 ring-green-500/30"
+                    : activeContact?.failed
+                      ? "border-red-500 opacity-60"
+                      : "border-gray-700 hover:border-pink-500"
+              }`}
+            >
+              <img
+                src={targetAvatarSrc}
+                alt={activeContact?.name || "Target"}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <span
+              className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-gray-950 ${
+                activeContact?.failed
+                  ? "bg-red-500"
+                  : activeContact?.cleared
+                    ? "bg-green-500"
+                    : "bg-emerald-400 animate-pulse"
+              }`}
+            />
+          </div>
+
           <div className="truncate">
-            <div className="font-bold text-pink-400 truncate flex items-center gap-2">
-              <span>{activeContact?.name}</span>
+            <div className="font-bold text-gray-100 text-sm sm:text-base truncate flex items-center gap-2">
+              <span className="text-pink-400 font-black">
+                {activeContact?.name}
+              </span>
               {activeContact?.cleared && (
-                <span className="text-[10px] bg-green-950 border border-green-700 text-green-400 px-1.5 py-0.5 rounded font-bold">
+                <span className="text-[10px] bg-green-950/80 border border-green-700 text-green-400 px-2 py-0.5 rounded-full font-bold shadow-sm shadow-green-950">
                   ★ BUSTED
                 </span>
               )}
             </div>
-            <div className="text-xs text-gray-500 truncate">
-              {activeContact?.danger}
+            <div className="text-xs text-gray-400 flex items-center gap-2 mt-0.5 truncate">
+              <span className="text-yellow-400/90 font-mono text-[11px]">
+                {activeContact?.danger}
+              </span>
+              {isLoading && (
+                <span className="text-pink-400 text-[11px] animate-pulse font-medium">
+                  • {t.typing}
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -80,7 +149,7 @@ export default function ChatWindow({
         <div className="flex items-center gap-2 shrink-0">
           {/* 🌐 Compact Language Switcher in Chat Header */}
           {onLanguageChange && (
-            <div className="flex items-center gap-0.5 bg-gray-800 border border-gray-700 rounded-lg p-0.5 shadow-sm">
+            <div className="flex items-center gap-0.5 bg-gray-800/90 border border-gray-700 rounded-lg p-0.5 shadow-sm">
               <button
                 onClick={() => onLanguageChange("ja")}
                 className={`px-1.5 py-0.5 rounded text-[11px] font-bold transition cursor-pointer flex items-center gap-0.5 ${
@@ -135,7 +204,7 @@ export default function ChatWindow({
           {activeContact?.failed && (
             <button
               onClick={() => onRetry(activeContact.id)}
-              className="px-3 py-1.5 bg-red-600/80 hover:bg-red-500 text-white font-bold text-xs rounded-lg transition cursor-pointer flex items-center gap-1 shrink-0"
+              className="px-3 py-1.5 bg-red-600/80 hover:bg-red-500 text-white font-bold text-xs rounded-lg transition cursor-pointer flex items-center gap-1 shrink-0 shadow-md shadow-red-950"
             >
               <span>🔄</span>
               <span>
@@ -152,58 +221,123 @@ export default function ChatWindow({
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 relative">
+      <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-4 relative bg-gradient-to-b from-gray-950 via-gray-900/40 to-gray-950">
         {/* ターゲット指令（スティッキー表示） */}
-        <div className="sticky top-0 z-10 bg-gray-900/90 backdrop-blur-md p-3 rounded-lg border border-gray-800 text-xs shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-2">
-          <div>
-            <span className="text-pink-400 font-bold block mb-1">
-              {t.missionTitle}
-            </span>
-            <div className="space-y-1">
+        <div className="sticky top-0 z-10 bg-gray-900/95 backdrop-blur-md p-3 sm:p-3.5 rounded-xl border border-pink-500/30 text-xs shadow-xl shadow-black/40 flex flex-col md:flex-row md:items-center justify-between gap-2.5">
+          <div className="space-y-1.5 flex-1">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-pink-500 animate-ping" />
+              <span className="text-pink-400 font-extrabold tracking-wide">
+                {t.missionTitle}
+              </span>
+            </div>
+            <div className="space-y-1 pl-4">
               {activeContact?.missions.map((m) => (
                 <div
                   key={m.id}
                   className={
                     m.found
-                      ? "text-green-400 font-bold flex items-center gap-1"
-                      : "text-gray-400 flex items-center gap-1"
+                      ? "text-emerald-400 font-bold flex items-center gap-1.5 transition-all animate-in fade-in duration-300"
+                      : "text-gray-300 flex items-center gap-1.5 font-medium"
                   }
                 >
-                  <span>{m.found ? "✔" : "○"}</span>
-                  <span className={m.found ? "line-through opacity-90" : ""}>
+                  <span
+                    className={
+                      m.found ? "text-emerald-400 scale-110" : "text-gray-500"
+                    }
+                  >
+                    {m.found ? "✔" : "○"}
+                  </span>
+                  <span
+                    className={
+                      m.found ? "line-through text-emerald-400/80" : ""
+                    }
+                  >
                     {m.name}
                   </span>
+                  {m.found && (
+                    <span className="text-[10px] bg-emerald-950 border border-emerald-700 px-1.5 py-0.2 rounded text-emerald-300 font-mono font-bold">
+                      SECURED
+                    </span>
+                  )}
                 </div>
               ))}
             </div>
           </div>
 
           {activeContact?.cleared && (
-            <div className="text-xs text-green-400 bg-green-950/60 border border-green-700 px-2.5 py-1 rounded font-bold text-center">
-              {t.evidenceSecured || "証拠押収完了！"}
+            <div className="text-xs text-green-400 bg-green-950/80 border border-green-600 px-3 py-1.5 rounded-lg font-black text-center shadow-md animate-bounce">
+              ✨ {t.evidenceSecured || "証拠押収完了！"}
             </div>
           )}
         </div>
 
-        {currentMessages.map((msg, idx) => (
-          <div
-            key={idx}
-            className={`flex ${
-              msg.sender === "player" ? "justify-end" : "justify-start"
-            }`}
-          >
+        {/* 💬 Chat Messages with Avatars */}
+        {currentMessages.map((msg, idx) => {
+          const isPlayer = msg.sender === "player";
+          return (
             <div
-              className={`max-w-[85%] md:max-w-md p-3 rounded-lg text-sm whitespace-pre-wrap ${
-                msg.sender === "player"
-                  ? "bg-pink-600 text-white rounded-br-none"
-                  : "bg-gray-900 border border-gray-800 text-gray-200 rounded-bl-none"
+              key={idx}
+              className={`flex items-end gap-2.5 animate-in fade-in slide-in-from-bottom-2 duration-300 ${
+                isPlayer ? "justify-end" : "justify-start"
               }`}
             >
-              {msg.text}
+              {/* Left Avatar for Scammer */}
+              {!isPlayer && (
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden border border-gray-700 shrink-0 shadow-md bg-gray-900 self-start mt-0.5">
+                  <img
+                    src={targetAvatarSrc}
+                    alt="Scammer"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+
+              {/* Message Bubble */}
+              <div
+                className={`max-w-[82%] sm:max-w-md p-3 sm:p-3.5 rounded-2xl text-sm whitespace-pre-wrap leading-relaxed shadow-md transition-all ${
+                  isPlayer
+                    ? "bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-br-xs shadow-pink-950/30"
+                    : "bg-gray-900/90 border border-gray-800 text-gray-100 rounded-bl-xs shadow-black/40 hover:border-gray-700"
+                }`}
+              >
+                {msg.text}
+              </div>
+
+              {/* Right Avatar for Player Agent */}
+              {isPlayer && (
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden border-2 border-pink-500/60 shrink-0 shadow-md bg-gray-900 self-start mt-0.5">
+                  <img
+                    src={agentAvatarSrc}
+                    alt="Agent"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+            </div>
+          );
+        })}
+
+        {/* 相手の入力中アニメーション */}
+        {isLoading && (
+          <div className="flex items-center gap-2.5 text-gray-400 text-xs animate-in fade-in duration-200">
+            <div className="w-7 h-7 rounded-full overflow-hidden border border-pink-500 animate-pulse shrink-0 bg-gray-900">
+              <img
+                src={targetAvatarSrc}
+                alt="Typing"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="bg-gray-900/90 border border-gray-800 px-3.5 py-2 rounded-2xl rounded-bl-xs flex items-center gap-1.5 shadow-md">
+              <span className="text-pink-400 font-bold">{t.typing}</span>
+              <span className="inline-flex gap-1 items-center">
+                <span className="w-1.5 h-1.5 rounded-full bg-pink-400 animate-bounce [animation-delay:-0.3s]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-pink-400 animate-bounce [animation-delay:-0.15s]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-pink-400 animate-bounce" />
+              </span>
             </div>
           </div>
-        ))}
-        {isLoading && <div className="text-gray-500 text-xs">{t.typing}</div>}
+        )}
       </div>
 
       {activeContact?.cleared ? (

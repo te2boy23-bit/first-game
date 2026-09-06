@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <linearGradient id="bgKuroda" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1f1105"/>
+      <stop offset="50%" stop-color="#3a1e05"/>
+      <stop offset="100%" stop-color="#0a0501"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="50%" stop-color="#eab308"/>
+      <stop offset="100%" stop-color="#ca8a04"/>
+    </linearGradient>
+    <filter id="glowGold">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="500" height="500" fill="url(#bgKuroda)"/>
+  <circle cx="250" cy="250" r="220" stroke="#ca8a04" stroke-width="3" stroke-dasharray="10 5" fill="none" opacity="0.4"/>
+  <circle cx="250" cy="185" r="75" fill="#fbcfe8" opacity="0.9"/>
+  <!-- Dark Suit -->
+  <path d="M100 480 L180 275 L320 275 L400 480 Z" fill="#18181b"/>
+  <path d="M210 275 L250 370 L290 275 Z" fill="#ffffff"/>
+  <path d="M240 275 L250 440 L260 275 Z" fill="#b91c1c"/>
+  <!-- Gold chain -->
+  <path d="M200 280 Q250 340 300 280" stroke="url(#goldGrad)" stroke-width="8" fill="none" filter="url(#glowGold)"/>
+  <!-- Head & Hair -->
+  <ellipse cx="250" cy="180" rx="65" ry="75" fill="#fed7aa"/>
+  <path d="M180 160 Q250 90 320 160 Q250 125 180 160 Z" fill="#18181b"/>
+  <!-- Menacing Sunglasses -->
+  <polygon points="195,160 240,165 235,190 190,185" fill="#09090b" stroke="#eab308" stroke-width="2"/>
+  <polygon points="260,165 305,160 310,185 265,190" fill="#09090b" stroke="#eab308" stroke-width="2"/>
+  <line x1="240" y1="165" x2="260" y2="165" stroke="#eab308" stroke-width="3"/>
+  <!-- Scars and Beard -->
+  <path d="M225 215 Q250 230 275 215" stroke="#7c2d12" stroke-width="3" fill="none"/>
+  <path d="M230 235 Q250 245 270 235" stroke="#18181b" stroke-width="6" fill="none"/>
+  <!-- Text Label Badge -->
+  <rect x="130" y="430" width="240" height="40" rx="8" fill="#451a03" stroke="#eab308" stroke-width="2"/>
+  <text x="250" y="457" fill="#fef08a" font-family="sans-serif" font-weight="900" font-size="18" text-anchor="middle" letter-spacing="2">KURODA • LOAN SHARK</text>
+</svg>

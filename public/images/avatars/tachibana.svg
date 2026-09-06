@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <linearGradient id="bgTachibana" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#14532d"/>
+      <stop offset="50%" stop-color="#1e3a8a"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+  </defs>
+  <rect width="500" height="500" fill="url(#bgTachibana)"/>
+  <circle cx="250" cy="250" r="220" stroke="#fbbf24" stroke-width="2" stroke-dasharray="12 4" fill="none" opacity="0.4"/>
+  <!-- Safe Vault Wheel -->
+  <circle cx="250" cy="250" r="190" stroke="#60a5fa" stroke-width="1" fill="none" opacity="0.2"/>
+  <!-- Body -->
+  <path d="M110 480 L170 270 L330 270 L390 480 Z" fill="#0f172a" stroke="#fbbf24" stroke-width="2"/>
+  <ellipse cx="250" cy="180" rx="65" ry="75" fill="#fde047" opacity="0.8"/>
+  <path d="M180 150 Q250 90 320 150 Q250 120 180 150 Z" fill="#1e293b"/>
+  <!-- Smart Banker Glasses -->
+  <polygon points="195,170 240,175 235,195 190,190" fill="#0284c7" opacity="0.8"/>
+  <polygon points="260,175 305,170 310,190 265,195" fill="#0284c7" opacity="0.8"/>
+  <rect x="130" y="430" width="240" height="40" rx="8" fill="#1e3a8a" stroke="#fbbf24" stroke-width="2"/>
+  <text x="250" y="457" fill="#fde68a" font-family="sans-serif" font-weight="900" font-size="18" text-anchor="middle" letter-spacing="2">TACHIBANA • BANK</text>
+</svg>

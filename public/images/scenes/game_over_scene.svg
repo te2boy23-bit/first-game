@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <defs>
+    <linearGradient id="bgGameOver" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#450a0a"/>
+      <stop offset="50%" stop-color="#18181b"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+    <filter id="dangerGlow">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="800" height="450" fill="url(#bgGameOver)"/>
+  <!-- Warning Stripes -->
+  <line x1="0" y1="40" x2="800" y2="40" stroke="#dc2626" stroke-width="8" stroke-dasharray="30 20"/>
+  <line x1="0" y1="410" x2="800" y2="410" stroke="#dc2626" stroke-width="8" stroke-dasharray="30 20"/>
+  <!-- Disconnected Network Icon -->
+  <circle cx="400" cy="180" r="70" fill="#7f1d1d" opacity="0.6" stroke="#ef4444" stroke-width="4" filter="url(#dangerGlow)"/>
+  <text x="400" y="200" fill="#fee2e2" font-size="64" text-anchor="middle">⚠️</text>
+  <!-- Glitch Red Banner -->
+  <rect x="150" y="270" width="500" height="80" rx="12" fill="#991b1b" stroke="#f87171" stroke-width="4" filter="url(#dangerGlow)"/>
+  <text x="400" y="318" fill="#ffffff" font-family="Impact, sans-serif" font-weight="900" font-size="36" text-anchor="middle" letter-spacing="4">ACCOUNT BLOCKED / ESCAPED</text>
+  <text x="400" y="342" fill="#fecaca" font-family="sans-serif" font-size="14" text-anchor="middle">SUSPICION MAX • CONNECTION TERMINATED</text>
+</svg>

@@ -46,18 +46,30 @@ export function AgentResumeModal({
         </p>
 
         {/* Agent Profile Box */}
-        <div className="bg-emerald-950/40 border border-emerald-800/60 rounded-xl p-3.5 sm:p-4 mb-5 text-xs space-y-1.5">
-          <div className="text-emerald-400 font-bold text-xs">
-            👤 捜査官ステータス (Authenticated Agent)
-          </div>
-          <div className="flex items-center justify-between pt-1 border-t border-emerald-900/60 text-slate-200">
-            <span className="text-slate-400">コードネーム (Name):</span>
-            <span className="text-white font-bold text-sm">{nickname || "Agent"}</span>
+        <div className="bg-emerald-950/40 border border-emerald-800/60 rounded-xl p-3.5 sm:p-4 mb-5 text-xs">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-12 h-12 rounded-xl overflow-hidden border border-emerald-400/80 shadow-md flex-shrink-0 bg-gray-900">
+              <img
+                src="/images/avatars/agent.svg"
+                alt="Cyber Taskforce Agent"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div>
+              <div className="text-emerald-400 font-bold text-xs">
+                👤 捜査官ステータス (Authenticated Agent)
+              </div>
+              <div className="text-white font-bold text-base">
+                {nickname || "Agent"}
+              </div>
+            </div>
           </div>
           {email && (
-            <div className="flex items-center justify-between text-slate-200">
+            <div className="flex items-center justify-between text-slate-200 pt-2 border-t border-emerald-900/60">
               <span className="text-slate-400">登録連絡先 (Contact):</span>
-              <span className="text-emerald-200 font-mono text-[11px]">{email}</span>
+              <span className="text-emerald-200 font-mono text-[11px]">
+                {email}
+              </span>
             </div>
           )}
         </div>

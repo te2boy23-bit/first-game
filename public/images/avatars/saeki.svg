@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <linearGradient id="bgSaeki" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#450a0a"/>
+      <stop offset="50%" stop-color="#1e1b4b"/>
+      <stop offset="100%" stop-color="#09090b"/>
+    </linearGradient>
+  </defs>
+  <rect width="500" height="500" fill="url(#bgSaeki)"/>
+  <!-- Locks background -->
+  <text x="80" y="120" fill="#ef4444" font-size="36" opacity="0.4">🔒</text>
+  <text x="390" y="120" fill="#ef4444" font-size="36" opacity="0.4">🔒</text>
+  <!-- Body -->
+  <path d="M120 480 L180 280 L320 280 L380 480 Z" fill="#1e1b4b"/>
+  <ellipse cx="250" cy="180" rx="65" ry="75" fill="#ffedd5"/>
+  <path d="M180 160 Q250 100 320 160 Q250 130 180 160 Z" fill="#312e81"/>
+  <!-- Glasses -->
+  <circle cx="220" cy="180" r="18" fill="none" stroke="#ef4444" stroke-width="3"/>
+  <circle cx="280" cy="180" r="18" fill="none" stroke="#ef4444" stroke-width="3"/>
+  <line x1="238" y1="180" x2="262" y2="180" stroke="#ef4444" stroke-width="3"/>
+  <!-- Tie -->
+  <polygon points="245,280 255,280 260,400 250,420 240,400" fill="#dc2626"/>
+  <rect x="130" y="430" width="240" height="40" rx="8" fill="#450a0a" stroke="#ef4444" stroke-width="2"/>
+  <text x="250" y="457" fill="#fca5a5" font-family="sans-serif" font-weight="900" font-size="18" text-anchor="middle" letter-spacing="2">SAEKI • NEGOTIATOR</text>
+</svg>
