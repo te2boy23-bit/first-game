@@ -21,6 +21,7 @@ interface ArchiveModalProps {
   isOpen: boolean;
   onClose: () => void;
   clearedContacts: Contact[];
+  nickname?: string;
   lang?: "ja" | "en" | "my" | "ne";
 }
 
@@ -28,6 +29,7 @@ export default function ArchiveModal({
   isOpen,
   onClose,
   clearedContacts,
+  nickname,
   lang = "ja",
 }: ArchiveModalProps) {
   const [selectedContact, setSelectedContact] = useState<Contact | null>(
@@ -170,12 +172,20 @@ export default function ArchiveModal({
     <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
       <div className="w-full max-w-2xl bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-2xl flex flex-col max-h-[85vh]">
         <div className="flex justify-between items-center pb-4 border-b border-gray-800">
-          <h3 className="text-lg font-bold text-pink-400">
-            {getArchiveTitle()}
-          </h3>
+          <div>
+            <h3 className="text-lg font-bold text-pink-400">
+              {getArchiveTitle()}
+            </h3>
+            {nickname && (
+              <div className="text-[11px] text-gray-400 font-mono mt-0.5">
+                AGENT: <span className="text-white font-bold">{nickname}</span>{" "}
+                (サイバー特命捜査官)
+              </div>
+            )}
+          </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-white text-sm px-2 py-1 bg-gray-800 rounded cursor-pointer"
+            className="text-gray-400 hover:text-white text-sm px-2.5 py-1.5 bg-gray-800 rounded cursor-pointer shrink-0"
           >
             {getCloseText()}
           </button>

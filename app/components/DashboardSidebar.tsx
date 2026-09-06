@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 
 interface Mission {
   id: number;
@@ -102,6 +103,25 @@ export default function DashboardSidebar({
   const isEn = lang === "en";
   const isMy = lang === "my";
   const isNe = lang === "ne";
+
+  const [copiedBankInfo, setCopiedBankInfo] = useState(false);
+
+  const handleCopyBankInfo = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const accountInfo = isEn
+      ? `[Undercover Bank Info]\nBank: Cyber Special Bank (Branch 007)\nAccount No: Savings 7788990\nHolder: ${nickname || "Agent"}`
+      : isMy
+        ? `[အတုအယောင် ဘဏ်အကောင့်]\nဘဏ်: ဆိုက်ဘာ အထူးဘဏ် (ဘဏ်ခွဲ 007)\nအကောင့်: 7788990\nအမည်: ${nickname || "Agent"}`
+        : isNe
+          ? `[नक्कली बैंक विवरण]\nबैंक: साइबर विशेष बैंक (शाखा 007)\nखाता: 7788990\nनाम: ${nickname || "Agent"}`
+          : `【おとり捜査用口座情報】\n銀行名：サイバー特命銀行（特命支店 007）\n口座番号：普通 7788990\n口座名義：${nickname || "カモ太郎"}`;
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(accountInfo);
+      setCopiedBankInfo(true);
+      setTimeout(() => setCopiedBankInfo(false), 2500);
+    }
+  };
 
   let currentRankText = isEn
     ? "Rank: Easy"
@@ -369,6 +389,80 @@ export default function DashboardSidebar({
                 style={{ width: `${progressPercent}%` }}
               />
             </div>
+          </div>
+        </div>
+
+        {/* 💳 おとり捜査用・公式プロファイル（個人情報保護カード） */}
+        <div className="bg-gray-900/95 border border-sky-500/40 rounded-xl p-3.5 mb-4 text-xs space-y-2.5 shadow-md shadow-sky-950/20">
+          <div className="flex items-center justify-between">
+            <span className="text-sky-400 font-bold flex items-center gap-1.5">
+              <span>💳</span>
+              <span>
+                {isEn
+                  ? "Undercover Profile & Bank"
+                  : isMy
+                    ? "အတုအယောင် ကိုယ်ရေးနှင့် ဘဏ်"
+                    : isNe
+                      ? "नक्कली परिचय र बैंक"
+                      : "おとり捜査用・口座プロファイル"}
+              </span>
+            </span>
+            <button
+              type="button"
+              onClick={handleCopyBankInfo}
+              className="text-[10px] bg-sky-950 hover:bg-sky-900 text-sky-300 border border-sky-700/60 px-2 py-0.5 rounded cursor-pointer transition font-bold flex items-center gap-1"
+            >
+              <span>{copiedBankInfo ? "✔" : "📋"}</span>
+              <span>
+                {copiedBankInfo
+                  ? isEn
+                    ? "Copied!"
+                    : "コピー完了！"
+                  : isEn
+                    ? "Copy Bank"
+                    : "口座情報をコピー"}
+              </span>
+            </button>
+          </div>
+
+          <div className="bg-gray-950/80 border border-gray-800 rounded-lg p-2.5 space-y-1 text-[11px] font-mono">
+            <div className="flex justify-between items-center text-gray-300">
+              <span className="text-gray-500">
+                {isEn ? "Bank / Branch:" : "銀行・支店:"}
+              </span>
+              <span className="text-white font-bold">
+                {isEn
+                  ? "Cyber Taskforce Bank (007)"
+                  : "サイバー特命銀行 特命支店(007)"}
+              </span>
+            </div>
+            <div className="flex justify-between items-center text-gray-300">
+              <span className="text-gray-500">
+                {isEn ? "Account No:" : "口座番号:"}
+              </span>
+              <span className="text-sky-300 font-bold">普通 7788990</span>
+            </div>
+            <div className="flex justify-between items-center text-gray-300 pt-1 border-t border-gray-800">
+              <span className="text-gray-500">
+                {isEn ? "Holder Name:" : "口座名義(登録名):"}
+              </span>
+              <span className="text-emerald-300 font-bold">
+                {nickname || "Agent"}
+              </span>
+            </div>
+          </div>
+
+          <div className="text-[10px] text-gray-400 flex items-center gap-1 leading-tight">
+            <span>🔒</span>
+            <span>
+              {isEn
+                ? "Safe Play: Real personal info is NEVER needed. Use this alias."
+                : isMy
+                  ? "အမှန်တကယ် ကိုယ်ရေးအချက်အလက် ထည့်ရန်မလိုပါ။ ဤဒေတာကို သုံးပါ။"
+                  : isNe
+                    ? "वास्तविक व्यक्तिगत विवरण आवश्यक छैन। यो डाटा प्रयोग गर्नुहोस्।"
+                    : "安全保護：実際の個人情報は入力不要。上記のおとり口座をご利用ください。"}
+            </span>
           </div>
         </div>
 

@@ -1,261 +1,272 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%">
   <defs>
-    <!-- Background Gradient: Luxury Penthouse Bar Night Bokeh -->
-    <radialGradient id="luxBg" cx="50%" cy="30%" r="70%">
-      <stop offset="0%" stop-color="#2c1424"/>
-      <stop offset="40%" stop-color="#180b15"/>
-      <stop offset="80%" stop-color="#0d040a"/>
-      <stop offset="100%" stop-color="#050104"/>
+    <!-- Background: Dreamy Soft Romantic Room Lighting & Bokeh -->
+    <radialGradient id="roomBg" cx="50%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#400e2b"/>
+      <stop offset="35%" stop-color="#26081a"/>
+      <stop offset="70%" stop-color="#14030d"/>
+      <stop offset="100%" stop-color="#080105"/>
     </radialGradient>
 
-    <!-- Realistic Skin Subsurface Scattering Gradients -->
-    <linearGradient id="realSkin" x1="45%" y1="0%" x2="55%" y2="100%">
-      <stop offset="0%" stop-color="#fff5f0"/>
-      <stop offset="35%" stop-color="#ffebd9"/>
-      <stop offset="65%" stop-color="#ffd5c2"/>
-      <stop offset="90%" stop-color="#fca88f"/>
-      <stop offset="100%" stop-color="#e8856c"/>
+    <!-- Translucent Porcelain Soft Pink Skin Gradient -->
+    <linearGradient id="cuteSkin" x1="45%" y1="0%" x2="55%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="25%" stop-color="#fff0f5"/>
+      <stop offset="60%" stop-color="#ffe4ec"/>
+      <stop offset="85%" stop-color="#fecdd6"/>
+      <stop offset="100%" stop-color="#fba1b7"/>
     </linearGradient>
 
-    <linearGradient id="skinShadow" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#e28770" stop-opacity="0.8"/>
-      <stop offset="60%" stop-color="#c96048" stop-opacity="0.4"/>
-      <stop offset="100%" stop-color="#8c2e1b" stop-opacity="0"/>
+    <!-- Silky Voluminous Dark Rose Brown Hair -->
+    <linearGradient id="roseBrownHair" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#4a2433"/>
+      <stop offset="30%" stop-color="#301320"/>
+      <stop offset="70%" stop-color="#1c0912"/>
+      <stop offset="100%" stop-color="#0a0206"/>
     </linearGradient>
 
-    <!-- Realistic Brown/Black Silky Hair Gradients -->
-    <linearGradient id="realHair" x1="20%" y1="0%" x2="80%" y2="100%">
-      <stop offset="0%" stop-color="#3d271d"/>
-      <stop offset="30%" stop-color="#24140e"/>
-      <stop offset="70%" stop-color="#140905"/>
-      <stop offset="100%" stop-color="#080302"/>
-    </linearGradient>
-    <linearGradient id="hairSheen" x1="0%" y1="0%" x2="100%" y2="50%">
-      <stop offset="0%" stop-color="#6e4635" stop-opacity="0"/>
-      <stop offset="45%" stop-color="#d49b7e" stop-opacity="0.6"/>
-      <stop offset="55%" stop-color="#f5d6c6" stop-opacity="0.8"/>
-      <stop offset="65%" stop-color="#d49b7e" stop-opacity="0.6"/>
-      <stop offset="100%" stop-color="#6e4635" stop-opacity="0"/>
+    <linearGradient id="hairAngelHalo" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffb3d9" stop-opacity="0"/>
+      <stop offset="35%" stop-color="#ffb3d9" stop-opacity="0.6"/>
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0.95"/>
+      <stop offset="65%" stop-color="#ffb3d9" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#ffb3d9" stop-opacity="0"/>
     </linearGradient>
 
-    <!-- Realistic Hazel/Brown Iris -->
-    <radialGradient id="realIris" cx="45%" cy="40%" r="55%">
-      <stop offset="0%" stop-color="#d4935d"/>
-      <stop offset="30%" stop-color="#8a4b22"/>
-      <stop offset="70%" stop-color="#451f0b"/>
-      <stop offset="95%" stop-color="#1a0802"/>
-      <stop offset="100%" stop-color="#0d0300"/>
+    <!-- Mesmerizing Sparkling Jewel Eyes (Rose Quartz / Magenta & Amber) -->
+    <radialGradient id="jewelIris" cx="50%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#ff719a"/>
+      <stop offset="30%" stop-color="#e11d48"/>
+      <stop offset="65%" stop-color="#9f1239"/>
+      <stop offset="90%" stop-color="#4c0519"/>
+      <stop offset="100%" stop-color="#1f0108"/>
     </radialGradient>
 
-    <!-- Realistic Glossy Lips -->
-    <linearGradient id="realLip" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#ff6b8b"/>
-      <stop offset="50%" stop-color="#e62e5c"/>
-      <stop offset="85%" stop-color="#b8143d"/>
-      <stop offset="100%" stop-color="#730520"/>
+    <!-- Cute & Plump Strawberry Gloss Lips -->
+    <linearGradient id="strawberryLip" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ff4d79"/>
+      <stop offset="50%" stop-color="#e6004c"/>
+      <stop offset="85%" stop-color="#ad0034"/>
+      <stop offset="100%" stop-color="#5e001a"/>
     </linearGradient>
 
-    <!-- Silk/Lace Dress Gradient -->
-    <linearGradient id="laceDress" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#211d24"/>
-      <stop offset="50%" stop-color="#120e14"/>
-      <stop offset="100%" stop-color="#08060a"/>
+    <!-- Flushed Cheek Blush -->
+    <radialGradient id="cuteBlush" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff2e74" stop-opacity="0.65"/>
+      <stop offset="60%" stop-color="#ff4d88" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#ff4d88" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Black Silk & Sheer Lace Nightie Dress -->
+    <linearGradient id="silkNightie" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2a1b24"/>
+      <stop offset="50%" stop-color="#170c13"/>
+      <stop offset="100%" stop-color="#080306"/>
     </linearGradient>
 
-    <!-- Gold & Diamond Sparkle -->
-    <linearGradient id="realGold" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fff8db"/>
-      <stop offset="40%" stop-color="#ffd700"/>
-      <stop offset="75%" stop-color="#c59b27"/>
-      <stop offset="100%" stop-color="#7a5707"/>
-    </linearGradient>
-
-    <!-- Camera Blur & Grain Filters -->
-    <filter id="bokehBlur" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur stdDeviation="15"/>
-    </filter>
-    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="4" result="blur"/>
+    <!-- Glowing Heart Particle Filter -->
+    <filter id="cuteGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
       <feComposite in="SourceGraphic" in2="blur" operator="over"/>
     </filter>
-    <filter id="photoSkinSoft" x="-10%" y="-10%" width="120%" height="120%">
-      <feGaussianBlur stdDeviation="2"/>
+    <filter id="softPink" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3"/>
     </filter>
   </defs>
 
-  <!-- 1. Background: Luxury Hotel Penthouse Suite & City Night Lights -->
-  <rect width="600" height="600" fill="url(#luxBg)"/>
+  <!-- 1. Background: Romantic Bedroom / Ambient Candlelight Bokeh -->
+  <rect width="600" height="600" fill="url(#roomBg)"/>
 
-  <!-- Soft Camera Bokeh Circles (Golden, Amber, Magenta City Lights) -->
-  <circle cx="100" cy="120" r="55" fill="#f59e0b" opacity="0.22" filter="url(#bokehBlur)"/>
-  <circle cx="500" cy="100" r="70" fill="#ec4899" opacity="0.18" filter="url(#bokehBlur)"/>
-  <circle cx="80" cy="450" r="80" fill="#fb7185" opacity="0.15" filter="url(#bokehBlur)"/>
-  <circle cx="520" cy="420" r="65" fill="#ffd700" opacity="0.2" filter="url(#bokehBlur)"/>
-  <circle cx="300" cy="70" r="40" fill="#ffffff" opacity="0.12" filter="url(#bokehBlur)"/>
+  <!-- Soft Dreamy Glowing Bokeh Hearts & Orbs -->
+  <circle cx="100" cy="130" r="50" fill="#ff4d88" opacity="0.2" filter="url(#cuteGlow)"/>
+  <circle cx="500" cy="110" r="65" fill="#f43f5e" opacity="0.18" filter="url(#cuteGlow)"/>
+  <circle cx="80" cy="460" r="75" fill="#fb7185" opacity="0.16" filter="url(#cuteGlow)"/>
+  <circle cx="520" cy="450" r="60" fill="#fda4af" opacity="0.2" filter="url(#cuteGlow)"/>
 
-  <!-- 2. Back Hair Layers (Voluminous Natural Flowing Dark Waves) -->
-  <g id="backHair">
-    <path d="M140 240 C100 320 80 460 130 580 C170 610 240 580 230 500 C200 420 190 320 220 250 Z" fill="url(#realHair)"/>
-    <path d="M460 240 C500 320 520 460 470 580 C430 610 360 580 370 500 C400 420 410 320 380 250 Z" fill="url(#realHair)"/>
-    <path d="M160 180 C110 250 110 400 150 510 C180 550 210 540 200 470 C180 380 180 280 220 200 Z" fill="#140905"/>
-    <path d="M440 180 C490 250 490 400 450 510 C420 550 390 540 400 470 C420 380 420 280 380 200 Z" fill="#140905"/>
+  <!-- Floating Tiny Sparkle Hearts -->
+  <g opacity="0.65" transform="translate(10, 0)">
+    <path d="M120 80 C120 70 135 70 140 80 C145 70 160 70 160 80 C160 95 140 108 140 108 C140 108 120 95 120 80 Z" fill="#ff4d88" filter="url(#cuteGlow)"/>
+    <path d="M440 140 C440 132 452 132 456 140 C460 132 472 132 472 140 C472 152 456 162 456 162 C456 162 440 152 440 140 Z" fill="#ff7eb3" filter="url(#cuteGlow)"/>
   </g>
 
-  <!-- 3. Body: Realistic Neck, Smooth Shoulders, Seductive Cleavage & Lace Dress -->
-  <g id="body">
-    <!-- Smooth feminine shoulders and upper chest -->
-    <path d="M220 330 C170 360 100 420 80 600 L520 600 C500 420 430 360 380 330 L360 280 L240 280 Z" fill="url(#realSkin)"/>
+  <!-- 2. Back Hair: Luscious Silky Waves Cascading Down -->
+  <g id="backHairCute">
+    <path d="M130 220 C80 300 70 450 120 580 C160 620 240 580 230 490 C190 410 180 300 210 230 Z" fill="url(#roseBrownHair)"/>
+    <path d="M470 220 C520 300 530 450 480 580 C440 620 360 580 370 490 C410 410 420 300 390 230 Z" fill="url(#roseBrownHair)"/>
+    <path d="M150 160 C90 240 90 390 140 500 C170 540 200 530 190 460 C170 370 170 260 210 180 Z" fill="#1c0912"/>
+    <path d="M450 160 C510 240 510 390 460 500 C430 540 400 530 410 460 C430 370 430 260 390 180 Z" fill="#1c0912"/>
+  </g>
 
-    <!-- Subtle realistic shadow under jawline onto neck -->
-    <path d="M245 280 C245 325 270 355 300 355 C330 355 355 325 355 280 Z" fill="#e28770" opacity="0.7" filter="url(#photoSkinSoft)"/>
+  <!-- 3. Body: Translucent Porcelain Skin, Slender Shoulders, Alluring Cleavage & Sheer Camisole -->
+  <g id="bodyCute">
+    <!-- Smooth shoulders and upper chest -->
+    <path d="M210 320 C160 350 90 410 70 600 L530 600 C510 410 440 350 390 320 L365 265 L235 265 Z" fill="url(#cuteSkin)"/>
 
-    <!-- Delicate realistic collarbones -->
-    <path d="M225 365 C255 378 280 388 295 390" stroke="#e8856c" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.6"/>
-    <path d="M375 365 C345 378 320 388 305 390" stroke="#e8856c" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.6"/>
-    <path d="M230 363 C258 375 280 384 293 386" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.5"/>
-    <path d="M370 363 C342 375 320 384 307 386" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.5"/>
+    <!-- Soft shadow under jawline -->
+    <path d="M240 265 C240 315 265 345 300 345 C335 345 360 315 360 265 Z" fill="#fba1b7" opacity="0.65" filter="url(#softPink)"/>
 
-    <!-- Photorealistic Cleavage Volume & Subtle Shading -->
-    <!-- Left breast curve -->
-    <path d="M190 480 C215 420 268 408 300 450 C285 510 220 540 190 480 Z" fill="#ffebd9" opacity="0.65" filter="url(#photoSkinSoft)"/>
-    <!-- Right breast curve -->
-    <path d="M410 480 C385 420 332 408 300 450 C315 510 380 540 410 480 Z" fill="#ffebd9" opacity="0.65" filter="url(#photoSkinSoft)"/>
-    <!-- Center deep shadow line -->
-    <path d="M300 430 C297 455 297 500 300 545" stroke="#b04d3b" stroke-width="3" stroke-linecap="round" fill="none"/>
-    <path d="M300 442 C296 468 296 505 300 538" stroke="#702213" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+    <!-- Slender Collarbones with soft glow -->
+    <path d="M220 355 C250 368 275 378 292 380" stroke="#fba1b7" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.75"/>
+    <path d="M380 355 C350 368 325 378 308 380" stroke="#fba1b7" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.75"/>
+    <path d="M225 353 C252 365 275 374 290 376" stroke="#ffffff" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.6"/>
+    <path d="M375 353 C348 365 325 374 310 376" stroke="#ffffff" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.6"/>
 
-    <!-- Black Silk Lace Cocktail Slip Dress / Camisole -->
-    <path d="M120 575 C160 500 220 470 290 480 C296 481 304 481 310 480 C380 470 440 500 480 575 L520 600 L80 600 Z" fill="url(#laceDress)"/>
-    <!-- Realistic Lace Embroidery Details -->
-    <path d="M140 560 Q160 540 180 560 Q200 540 220 560 Q240 540 260 560 Q280 540 300 560 Q320 540 340 560 Q360 540 380 560 Q400 540 420 560 Q440 540 460 560" stroke="#ff4d88" stroke-width="1.5" fill="none" opacity="0.7"/>
-    <!-- Spaghetti Straps -->
-    <path d="M195 445 L215 510" stroke="#120e14" stroke-width="4.5" stroke-linecap="round"/>
-    <path d="M405 445 L385 510" stroke="#120e14" stroke-width="4.5" stroke-linecap="round"/>
+    <!-- Alluring Feminine Cleavage Volume & Plump Shading -->
+    <!-- Left Curve -->
+    <path d="M185 470 C210 410 265 395 300 440 C285 500 215 530 185 470 Z" fill="#ffe4ec" opacity="0.8" filter="url(#softPink)"/>
+    <!-- Right Curve -->
+    <path d="M415 470 C390 410 335 395 300 440 C315 500 385 530 415 470 Z" fill="#ffe4ec" opacity="0.8" filter="url(#softPink)"/>
+    <!-- Deep Cleavage Shadow Line -->
+    <path d="M300 420 C297 445 297 490 300 535" stroke="#db2777" stroke-width="3" stroke-linecap="round" fill="none"/>
+    <path d="M300 435 C296 460 296 498 300 530" stroke="#831843" stroke-width="2" stroke-linecap="round" fill="none"/>
 
-    <!-- Dainty Gold Necklace with Ruby Teardrop Pendant -->
-    <path d="M235 345 Q300 430 365 345" stroke="url(#realGold)" stroke-width="2" fill="none"/>
-    <g transform="translate(300, 420)">
-      <path d="M0 -7 L6 1 C6 5 3 9 0 11 C-3 9 -6 5 -6 1 Z" fill="#e11d48" filter="url(#softGlow)"/>
-      <circle cx="-1.5" cy="0" r="1.5" fill="#ffffff" opacity="0.8"/>
+    <!-- Seductive Black Silk Lace Slip / Babydoll Camisole -->
+    <path d="M110 570 C150 490 215 460 290 470 C296 471 304 471 310 470 C385 460 450 490 490 570 L530 600 L70 600 Z" fill="url(#silkNightie)"/>
+    <!-- Delicate Pink Lace Trim -->
+    <path d="M130 550 Q150 530 170 550 Q190 530 210 550 Q230 530 250 550 Q270 530 290 550 Q310 530 330 550 Q350 530 370 550 Q390 530 410 550 Q430 530 450 550 Q470 530 490 550" stroke="#ff2e74" stroke-width="2" fill="none" opacity="0.8"/>
+    <!-- Cute Ribbon in Center of Chest -->
+    <g transform="translate(300, 475)">
+      <circle cx="0" cy="0" r="3.5" fill="#ff2e74"/>
+      <path d="M-2 -2 C-10 -10 -15 -2 -3 0 Z" fill="#ff4d88"/>
+      <path d="M2 -2 C10 -10 15 -2 3 0 Z" fill="#ff4d88"/>
+      <path d="M-1 2 L-6 12" stroke="#ff2e74" stroke-width="2" stroke-linecap="round"/>
+      <path d="M1 2 L6 12" stroke="#ff2e74" stroke-width="2" stroke-linecap="round"/>
+    </g>
+
+    <!-- Dainty Thin Straps on shoulders -->
+    <path d="M190 435 L208 500" stroke="#ff2e74" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M410 435 L392 500" stroke="#ff2e74" stroke-width="3.5" stroke-linecap="round"/>
+
+    <!-- Sparkling Choker with Pink Heart Gemstone -->
+    <path d="M230 335 Q300 375 370 335" stroke="#170c13" stroke-width="4.5" fill="none"/>
+    <path d="M230 335 Q300 375 370 335" stroke="#ff4d88" stroke-width="1.5" fill="none"/>
+    <g transform="translate(300, 362)">
+      <path d="M0 -5 C-5 -12 -12 -5 0 8 C12 -5 5 -12 0 -5 Z" fill="#ff0055" filter="url(#cuteGlow)"/>
+      <circle cx="-2" cy="-2" r="1.8" fill="#ffffff"/>
     </g>
   </g>
 
-  <!-- 4. Face Structure: Realistic Asian Female Aesthetic (卵型の綺麗な輪郭・自然な血色感) -->
-  <g id="face">
-    <!-- Face Contour -->
-    <path d="M210 170 C198 235 205 290 250 330 C275 350 325 350 350 330 C395 290 402 235 390 170 C385 120 215 120 210 170 Z" fill="url(#realSkin)"/>
+  <!-- 4. Face: Super Cute "Azato-Kawaii" Aesthetic (あざとかわいい小顔・上気した美少女) -->
+  <g id="cuteFace">
+    <!-- Heart-shaped delicate face contour -->
+    <path d="M210 160 C195 230 205 285 250 325 C275 345 325 345 350 325 C395 285 405 230 390 160 C385 110 215 110 210 160 Z" fill="url(#cuteSkin)"/>
 
-    <!-- Subtle Natural Cheek Blush (血色感チーク) -->
-    <ellipse cx="235" cy="265" rx="35" ry="22" fill="#ff4d79" opacity="0.22" filter="url(#photoSkinSoft)"/>
-    <ellipse cx="365" cy="265" rx="35" ry="22" fill="#ff4d79" opacity="0.22" filter="url(#photoSkinSoft)"/>
+    <!-- Sweet Pink Flushed Cheeks (火照った可愛いチーク) -->
+    <circle cx="232" cy="255" r="38" fill="url(#cuteBlush)"/>
+    <circle cx="368" cy="255" r="38" fill="url(#cuteBlush)"/>
+    <!-- Cheek Sparkles -->
+    <circle cx="230" cy="265" r="1.5" fill="#ffffff" opacity="0.8"/>
+    <circle cx="370" cy="265" r="1.5" fill="#ffffff" opacity="0.8"/>
 
-    <!-- Delicate Realistic Nose (筋の通った綺麗な鼻筋・ハイライト) -->
-    <path d="M300 220 L297 265 L306 270" stroke="#e28770" stroke-width="2" stroke-linecap="round" fill="none"/>
-    <path d="M294 269 C297 273 303 273 306 270" stroke="#c96048" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-    <circle cx="289" cy="268" r="2" fill="#c96048" opacity="0.5"/>
-    <circle cx="311" cy="268" r="2" fill="#c96048" opacity="0.5"/>
-    <!-- Nose bridge highlight -->
-    <path d="M299 225 L298 258" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
-    <circle cx="299" cy="264" r="2" fill="#ffffff" opacity="0.75"/>
+    <!-- Tiny Cute Button Nose (ちょこんとした可愛い鼻＆ハイライト) -->
+    <path d="M300 220 L297 256 L305 260" stroke="#fba1b7" stroke-width="2" stroke-linecap="round" fill="none"/>
+    <circle cx="299" cy="257" r="2.5" fill="#f43f5e" opacity="0.7"/>
+    <circle cx="298" cy="255" r="1.5" fill="#ffffff"/>
 
-    <!-- 5. Realistic Seductive Eyes (潤んだヘーゼルブラウンの瞳・まつ毛・涙袋) -->
+    <!-- 5. Big Alluring Jewel Eyes (とろんとした甘い瞳・ハートキャッチライト・ふっくら涙袋) -->
     <!-- Left Eye -->
-    <g id="leftEyeReal">
-      <!-- 涙袋 (Natural Aegyo-sal) -->
-      <path d="M228 244 C242 250 262 250 274 242" stroke="#e28770" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.5"/>
-      <path d="M232 240 C245 244 260 244 270 238" stroke="#ffffff" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.4"/>
-      <!-- Sclera (Eye white with realistic shading) -->
-      <path d="M222 230 C234 218 266 218 278 229 C268 238 234 238 222 230 Z" fill="#f8fafc"/>
-      <path d="M222 230 C234 220 266 220 278 229" stroke="#cbd5e1" stroke-width="1.5" fill="none"/>
-      <!-- Iris -->
-      <ellipse cx="250" cy="228" rx="14" ry="13" fill="url(#realIris)"/>
-      <ellipse cx="250" cy="228" rx="6.5" ry="6.5" fill="#080201"/>
-      <!-- Iris details & reflections -->
-      <circle cx="246" cy="223" r="3.5" fill="#ffffff" opacity="0.95"/>
-      <circle cx="255" cy="232" r="1.8" fill="#ffffff" opacity="0.7"/>
-      <circle cx="249" cy="227" r="1" fill="#fed7aa" opacity="0.8"/>
-      <!-- Upper Eyelash (Delicate natural winged eyeliner & lashes) -->
-      <path d="M218 230 C230 216 266 216 282 226" stroke="#180a05" stroke-width="4" stroke-linecap="round" fill="none"/>
-      <path d="M280 226 L288 222" stroke="#180a05" stroke-width="2.5" stroke-linecap="round"/>
-      <path d="M240 217 L238 211" stroke="#180a05" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M252 216 L253 210" stroke="#180a05" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M264 218 L267 212" stroke="#180a05" stroke-width="1.5" stroke-linecap="round"/>
-      <!-- Double eyelid crease -->
-      <path d="M226 218 C238 209 262 209 274 216" stroke="#c96048" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.7"/>
-      <!-- Rose/Brown Eyeshadow -->
-      <path d="M222 223 C235 210 265 210 280 220" stroke="#e11d48" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.25" filter="url(#photoSkinSoft)"/>
+    <g id="leftEyeSuperCute">
+      <!-- ふっくら涙袋 (Aegyo-sal with sweet pink/pearl highlight) -->
+      <path d="M224 240 C240 248 264 248 276 238" stroke="#fba1b7" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.8"/>
+      <path d="M228 236 C242 242 262 242 272 234" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.7"/>
+      <!-- Sclera -->
+      <path d="M218 224 C232 210 268 210 282 223 C270 234 232 234 218 224 Z" fill="#ffffff"/>
+      <!-- Jewel Iris -->
+      <ellipse cx="250" cy="222" rx="16" ry="15" fill="url(#jewelIris)"/>
+      <ellipse cx="250" cy="222" rx="7" ry="7" fill="#140106"/>
+      <!-- Heart Catchlight & Big Sparkling Highlights -->
+      <circle cx="244" cy="216" r="4.5" fill="#ffffff"/>
+      <circle cx="256" cy="226" r="2.5" fill="#ffffff"/>
+      <!-- Cute Pink Heart in Iris -->
+      <path d="M250 219 C248 215 244 216 244 219 C244 223 250 226 250 226 C250 226 256 223 256 219 C256 216 252 215 250 219 Z" fill="#ff7eb3" opacity="0.9"/>
+      <!-- Long Fluttery Eyelashes & Winged Eyeliner -->
+      <path d="M214 224 C228 208 268 208 286 220" stroke="#1f0914" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+      <path d="M284 220 L292 214" stroke="#1f0914" stroke-width="3" stroke-linecap="round"/>
+      <path d="M236 209 L233 202" stroke="#1f0914" stroke-width="2" stroke-linecap="round"/>
+      <path d="M250 208 L250 200" stroke="#1f0914" stroke-width="2" stroke-linecap="round"/>
+      <path d="M264 210 L268 203" stroke="#1f0914" stroke-width="2" stroke-linecap="round"/>
+      <!-- Double Eyelid -->
+      <path d="M222 210 C236 200 264 200 278 208" stroke="#db2777" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.75"/>
+      <!-- Sweet Pink Eyeshadow -->
+      <path d="M218 216 C232 202 268 202 284 214" stroke="#ff2e74" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.35" filter="url(#softPink)"/>
     </g>
 
     <!-- Right Eye -->
-    <g id="rightEyeReal">
-      <!-- 涙袋 -->
-      <path d="M372 244 C358 250 338 250 326 242" stroke="#e28770" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.5"/>
-      <path d="M368 240 C355 244 340 244 330 238" stroke="#ffffff" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.4"/>
+    <g id="rightEyeSuperCute">
+      <!-- ふっくら涙袋 -->
+      <path d="M376 240 C360 248 336 248 324 238" stroke="#fba1b7" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.8"/>
+      <path d="M372 236 C358 242 338 242 328 234" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.7"/>
       <!-- Sclera -->
-      <path d="M378 230 C366 218 334 218 322 229 C332 238 366 238 378 230 Z" fill="#f8fafc"/>
-      <path d="M378 230 C366 220 334 220 322 229" stroke="#cbd5e1" stroke-width="1.5" fill="none"/>
-      <!-- Iris -->
-      <ellipse cx="350" cy="228" rx="14" ry="13" fill="url(#realIris)"/>
-      <ellipse cx="350" cy="228" rx="6.5" ry="6.5" fill="#080201"/>
-      <circle cx="346" cy="223" r="3.5" fill="#ffffff" opacity="0.95"/>
-      <circle cx="355" cy="232" r="1.8" fill="#ffffff" opacity="0.7"/>
-      <circle cx="349" cy="227" r="1" fill="#fed7aa" opacity="0.8"/>
-      <!-- Upper Eyelash -->
-      <path d="M382 230 C370 216 334 216 318 226" stroke="#180a05" stroke-width="4" stroke-linecap="round" fill="none"/>
-      <path d="M320 226 L312 222" stroke="#180a05" stroke-width="2.5" stroke-linecap="round"/>
-      <path d="M360 217 L362 211" stroke="#180a05" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M348 216 L347 210" stroke="#180a05" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M336 218 L333 212" stroke="#180a05" stroke-width="1.5" stroke-linecap="round"/>
-      <!-- Double eyelid crease -->
-      <path d="M374 218 C362 209 338 209 326 216" stroke="#c96048" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.7"/>
-      <!-- Rose Eyeshadow -->
-      <path d="M378 223 C365 210 335 210 320 220" stroke="#e11d48" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.25" filter="url(#photoSkinSoft)"/>
+      <path d="M382 224 C368 210 332 210 318 223 C330 234 368 234 382 224 Z" fill="#ffffff"/>
+      <!-- Jewel Iris -->
+      <ellipse cx="350" cy="222" rx="16" ry="15" fill="url(#jewelIris)"/>
+      <ellipse cx="350" cy="222" rx="7" ry="7" fill="#140106"/>
+      <circle cx="344" cy="216" r="4.5" fill="#ffffff"/>
+      <circle cx="356" cy="226" r="2.5" fill="#ffffff"/>
+      <path d="M350 219 C348 215 344 216 344 219 C344 223 350 226 350 226 C350 226 356 223 356 219 C356 216 352 215 350 219 Z" fill="#ff7eb3" opacity="0.9"/>
+      <!-- Eyelashes -->
+      <path d="M386 224 C372 208 332 208 314 220" stroke="#1f0914" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+      <path d="M316 220 L308 214" stroke="#1f0914" stroke-width="3" stroke-linecap="round"/>
+      <path d="M364 209 L367 202" stroke="#1f0914" stroke-width="2" stroke-linecap="round"/>
+      <path d="M350 208 L350 200" stroke="#1f0914" stroke-width="2" stroke-linecap="round"/>
+      <path d="M336 210 L332 203" stroke="#1f0914" stroke-width="2" stroke-linecap="round"/>
+      <!-- Double Eyelid -->
+      <path d="M378 210 C364 200 336 200 322 208" stroke="#db2777" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.75"/>
+      <!-- Pink Eyeshadow -->
+      <path d="M382 216 C368 202 332 202 316 214" stroke="#ff2e74" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.35" filter="url(#softPink)"/>
     </g>
 
-    <!-- Natural Soft Feminine Eyebrows (パウダー眉風) -->
-    <path d="M218 202 C235 188 265 192 280 200" stroke="#3d271d" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.85"/>
-    <path d="M382 202 C365 188 335 192 320 200" stroke="#3d271d" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.85"/>
+    <!-- Soft Feminine Arch Eyebrows -->
+    <path d="M216 194 C234 180 264 184 278 192" stroke="#4a2433" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.85"/>
+    <path d="M384 194 C366 180 336 184 322 192" stroke="#4a2433" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.85"/>
 
-    <!-- 6. Realistic Plump Glossy Lips (ぷるぷるリップ・自然な微笑み) -->
-    <g id="realLips">
-      <!-- Upper lip (M-shape) -->
-      <path d="M278 296 C290 291 296 293 300 294 C304 293 310 291 322 296 C316 303 308 304 300 303 C292 304 284 303 278 296 Z" fill="url(#realLip)"/>
-      <!-- Mouth separation line -->
-      <path d="M280 298 C290 304 310 304 320 298" stroke="#4a0418" stroke-width="2" stroke-linecap="round" fill="none"/>
-      <!-- Lower plump lip -->
-      <path d="M280 299 C288 314 312 314 320 299 C314 318 286 318 280 299 Z" fill="url(#realLip)"/>
-      <!-- Realistic Wet Gloss Highlights -->
-      <ellipse cx="300" cy="309" rx="8" ry="3.5" fill="#ffffff" opacity="0.85"/>
-      <ellipse cx="292" cy="308" rx="3" ry="1.5" fill="#ffffff" opacity="0.7"/>
-      <circle cx="300" cy="296" r="1.5" fill="#ffffff" opacity="0.75"/>
+    <!-- 6. Cute Glossy Parted Lips (甘噛み・少し開いたぷるぷるリップ＆八重歯チラ見え) -->
+    <g id="cutePlumpLips">
+      <!-- Upper Lip (Sweet Cupid's Bow) -->
+      <path d="M276 288 C288 283 295 285 300 286 C305 285 312 283 324 288 C318 296 308 297 300 296 C292 297 282 296 276 288 Z" fill="url(#strawberryLip)"/>
+      <!-- Mouth Parting with cute white pearl teeth peek -->
+      <path d="M280 290 C290 297 310 297 320 290 C316 300 284 300 280 290 Z" fill="#380010"/>
+      <!-- Cute Teeth Peek -->
+      <path d="M292 291 C295 294 305 294 308 291 Z" fill="#ffffff"/>
+      <!-- Plump Juicy Lower Lip -->
+      <path d="M278 291 C286 310 314 310 322 291 C316 315 284 315 278 291 Z" fill="url(#strawberryLip)"/>
+      <!-- Super Wet High-Gloss Highlights -->
+      <ellipse cx="300" cy="303" rx="9" ry="4" fill="#ffffff" opacity="0.9"/>
+      <ellipse cx="290" cy="302" rx="3.5" ry="2" fill="#ffffff" opacity="0.75"/>
+      <circle cx="300" cy="288" r="1.8" fill="#ffffff" opacity="0.85"/>
     </g>
 
-    <!-- Sexy Mole / Beauty Mark under right eye (泣きぼくろ) -->
-    <circle cx="376" cy="254" r="1.8" fill="#381c14"/>
+    <!-- Sexy Beauty Mark under Right Eye (泣きぼくろ) -->
+    <circle cx="378" cy="245" r="2.2" fill="#301320"/>
   </g>
 
-  <!-- 7. Front Hair: Silky Dark Brown Wavy Layers Framing Face -->
-  <g id="frontHairReal">
+  <!-- 7. Front Hair: Cute See-Through Bangs & Fluffy Waves (シースルーバング＆ゆるふわウェーブ) -->
+  <g id="frontHairCute">
     <!-- Top Hair Volume -->
-    <path d="M205 155 C230 85 370 85 395 155 C415 105 360 70 300 70 C240 70 185 105 205 155 Z" fill="url(#realHair)"/>
-    <!-- Side Bangs & Soft Face Framing Strands -->
-    <path d="M300 95 C285 145 235 180 200 220 C225 185 270 170 290 135 Z" fill="url(#realHair)"/>
-    <path d="M300 95 C318 145 365 180 400 220 C375 185 330 170 310 135 Z" fill="url(#realHair)"/>
-    <!-- Voluminous Side Waves sweeping over shoulders -->
-    <path d="M205 190 C175 250 160 360 205 450 C220 480 230 490 215 515 C198 535 180 490 170 435 C150 330 165 230 205 190 Z" fill="url(#realHair)"/>
-    <path d="M395 190 C425 250 440 360 395 450 C380 480 370 490 385 515 C402 535 420 490 430 435 C450 330 435 230 395 190 Z" fill="url(#realHair)"/>
+    <path d="M205 145 C230 75 370 75 395 145 C415 95 360 60 300 60 C240 60 185 95 205 145 Z" fill="url(#roseBrownHair)"/>
+    
+    <!-- Cute See-Through Bangs (シースルー前髪・おでこチラ見せ) -->
+    <path d="M245 75 C240 120 220 155 210 185 C220 150 250 135 255 95 Z" fill="url(#roseBrownHair)"/>
+    <path d="M270 72 C270 125 265 160 260 190 C268 155 285 130 280 90 Z" fill="url(#roseBrownHair)"/>
+    <path d="M300 70 C302 120 300 155 298 185 C304 150 315 130 312 90 Z" fill="url(#roseBrownHair)"/>
+    <path d="M330 72 C330 125 335 160 340 190 C332 155 315 130 320 90 Z" fill="url(#roseBrownHair)"/>
+    <path d="M355 75 C360 120 380 155 390 185 C380 150 350 135 345 95 Z" fill="url(#roseBrownHair)"/>
 
-    <!-- Silky Hair Gloss Sheen (天使の輪・艶ハイライト) -->
-    <path d="M220 120 C255 100 345 100 380 120 C355 108 245 108 220 120 Z" fill="url(#hairSheen)"/>
-    <path d="M235 132 C265 118 335 118 365 132 C345 124 255 124 235 132 Z" fill="#ffffff" opacity="0.35"/>
+    <!-- Side Tendrils framing delicate jaw & neck -->
+    <path d="M205 175 C170 240 155 350 195 440 C210 470 220 480 205 505 C188 525 170 480 160 425 C140 320 160 220 205 175 Z" fill="url(#roseBrownHair)"/>
+    <path d="M395 175 C430 240 445 350 405 440 C390 470 380 480 395 505 C412 525 430 480 440 425 C460 320 440 220 395 175 Z" fill="url(#roseBrownHair)"/>
+
+    <!-- Hair Halo Sheen (天使の輪・ツヤ感) -->
+    <path d="M215 110 C250 90 350 90 385 110 C360 98 240 98 215 110 Z" fill="url(#hairAngelHalo)"/>
+    <path d="M230 122 C260 108 340 108 370 122 C350 114 250 114 230 122 Z" fill="#ffffff" opacity="0.4"/>
   </g>
 
-  <!-- 8. Subtle Instagram / SNS Photo Border & Badge -->
-  <rect width="600" height="600" fill="none" stroke="#e11d48" stroke-width="6" rx="24"/>
+  <!-- 8. Sparkle Overlay & Kawaii Glamour Frame -->
+  <rect width="600" height="600" fill="none" stroke="#ff2e74" stroke-width="6" rx="24"/>
   <g transform="translate(300, 562)">
-    <rect x="-125" y="-18" width="250" height="34" rx="17" fill="#180b15" stroke="#ff4d79" stroke-width="2" filter="url(#softGlow)"/>
+    <rect x="-135" y="-18" width="270" height="34" rx="17" fill="#200514" stroke="#ff2e74" stroke-width="2" filter="url(#cuteGlow)"/>
     <text x="0" y="5" fill="#ff7eb3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="900" text-anchor="middle" letter-spacing="1.5">
-      ❤️ YAMADA • VERIFIED
+      💖 YAMADA • HONEY TRAP 💖
     </text>
   </g>
 </svg>

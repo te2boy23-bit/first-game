@@ -17,6 +17,7 @@ interface ActiveContact {
 
 interface ChatWindowProps {
   t: any;
+  nickname?: string;
   activeContact: ActiveContact;
   currentMessages: { sender: string; text: string }[];
   isLoading: boolean;
@@ -56,6 +57,7 @@ const AVATAR_MAP: Record<string, string> = {
 
 export default function ChatWindow({
   t,
+  nickname,
   activeContact,
   currentMessages,
   isLoading,
@@ -76,6 +78,51 @@ export default function ChatWindow({
       ? "/images/avatars/master_boss.svg"
       : "/images/avatars/sato.jpg");
   const agentAvatarSrc = "/images/avatars/agent.svg";
+  const agentName =
+    nickname ||
+    (lang === "en"
+      ? "Agent"
+      : lang === "my"
+        ? "စုံစမ်းရေးမှူး"
+        : lang === "ne"
+          ? "एजेन्ट"
+          : "カモ太郎");
+
+  const handleInsertBank = () => {
+    let text = `振込先口座情報です。\n銀行名：サイバー特命銀行（特命支店 007）\n口座番号：普通 7788990\n口座名義：${agentName}`;
+    if (lang === "en") {
+      text = `Here is the bank account details:\nBank: Cyber Special Bank (Branch 007)\nAccount: Savings 7788990\nHolder: ${agentName}`;
+    } else if (lang === "my") {
+      text = `ငွေလွှဲရန် ဘဏ်အကောင့် အချက်အလက် ဖြစ်ပါသည်။\nဘဏ်: ဆိုက်ဘာ အထူးဘဏ် (ဘဏ်ခွဲ 007)\nအကောင့်: 7788990\nအမည်: ${agentName}`;
+    } else if (lang === "ne") {
+      text = `बैंक खाता विवरण:\nबैंक: साइबर विशेष बैंक (शाखा 007)\nखाता: 7788990\nनाम: ${agentName}`;
+    }
+    setInput(text);
+  };
+
+  const handleInsertId = () => {
+    let text = `身元確認用の情報です。\n氏名：${agentName}\n住所：東京都千代田区霞が関2-1-1 警視庁特命室\n生年月日：1998/07/07`;
+    if (lang === "en") {
+      text = `Here is my identification info:\nName: ${agentName}\nAddress: 2-1-1 Kasumigaseki, Chiyoda, Tokyo\nDOB: 1998/07/07`;
+    } else if (lang === "my") {
+      text = `အထောက်အထား အချက်အလက်:\nအမည်: ${agentName}\nလိပ်စာ: တိုကျို ဆိုက်ဘာဌာန\nမွေးသက္ကရာဇ်: 1998/07/07`;
+    } else if (lang === "ne") {
+      text = `परिचय विवरण:\nनाम: ${agentName}\nठेगाना: टोकियो साइबर महाशाखा\nजन्म मिति: 1998/07/07`;
+    }
+    setInput(text);
+  };
+
+  const handleInsertPayIntent = () => {
+    let text = `手続きの準備ができました。指定の口座へすぐに送金したいので、お振込先の口座番号と会社名を教えてください。`;
+    if (lang === "en") {
+      text = `I am ready to transfer now. Please provide your official company name and bank details so I can send the payment.`;
+    } else if (lang === "my") {
+      text = `ငွေလွှဲရန် အဆင်သင့်ဖြစ်ပါပြီ။ သင့်တရားဝင်ကုမ္ပဏီအမည်နှင့် ဘဏ်အကောင့်ကို ပေးပို့ပေးပါ။`;
+    } else if (lang === "ne") {
+      text = `म रकम भुक्तानी गर्न तयार छु। कृपया तपाईंको आधिकारिक कम्पनीको नाम र बैंक खाता विवरण पठाउनुहोस्।`;
+    }
+    setInput(text);
+  };
 
   return (
     <div
@@ -385,26 +432,104 @@ export default function ChatWindow({
           </div>
         </div>
       ) : (
-        <form
-          onSubmit={handleSend}
-          className="p-3 border-t border-gray-800 bg-gray-900/30 flex gap-2"
-        >
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder={t.placeholder || "メッセージを入力..."}
-            disabled={isLoading}
-            className="flex-1 p-2 bg-gray-900 border border-gray-800 rounded text-white text-base sm:text-sm focus:outline-none focus:border-pink-500"
-          />
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="px-4 py-2 bg-pink-600 hover:bg-pink-500 font-bold rounded text-sm text-white cursor-pointer disabled:opacity-50"
-          >
-            {t.send}
-          </button>
-        </form>
+        <div className="border-t border-gray-800 bg-gray-900/50 p-2.5 sm:p-3 space-y-2">
+          {/* 🛡️ おとり捜査用クイックアクションバー */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px] scrollbar-thin">
+            <span className="text-gray-500 font-bold shrink-0 hidden sm:inline flex items-center gap-1">
+              <span>🛡️</span>
+              <span>
+                {lang === "en"
+                  ? "Undercover Data:"
+                  : lang === "my"
+                    ? "အတုအယောင်ဒေတာ:"
+                    : lang === "ne"
+                      ? "नक्कली डाटा:"
+                      : "おとり捜査用データ:"}
+              </span>
+            </span>
+            <button
+              type="button"
+              onClick={handleInsertBank}
+              className="px-2.5 py-1 bg-blue-950/80 hover:bg-blue-900 text-blue-300 hover:text-white border border-blue-700/70 rounded-lg transition cursor-pointer font-bold shrink-0 shadow-sm flex items-center gap-1"
+              title={
+                lang === "en"
+                  ? "Insert Undercover Bank Account"
+                  : "おとり捜査用口座情報を自動入力"
+              }
+            >
+              <span>💳</span>
+              <span>
+                {lang === "en"
+                  ? "Send Dummy Bank Info"
+                  : lang === "my"
+                    ? "ဘဏ်အကောင့် ထည့်ပါ"
+                    : lang === "ne"
+                      ? "बैंक विवरण राख्नुहोस्"
+                      : "おとり口座を送る"}
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={handleInsertId}
+              className="px-2.5 py-1 bg-purple-950/80 hover:bg-purple-900 text-purple-300 hover:text-white border border-purple-700/70 rounded-lg transition cursor-pointer font-bold shrink-0 shadow-sm flex items-center gap-1"
+              title={
+                lang === "en"
+                  ? "Insert Undercover ID & Address"
+                  : "偽の身元・住所情報を自動入力"
+              }
+            >
+              <span>💼</span>
+              <span>
+                {lang === "en"
+                  ? "Send Dummy ID"
+                  : lang === "my"
+                    ? "အတုအထောက်အထား ထည့်ပါ"
+                    : lang === "ne"
+                      ? "नक्कली परिचय राख्नुहोस्"
+                      : "偽身分証を送る"}
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={handleInsertPayIntent}
+              className="px-2.5 py-1 bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 hover:text-white border border-emerald-700/70 rounded-lg transition cursor-pointer font-bold shrink-0 shadow-sm flex items-center gap-1"
+              title={
+                lang === "en"
+                  ? "Tell them you are ready to transfer money"
+                  : "振込・送金する意思を伝えて相手の口座・会社名を引き出す"
+              }
+            >
+              <span>💴</span>
+              <span>
+                {lang === "en"
+                  ? "Ready to Transfer"
+                  : lang === "my"
+                    ? "ငွေလွှဲမည်ဟု ပြောပါ"
+                    : lang === "ne"
+                      ? "रकम भुक्तानी इच्छा"
+                      : "振り込みたいと伝える"}
+              </span>
+            </button>
+          </div>
+
+          <form onSubmit={handleSend} className="flex gap-2">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder={t.placeholder || "メッセージを入力..."}
+              disabled={isLoading}
+              className="flex-1 p-2 bg-gray-900 border border-gray-800 rounded text-white text-base sm:text-sm focus:outline-none focus:border-pink-500"
+            />
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="px-4 py-2 bg-pink-600 hover:bg-pink-500 font-bold rounded text-sm text-white cursor-pointer disabled:opacity-50"
+            >
+              {t.send}
+            </button>
+          </form>
+        </div>
       )}
     </div>
   );

@@ -2971,6 +2971,7 @@ export default function DashboardPage() {
 
       <ChatWindow
         t={t}
+        nickname={nickname}
         activeContact={activeContact}
         currentMessages={currentMessages}
         isLoading={isLoading}
