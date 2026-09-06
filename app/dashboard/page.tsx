@@ -2890,6 +2890,7 @@ export default function DashboardPage() {
         onClose={() => setShowArchiveModal(false)}
         clearedContacts={contacts.filter((c) => c.cleared)}
         lang={lang}
+        nickname={nickname}
       />
 
       <AdModal

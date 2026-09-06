@@ -179,7 +179,15 @@ export default function ArchiveModal({
             {nickname && (
               <div className="text-[11px] text-gray-400 font-mono mt-0.5">
                 AGENT: <span className="text-white font-bold">{nickname}</span>{" "}
-                (サイバー特命捜査官)
+                <span className="text-pink-400/80">
+                  {lang === "en"
+                    ? "(Special Agent)"
+                    : lang === "my"
+                      ? "(စုံစမ်းရေးမှူး)"
+                      : lang === "ne"
+                        ? "(विशेष एजेन्ट)"
+                        : "(特命捜査官)"}
+                </span>
               </div>
             )}
           </div>

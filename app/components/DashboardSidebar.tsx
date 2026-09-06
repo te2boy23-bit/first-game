@@ -109,12 +109,12 @@ export default function DashboardSidebar({
   const handleCopyBankInfo = (e: React.MouseEvent) => {
     e.stopPropagation();
     const accountInfo = isEn
-      ? `[Undercover Bank Info]\nBank: Cyber Special Bank (Branch 007)\nAccount No: Savings 7788990\nHolder: ${nickname || "Agent"}`
+      ? `Bank: Sakura Net Bank (Shinjuku Branch 108)\nAccount No: Savings 4589210\nAccount Name: ${nickname || "Agent"}`
       : isMy
-        ? `[အတုအယောင် ဘဏ်အကောင့်]\nဘဏ်: ဆိုက်ဘာ အထူးဘဏ် (ဘဏ်ခွဲ 007)\nအကောင့်: 7788990\nအမည်: ${nickname || "Agent"}`
+        ? `ဘဏ်: Sakura Net Bank (Shinjuku ဘဏ်ခွဲ 108)\nအကောင့်: 4589210\nအမည်: ${nickname || "Agent"}`
         : isNe
-          ? `[नक्कली बैंक विवरण]\nबैंक: साइबर विशेष बैंक (शाखा 007)\nखाता: 7788990\nनाम: ${nickname || "Agent"}`
-          : `【おとり捜査用口座情報】\n銀行名：サイバー特命銀行（特命支店 007）\n口座番号：普通 7788990\n口座名義：${nickname || "カモ太郎"}`;
+          ? `बैंक: Sakura Net Bank (Shinjuku Branch 108)\nखाता: 4589210\nनाम: ${nickname || "Agent"}`
+          : `銀行名：さくらネット銀行（新宿支店 108）\n口座番号：普通 4589210\n口座名義：${nickname || "カモ太郎"}`;
 
     if (navigator.clipboard) {
       navigator.clipboard.writeText(accountInfo);
@@ -432,22 +432,33 @@ export default function DashboardSidebar({
               </span>
               <span className="text-white font-bold">
                 {isEn
-                  ? "Cyber Taskforce Bank (007)"
-                  : "サイバー特命銀行 特命支店(007)"}
+                  ? "Sakura Net Bank (Shinjuku 108)"
+                  : "さくらネット銀行 新宿支店(108)"}
               </span>
             </div>
             <div className="flex justify-between items-center text-gray-300">
               <span className="text-gray-500">
                 {isEn ? "Account No:" : "口座番号:"}
               </span>
-              <span className="text-sky-300 font-bold">普通 7788990</span>
+              <span className="text-sky-300 font-bold">普通 4589210</span>
             </div>
             <div className="flex justify-between items-center text-gray-300 pt-1 border-t border-gray-800">
               <span className="text-gray-500">
                 {isEn ? "Holder Name:" : "口座名義(登録名):"}
               </span>
               <span className="text-emerald-300 font-bold">
-                {nickname || "Agent"}
+                {nickname || "カモ太郎"}
+              </span>
+            </div>
+            <div className="flex justify-between items-center text-gray-300 pt-1 border-t border-gray-800">
+              <span className="text-gray-500">
+                {isEn ? "Dummy Address:" : "ダミー住所:"}
+              </span>
+              <span
+                className="text-gray-300 truncate max-w-[150px]"
+                title="東京都新宿区西新宿3-12-8"
+              >
+                {isEn ? "Nishi-Shinjuku, Tokyo" : "東京都新宿区西新宿3-12-8"}
               </span>
             </div>
           </div>
@@ -456,12 +467,12 @@ export default function DashboardSidebar({
             <span>🔒</span>
             <span>
               {isEn
-                ? "Safe Play: Real personal info is NEVER needed. Use this alias."
+                ? "Safe Play: Real personal info is NEVER needed. Use this civilian alias."
                 : isMy
-                  ? "အမှန်တကယ် ကိုယ်ရေးအချက်အလက် ထည့်ရန်မလိုပါ။ ဤဒေတာကို သုံးပါ။"
+                  ? "အမှန်တကယ် ကိုယ်ရေးအချက်အလက် ထည့်ရန်မလိုပါ။ ဤအရပ်သား အချက်အလက်ကို သုံးပါ။"
                   : isNe
-                    ? "वास्तविक व्यक्तिगत विवरण आवश्यक छैन। यो डाटा प्रयोग गर्नुहोस्।"
-                    : "安全保護：実際の個人情報は入力不要。上記のおとり口座をご利用ください。"}
+                    ? "वास्तविक व्यक्तिगत विवरण आवश्यक छैन। यो सामान्य नागरिक डाटा प्रयोग गर्नुहोस्।"
+                    : "安全保護：実際の個人情報は入力不要。上記のおとり用ダミー情報を使用します。"}
             </span>
           </div>
         </div>

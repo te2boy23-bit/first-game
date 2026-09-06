@@ -89,25 +89,25 @@ export default function ChatWindow({
           : "カモ太郎");
 
   const handleInsertBank = () => {
-    let text = `振込先口座情報です。\n銀行名：サイバー特命銀行（特命支店 007）\n口座番号：普通 7788990\n口座名義：${agentName}`;
+    let text = `振込先口座の情報です。\n銀行名：さくらネット銀行（新宿支店 108）\n口座番号：普通 4589210\n口座名義：${agentName}`;
     if (lang === "en") {
-      text = `Here is the bank account details:\nBank: Cyber Special Bank (Branch 007)\nAccount: Savings 7788990\nHolder: ${agentName}`;
+      text = `Here is my bank account information:\nBank: Sakura Net Bank (Shinjuku Branch 108)\nAccount No: Savings 4589210\nAccount Name: ${agentName}`;
     } else if (lang === "my") {
-      text = `ငွေလွှဲရန် ဘဏ်အကောင့် အချက်အလက် ဖြစ်ပါသည်။\nဘဏ်: ဆိုက်ဘာ အထူးဘဏ် (ဘဏ်ခွဲ 007)\nအကောင့်: 7788990\nအမည်: ${agentName}`;
+      text = `ငွေလွှဲလက်ခံမည့် ဘဏ်အကောင့် အချက်အလက် ဖြစ်ပါသည်။\nဘဏ်: Sakura Net Bank (Shinjuku ဘဏ်ခွဲ 108)\nအကောင့်နံပါတ်: 4589210\nအမည်: ${agentName}`;
     } else if (lang === "ne") {
-      text = `बैंक खाता विवरण:\nबैंक: साइबर विशेष बैंक (शाखा 007)\nखाता: 7788990\nनाम: ${agentName}`;
+      text = `मेरो बैंक खाता विवरण यस प्रकार छ:\nबैंक: Sakura Net Bank (Shinjuku Branch 108)\nखाता नम्बर: 4589210\nखातावालाको नाम: ${agentName}`;
     }
     setInput(text);
   };
 
   const handleInsertId = () => {
-    let text = `身元確認用の情報です。\n氏名：${agentName}\n住所：東京都千代田区霞が関2-1-1 警視庁特命室\n生年月日：1998/07/07`;
+    let text = `身元確認用の情報です。\n氏名：${agentName}\n住所：東京都新宿区西新宿3丁目12-8 パークレジデンス402\n電話番号：090-3841-9284\n生年月日：1995/04/12`;
     if (lang === "en") {
-      text = `Here is my identification info:\nName: ${agentName}\nAddress: 2-1-1 Kasumigaseki, Chiyoda, Tokyo\nDOB: 1998/07/07`;
+      text = `Here is my identification information:\nName: ${agentName}\nAddress: #402 Park Residence, 3-12-8 Nishi-Shinjuku, Shinjuku-ku, Tokyo\nPhone: 090-3841-9284\nDOB: 1995/04/12`;
     } else if (lang === "my") {
-      text = `အထောက်အထား အချက်အလက်:\nအမည်: ${agentName}\nလိပ်စာ: တိုကျို ဆိုက်ဘာဌာန\nမွေးသက္ကရာဇ်: 1998/07/07`;
+      text = `အထောက်အထား အချက်အလက် ဖြစ်ပါသည်။\nအမည်: ${agentName}\nလိပ်စာ: #402 Park Residence, 3-12-8 Nishi-Shinjuku, Shinjuku-ku, Tokyo\nဖုန်း: 090-3841-9284\nမွေးသက္ကရာဇ်: 1995/04/12`;
     } else if (lang === "ne") {
-      text = `परिचय विवरण:\nनाम: ${agentName}\nठेगाना: टोकियो साइबर महाशाखा\nजन्म मिति: 1998/07/07`;
+      text = `परिचय प्रमाणीकरण विवरण:\nनाम: ${agentName}\nठेगाना: #402 Park Residence, 3-12-8 Nishi-Shinjuku, Shinjuku-ku, Tokyo\nफोन: 090-3841-9284\nजन्म मिति: 1995/04/12`;
     }
     setInput(text);
   };
