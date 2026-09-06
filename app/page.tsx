@@ -333,7 +333,12 @@ export default function GeneralPortalPage() {
 
       <main className="max-w-6xl mx-auto px-3 sm:px-6 py-5 sm:py-8 grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
         <PortalArticle t={t} articleTriggerRef={articleTriggerRef} />
-        <PortalSidebar t={t} onTriggerScamTrap={triggerScamTrap} />
+        <PortalSidebar
+          t={t}
+          isAlreadyAgent={isMounted && isAlreadyAgent}
+          onResumeMission={handleResumeMission}
+          onTriggerScamTrap={triggerScamTrap}
+        />
       </main>
 
       {/* 🚨 MODALS */}

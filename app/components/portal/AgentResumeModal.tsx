@@ -79,9 +79,9 @@ export function AgentResumeModal({
           <button
             type="button"
             onClick={onResumeMission}
-            className="w-full py-3.5 bg-gradient-to-r from-emerald-600 via-teal-600 to-green-500 hover:from-emerald-500 hover:to-green-400 text-white font-black rounded-xl text-sm sm:text-base cursor-pointer shadow-lg shadow-emerald-600/40 flex items-center justify-center gap-2 transition duration-200"
+            className="w-full py-4 bg-gradient-to-r from-emerald-500 via-teal-500 to-green-400 hover:from-emerald-400 hover:to-green-300 text-slate-950 font-black rounded-xl text-base sm:text-lg cursor-pointer shadow-xl shadow-emerald-500/30 flex items-center justify-center gap-2 transition duration-200"
           >
-            <span>🚨</span>
+            <span className="text-xl">🎮</span>
             <span>{t.agentStartGameBtn}</span>
           </button>
 
