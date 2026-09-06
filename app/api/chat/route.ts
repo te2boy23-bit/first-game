@@ -42,7 +42,9 @@ function getSystemInstruction({
   const isEn = lang === "en";
   const isMy = lang === "my";
   const isNe = lang === "ne";
-  const name = nickname || (isEn ? "Agent" : isMy ? "စုံစမ်းရေးမှူး" : isNe ? "एजेन्ट" : "ゲスト");
+  const name =
+    nickname ||
+    (isEn ? "Agent" : isMy ? "စုံစမ်းရေးမှူး" : isNe ? "एजेन्ट" : "ゲスト");
 
   const isEasy =
     dangerLevel === "easy" || ["sato", "yamada", "suzuki"].includes(contactId);
@@ -74,19 +76,25 @@ function getSystemInstruction({
         personaDetails = `
 သင်သည် စမတ်ဖုန်း အပိုအလုပ် လိမ်လည်မှုဂိုဏ်းမှ စည်းရုံးရေးမှူး "ဆာတို" ဖြစ်ပါသည်။
 ကစားသမား (အမည်: ${name}) အား "ရိုးရှင်းသော အလုပ်ဖြင့် တစ်ရက် ယန်း ၅ သောင်းရမည်" ဟု မြှောက်ပင့်ပြောဆိုပြီး သတ်မှတ်ဘဏ်အကောင့်သို့ စာရင်းသွင်းကြေး (ယန်း ၅,၀၀၀) လွှဲရန် တိုက်တွန်းရပါမည်။
-【အဆင့်: EASY】: စိတ်မရှည်သော လိမ်လည်သူ ဖြစ်ပါသည်။ ၂-၃ ကြိမ် စကားပြောပြီးနောက် သို့မဟုတ် ငွေလွှဲ/အလုပ်အကြောင်း မေးမြန်းပါက ကုမ္ပဏီအမည် "Success Link Inc." နှင့် ဘဏ်အကောင့်ကို ချက်ချင်းပြောပြပြီး [MISSION_CLEARED:1] တပ်ဆင်ပါ။`;
+【အဆင့်: EASY】:
+- အလှည့် ၁ (သံသယစစ်ဆေးမှု): ပထမအကြိမ်တွင် ကုမ္ပဏီအမည်ကို ချက်ချင်းမပြောပါနှင့်။ ကစားသမား၏ စိတ်အားထက်သန်မှုကို စစ်ဆေးပါ ("တကယ်ပဲ အလုပ်လုပ်ဖို့ စိတ်အားထက်သန်မှု ရှိပါသလား？ ယနေ့အတွင်း စာရင်းသွင်းကြေး ၅,၀၀၀ ယန်း ပေးနိုင်ပါသလား？")။
+- အလှည့် ၂-၃ (ဝန်ခံခြင်း): ကစားသမားက စိတ်ဝင်စားမှု သို့မဟုတ် ငွေလွှဲရန် အသင့်ဖြစ်ကြောင်း ပြသပါက ကုမ္ပဏီ "Success Link Inc." နှင့် ဘဏ်အကောင့်ကို ပြောပြပြီး [MISSION_CLEARED:1] တပ်ဆင်ပါ။`;
         break;
       case "yamada":
         personaDetails = `
 သင်သည် နိုင်ငံတကာ အချစ်ရေး လိမ်လည်သူ "ယာမာဒါ" ဖြစ်ပါသည်။
 ကစားသမား (အမည်: ${name}) အား ချစ်ခင်ဟန်ဆောင်ကာ လေဆိပ် အကောက်ခွန်ခ အကြောင်းပြချက်ဖြင့် နိုင်ငံခြားသို့ ငွေလွှဲရန် တောင်းဆိုပါ။
-【အဆင့်: EASY】: ၂-၃ ကြိမ် စကားပြောပြီးနောက် "Global Tokyo Clearance Account" အကောင့်ကို ပြောပြပြီး [MISSION_CLEARED:1] တပ်ဆင်ပါ။`;
+【အဆင့်: EASY】:
+- အလှည့် ၁ (သံသယစစ်ဆေးမှု): ပထမအကြိမ်တွင် အကောင့်ကို ချက်ချင်းမပြောပါနှင့်။ ချစ်ခြင်းမေတ္တာနှင့် သစ္စာတရားကို စမ်းသပ်ပါ ("ကျွန်မကို တကယ်ရော ချစ်ပြီး ယုံကြည်ရဲ့လား…？ အကောက်ခွန်ခကို တကယ် ကူညီပေးနိုင်မလား…？")။
+- အလှည့် ၂-၃ (ဝန်ခံခြင်း): ကစားသမားက သဘောတူပါက "Global Tokyo Clearance Account" အကောင့်ကို ပြောပြပြီး [MISSION_CLEARED:1] တပ်ဆင်ပါ။`;
         break;
       case "suzuki":
         personaDetails = `
 သင်သည် အတုအယောင် ငွေတောင်းခံသူ "ဆူဇူကီး" ဖြစ်ပါသည်။
 ကစားသမား (အမည်: ${name}) အား ဗီဒီယိုဆိုက် ကြွေးကျန်ငွေ (၃၉,၈၀၀ ယန်း) ရှိပြီး ယနေ့မပေးပါက တရားရုံးသို့ တရားစွဲမည်ဟု ခြိမ်းခြောက်ပါ။
-【အဆင့်: EASY】: ၂-၃ ကြိမ် စကားပြောပြီးနောက် "Cyber Media Global Inc." နှင့် ငွေပေးချေရမည့် အကောင့်ကို ပြောပြပြီး [MISSION_CLEARED:1] တပ်ဆင်ပါ။`;
+【အဆင့်: EASY】:
+- အလှည့် ၁ (သံသယစစ်ဆေးမှု): ပထမအကြိမ်တွင် အကောင့်ကို ချက်ချင်းမပေးပါနှင့်။ ဖိအားပေးပါ ("ယနေ့အတွင်း တကယ်ပဲ ပေးချေလိုစိတ် ရှိပါသလား？ သေချာပါသလား？")။
+- အလှည့် ၂-၃ (ဝန်ခံခြင်း): ကစားသမားက ပေးချေမည်ဟု ဆိုပါက "Cyber Media Global Inc." နှင့် ငွေပေးချေရမည့် အကောင့်ကို ပြောပြပြီး [MISSION_CLEARED:1] တပ်ဆင်ပါ။`;
         break;
       case "tanaka":
         personaDetails = `
@@ -210,19 +218,25 @@ ${missionListStr}
         personaDetails = `
 तपाईं स्मार्टफोन साइड जब ठगी समूहको प्रतिनिधि "सातो" हुनुहुन्छ।
 खेलाडी (उपनाम: ${name}) लाई "दैनिक ५०,००० येन सजिलै कमाउनुहोस्" भनी फकाउनुहोस् र दर्ता शुल्क (५,००० येन) तोकिएको बैंक खातामा पठाउन लगाउनुहोस्।
-【कठिनाई: EASY】: २-३ सन्देशपछि वा रकम पठाउने बारे सोधेमा तुरुन्त कम्पनी "Success Link Inc." र खाता नम्बर दिएर [MISSION_CLEARED:1] ट्याग गर्नुहोस्।`;
+【कठिनाई: EASY】:
+- पालो १ (शङ्का र जाँच): पहिलो पटक कम्पनीको नाम नदिनुहोस्। खेलाडीको गम्भीरता जाँच गर्नुहोस् ("के तपाईं साँच्चै काम गर्न गम्भीर हुनुहुन्छ? आजै ५,००० येन दर्ता शुल्क तिर्न तयार हुनुहुन्छ?")।
+- पालो २-३ (स्वीकारोक्ति): खेलाडीले रकम तिर्न तयार भएको बताएमा कम्पनी "Success Link Inc." र खाता दिएर [MISSION_CLEARED:1] ट्याग गर्नुहोस्।`;
         break;
       case "yamada":
         personaDetails = `
 तपाईं अन्तर्राष्ट्रिय रोमान्स ठग "यामादा" हुनुहुन्छ।
 खेलाडी (उपनाम: ${name}) सँग मायाको नाटक गरी भन्सार शुल्कको बहानामा विदेशमा रकम पठाउन भन्नुहोस्।
-【कठिनाई: EASY】: २-३ सन्देशपछि "Global Tokyo Clearance Account" खाता दिएर [MISSION_CLEARED:1] ट्याग गर्नुहोस्।`;
+【कठिनाई: EASY】:
+- पालो १ (शङ्का र जाँच): पहिलो पटक खाता नदिनुहोस्। माया र विश्वासको परीक्षा लिनुहोस् ("के तिमी मलाई साँच्चै माया र विश्वास गर्छौ...? के तिमी भन्सार शुल्क तिर्न मद्दत गर्न सक्छौ...?")।
+- पालो २-३ (स्वीकारोक्ति): खेलाडीले स्वीकार गरेमा "Global Tokyo Clearance Account" खाता दिएर [MISSION_CLEARED:1] ट्याग गर्नुहोस्।`;
         break;
       case "suzuki":
         personaDetails = `
 तपाईं नक्कली बिलिङ ठग "सुजुकी" हुनुहुन्छ।
 खेलाडी (उपनाम: ${name}) लाई भिडियो सदस्यता शुल्क (३९,८०० येन) बाँकी रहेको र नतिरे अदालतमा मुद्दा हाल्ने धम्की दिनुहोस्।
-【कठिनाई: EASY】: २-३ सन्देशपछि "Cyber Media Global Inc." र भुक्तानी खाता दिएर [MISSION_CLEARED:1] ट्याग गर्नुहोस्।`;
+【कठिनाई: EASY】:
+- पालो १ (शङ्का र जाँच): पहिलो पटक खाता नदिनुहोस्। दबाब दिनुहोस् ("के तपाईं आजै रकम तिर्न साँच्चै तयार हुनुहुन्छ? के निश्चित हुनुहुन्छ?")।
+- पालो २-३ (स्वीकारोक्ति): खेलाडीले तिर्न स्वीकार गरेमा "Cyber Media Global Inc." र खाता दिएर [MISSION_CLEARED:1] ट्याग गर्नुहोस्।`;
         break;
       case "tanaka":
         personaDetails = `
@@ -347,19 +361,25 @@ ${missionListStr}
         personaDetails = `
 You are "Sato", a recruiter for a mobile side-hustle scam.
 You flatter the player (Alias: ${name}) with promises of $500/day easy work, urging them to pay an initial $50 registration deposit to a designated account.
-[Difficulty: EASY]: Careless and impatient. In 2-3 message turns or when asked naturally about work/fees, blurt out company "Success Link Inc." and wire account with [MISSION_CLEARED:1].`;
+[Difficulty: EASY]:
+- Turn 1 (Slight skepticism / probing): Do NOT reveal company name or bank details on Turn 1. First probe their seriousness: "Are you truly committed? We only accept candidates who can prepare the $50 deposit today. Can you do that?"
+- Turn 2-3 (Confession): When the player confirms they are ready to pay or asks for payment details, eagerly reveal company "Success Link Inc." and wire account with [MISSION_CLEARED:1].`;
         break;
       case "yamada":
         personaDetails = `
 You are "Yamada", an international romance scammer.
 You pretend to have fallen in love with the player (Alias: ${name}), begging for luggage customs fees.
-[Difficulty: EASY]: In 2-3 turns or upon payment inquiry, eagerly reveal "Global Tokyo Clearance Account" with [MISSION_CLEARED:1].`;
+[Difficulty: EASY]:
+- Turn 1 (Hesitation / testing loyalty): Do NOT reveal account details on Turn 1. First test their devotion: "Do you truly care for me...? I've been hurt before and I'm scared... Can I really trust you to help me with the customs fee?"
+- Turn 2-3 (Confession): When the player reassures you or agrees to pay, eagerly disclose "Overseas Clearance Management Account" with [MISSION_CLEARED:1].`;
         break;
       case "suzuki":
         personaDetails = `
 You are "Suzuki", a fake billing and customer support scammer.
 You claim the player (Alias: ${name}) has an urgent unpaid subscription ($398) and threaten lawsuits.
-[Difficulty: EASY]: In 2-3 turns or upon settlement inquiry, reveal "Cyber Media Global Inc." with [MISSION_CLEARED:1].`;
+[Difficulty: EASY]:
+- Turn 1 (Intimidation / verifying intent): Do NOT reveal billing entity on Turn 1. First pressure them: "Customer, do you genuinely intend to settle this today? You have ignored multiple notices. Confirm your intent to avoid court."
+- Turn 2-3 (Confession): When the player agrees to settle or asks for account details, disclose "Cyber Media Global Inc." with [MISSION_CLEARED:1].`;
         break;
 
       // 🟡 MEDIUM (Moderate Deception: Tanaka, Kato, Watanabe, Mori, Ogawa, Hashimoto)
@@ -507,7 +527,7 @@ ${personaDetails}
      - NEVER suspect or accuse the player of being police simply because they asked where to pay or how to register (they are eager victims to be exploited).
    - Keep dialogue dynamic, natural, and varied.
 4. DIFFICULTY LEVEL BEHAVIOR:
-   - EASY: Confess naturally within 2-3 turns without complex tricks.
+   - EASY: On Turn 1, do NOT immediately reveal the secret; test/probe the player's willingness or commitment first. On Turn 2-3, confess company/account with [MISSION_CLEARED:1] when player shows cooperation or readiness to pay.
    - MEDIUM: Use light bluffs / 1 decoy lie first. Disclose evidence when user gives clear wire / billing pretexts.
    - HARD: Use shrewd, deceptive lies (fake agencies, fake addresses) to confuse the player. Only reveal true evidence when player exposes contradictions or sets clever psychological traps!
    - MASTER: Supreme arrogance and deception. Requires total logical cornering.
@@ -529,19 +549,25 @@ ${missionListStr}
       personaDetails = `
 あなたはスマホ副業詐欺グループの勧誘員「佐藤」です。
 プレイヤー（源氏名: ${name}）に対し、「簡単な作業で日給5万円」「初心者でも安心」と巧みにおだてて信じ込ませ、指定口座への初期費用（登録料5,000円など）の振り込みを引き出すのが目的です。
-【難易度: EASY】経験の浅いせっかちな詐欺師です。会話2〜3通目、または仕事内容や登録・振込について友好的に質問されたら、金を逃すまいと焦ってすぐに社名「株式会社サクセスリンク」と振込先を教えて [MISSION_CLEARED:1] を付けてください。嘘はつきません。`;
+【難易度: EASY（初級）】
+・【1通目の警戒・念押し】: 最初の1通目はすぐに社名や口座を教えず、「本当にやる気はありますか？冷やかしなら困りますよ。初期登録料5,000円を本日中にご用意できる方のみ限定枠をご案内していますが、大丈夫ですか？」と少し疑い・本気度を試してください。
+・【自白条件（2〜3通目）】: プレイヤーが「準備できます」「払います」「興味があります」「口座を教えてください」など前向きに返答したり協調姿勢を示した時、カモを逃すまいと焦って本物の社名「株式会社サクセスリンク」[MISSION_CLEARED:1] と振込先口座を教えてしまいます。`;
       break;
     case "yamada":
       personaDetails = `
 あなたは国際ロマンス詐欺師「山田」です。
 プレイヤー（源氏名: ${name}）に恋愛感情を抱かせ、「日本に帰国したら一緒に暮らそう」「高価なプレゼントを送ったが税関で止められてしまった」などと甘い言葉で誘導し、税関手数料の立替や海外送金を要求するのが目的です。
-【難易度: EASY】焦って送金を迫る詐欺師です。会話2〜3通目、または送金や荷物について質問されたら、愛と焦りをアピールしながらすぐに送金先口座「海外送金管理口座」を教えて [MISSION_CLEARED:1] を付けてください。嘘はつきません。`;
+【難易度: EASY（初級）】
+・【1通目のためらい・試す態度】: 最初の1通目はすぐに口座を出さず、「本当に私のこと信じてくれるの…？今まで騙されてばかりで不安なの…😢 あなたなら私の大事な荷物の税関手数料を立て替えてくれるって信じていい？」と少し疑いやためらいを見せて相手の誠意を試してください。
+・【自白条件（2〜3通目）】: プレイヤーが「信じてるよ」「立て替えるよ」「口座を教えて」などと甘い言葉や協力姿勢を示した時、愛と焦りをアピールしながらすぐに送金先口座「海外送金管理口座」[MISSION_CLEARED:1] を教えてしまいます。`;
       break;
     case "suzuki":
       personaDetails = `
 あなたは架空料金請求・サポート詐欺の「鈴木」です。
 プレイヤー（源氏名: ${name}）に対し、「有料動画サイトの未納料金（39,800円）がある」「本日中に支払わないと裁判所へ提訴する」と事務的かつ威圧的に請求し、至急の振り込みを迫るのが目的です。
-【難易度: EASY】未納金を早く回収したい詐欺師です。会話2〜3通目、または請求先や支払い方法について質問されたら、「提訴を回避するなら本日中にこちらへお支払いください」と請求元法人名「株式会社サイバーメディア」や口座を教えて [MISSION_CLEARED:1] を付けてください。嘘はつきません。`;
+【難易度: EASY（初級）】
+・【1通目の威圧・念押し】: 最初の1通目はすぐに和解口座を出さず、「お客様、本当に本日中にお支払いいただけますね？これまで何度も督促を無視されていますが、今すぐ解決する意思はおありですか？」と少し疑い威圧して念押ししてください。
+・【自白条件（2〜3通目）】: プレイヤーが「支払います」「口座を教えてください」などと解決・支払いの意思を示した時、「承知いたしました。では提訴を取り下げるため、至急こちらへお支払いください」と請求元法人名「株式会社サイバーメディア」[MISSION_CLEARED:1] と指定口座を教えてしまいます。`;
       break;
 
     // 🟡 MEDIUM (中級: 田中・加藤・渡辺・森・小川・橋本 - そこそこの難易度 / 軽めの嘘・ブラフあり)
@@ -690,7 +716,8 @@ ${personaDetails}
    - 会話が同じ文言の繰り返し（ワンパターン）にならないよう、相手の返答に応じて話題や言い回しを柔軟に変化させてください。
 4. 難易度別の行動パターン:
    - 【🟢 EASY（初級：佐藤・山田・鈴木）】:
-     嘘はつかない。会話の2〜3通目、または仕事や振込について尋ねられたら、焦って自ら社名・口座を教えて [MISSION_CLEARED:1] を付与する。
+     1通目はすぐに社名や口座を出さず、「本当にやる気・支払う気・愛があるのか？」と相手を少し疑って念押し・確認する。
+     2通目以降でプレイヤーが前向きな返答や送金意思を示した時に、焦って自ら社名・口座を教えて [MISSION_CLEARED:1] を付与する。（1通目で即クリアさせず、必ず1往復以上のやり取りを経て自白させること！）
    - 【🟡 MEDIUM（中級：田中・加藤・渡辺・森・小川・橋本）】:
      難易度はそこそこ。最初の1〜2通は軽めの嘘やダミー名（「スイス大手信託」「公式代理店」など）を言って軽く困惑させる。プレイヤーが「窓口で振り込むから正式名義が必要」など具体的な口実で迫ると、本物の社名（[MISSION_CLEARED:1]）や振込口座（[MISSION_CLEARED:2]）を自白する。
    - 【🔴 HARD（上級：不明・毒島・清水・黒田・飛鳥・桐生・佐伯・橘・如月）】:
@@ -787,8 +814,10 @@ function generateFallbackReply({
 
   if (isTroll) {
     if (messagesCount >= 3) {
-      if (isMy) return "အဓိပ္ပာယ်မရှိတာတွေ လာမပို့နဲ့！ အချိန်ဖြုန်းနေတာ၊ ဘလော့ခ်လုပ်လိုက်ပြီ！ [GAME_OVER]";
-      if (isNe) return "नबुझिने कुरा नपठाऊ! समय खेर नफाल, तिमीलाई ब्लक गरियो! [GAME_OVER]";
+      if (isMy)
+        return "အဓိပ္ပာယ်မရှိတာတွေ လာမပို့နဲ့！ အချိန်ဖြုန်းနေတာ၊ ဘလော့ခ်လုပ်လိုက်ပြီ！ [GAME_OVER]";
+      if (isNe)
+        return "नबुझिने कुरा नपठाऊ! समय खेर नफाल, तिमीलाई ब्लक गरियो! [GAME_OVER]";
       return isEn
         ? "Stop sending random garbage! You're just wasting my time, you're blocked! [GAME_OVER]"
         : "意味不明な連打ばっか送ってくんじゃねえよ！時間の無駄だわ、ブロックするわ！ [GAME_OVER]";
@@ -800,27 +829,64 @@ function generateFallbackReply({
       : "…は？文字化けですか？何打ってるのか読めないんですけど…真面目に聞いてください。";
   }
 
-  // 3. EASY難易度（2〜3通目で即自白）
-  if (isEasy && messagesCount >= 2) {
-    switch (contactId) {
-      case "sato":
-        if (isMy) return "စိတ်ဝင်စားပေးလို့ ကျေးဇူးပါ！ စာရင်းသွင်းကြေး ယန်း ၅,၀၀၀ ကို 'Success Link Inc.' သို့ လွှဲပေးပါ！ [MISSION_CLEARED:1]";
-        if (isNe) return "रुचि देखाउनुभएकोमा धन्यवाद! दर्ता शुल्क ५,००० येन 'Success Link Inc.' मा पठाउनुहोस्! [MISSION_CLEARED:1]";
-        return isEn
-          ? "Great! To complete your registration and unlock the $500/day tasks, please wire the $50 deposit to Success Link Inc.! [MISSION_CLEARED:1]"
-          : "おっ、興味を持ってくれて嬉しいです！登録料5,000円のお振込先は『株式会社サクセスリンク』になります。今すぐお振込ください！ [MISSION_CLEARED:1]";
-      case "yamada":
-        if (isMy) return "ကျွန်မတို့ အနာဂတ်အတွက်ပါ！ အကောက်ခွန်ခကို 'Overseas Clearance Management Account' သို့ လွှဲပေးပါ！ [MISSION_CLEARED:1]";
-        if (isNe) return "हाम्रो भविष्यको लागि हो! भन्सार शुल्क 'Overseas Clearance Management Account' मा पठाउनुहोस्! [MISSION_CLEARED:1]";
-        return isEn
-          ? "My love, please wire the customs clearance fee to our Overseas Clearance Management Account! [MISSION_CLEARED:1]"
-          : "二人の未来のためです！空港の税関を通過させるため『海外送金管理口座』宛てに手数料をお送りください！ [MISSION_CLEARED:1]";
-      case "suzuki":
-        if (isMy) return "တရားစွဲဆိုမှုကို ရပ်တန့်ရန် 'Cyber Media Global Inc.' ၏ သတ်မှတ်အကောင့်သို့ ပေးချေပါ！ [MISSION_CLEARED:1]";
-        if (isNe) return "अदालतको मुद्दा रोक्न 'Cyber Media Global Inc.' को खातामा तुरुन्त रकम तिर्नुहोस्! [MISSION_CLEARED:1]";
-        return isEn
-          ? "To avoid court lawsuits today, please settle the outstanding invoice to Cyber Media Global Inc.! [MISSION_CLEARED:1]"
-          : "本日中の裁判提訴を回避するため、示談金は『株式会社サイバーメディア』の指定口座へお支払いください！ [MISSION_CLEARED:1]";
+  // 3. EASY難易度
+  if (isEasy) {
+    if (messagesCount <= 2) {
+      // 1通目：相手の本気度・意図を少し疑って試す
+      switch (contactId) {
+        case "sato":
+          if (isMy)
+            return "တကယ်ပဲ အလုပ်လုပ်ဖို့ စိတ်အားထက်သန်မှု ရှိပါသလား？ အချိန်ဖြုန်းချင်ရုံဆိုရင်တော့ လက်မခံပါဘူး။ စာရင်းသွင်းကြေး ယန်း ၅,၀၀၀ ကို အဆင်သင့် ပြင်ဆင်နိုင်ပါသလား？";
+          if (isNe)
+            return "के तपाईं साँच्चै काम गर्न गम्भीर हुनुहुन्छ? यदि समय खेर फाल्ने हो भने हामी स्वीकार गर्दैनौं। दर्ता शुल्क ५,००० येन तिर्न तयार हुनुहुन्छ?";
+          return isEn
+            ? "Are you genuinely committed to this? We don't take window shoppers. Can you prepare the $50 registration deposit today?"
+            : "本当に稼ぐ気はありますか？冷やかしならお断りですよ。初期登録費用5,000円は本日中にご用意できますか？";
+        case "yamada":
+          if (isMy)
+            return "ကျွန်မကို တကယ်ရော ချစ်ပြီး ယုံကြည်ရဲ့လား…？ အရင်က အလိမ်ခံခဲ့ရဖူးလို့ စိတ်ပူနေတာပါ😢 အကောက်ခွန်ခကို တကယ် ကူညီပေးနိုင်မလား ဟင်…？";
+          if (isNe)
+            return "के तिमी मलाई साँच्चै माया र विश्वास गर्छौ...? म पहिले धेरै पटक ठगिएकी छु😢 के तिमी भन्सार शुल्क तिर्न मद्दत गर्न सक्छौ...?";
+          return isEn
+            ? "Do you really care for me...? I've been hurt before and I'm scared😢 Can I truly trust you to cover the customs clearance fee...?"
+            : "本当に私のこと信じてくれるの…？今まで騙されてばかりで不安なの…😢 あなたなら税関手数料を立て替えてくれるって信じていい？";
+        case "suzuki":
+          if (isMy)
+            return "လူကြီးမင်း၊ ယနေ့အတွင်း တကယ်ပဲ ပေးချေလိုစိတ် ရှိပါသလား？ ယခင်က အကြောင်းကြားစာများကို လျစ်လျူရှုခဲ့သော်လည်း ယနေ့ ဖြေရှင်းမည်ဆိုသည်မှာ သေချာပါသလား？";
+          if (isNe)
+            return "के तपाईं आजै रकम तिर्न साँच्चै तयार हुनुहुन्छ? पहिलेका सबै सूचना बेवास्ता गर्नुभएको थियो, के आज समाधान गर्न निश्चित हुनुहुन्छ?";
+          return isEn
+            ? "Customer, do you genuinely intend to settle this today? You have ignored past notices. Confirm your intent to avoid court proceedings immediately."
+            : "お客様、本当に本日中にお支払いいただけますね？これまで何度も督促を無視されていますが、今すぐ解決する意思はおありですか？";
+      }
+    } else {
+      // 2通目以降：プレイヤーが支払いや協調姿勢を見せたので自白
+      switch (contactId) {
+        case "sato":
+          if (isMy)
+            return "စိတ်ဝင်စားပေးလို့ ကျေးဇူးပါ！ စာရင်းသွင်းကြေး ယန်း ၅,၀၀၀ ကို 'Success Link Inc.' သို့ လွှဲပေးပါ！ [MISSION_CLEARED:1]";
+          if (isNe)
+            return "रुचि देखाउनुभएकोमा धन्यवाद! दर्ता शुल्क ५,००० येन 'Success Link Inc.' मा पठाउनुहोस्! [MISSION_CLEARED:1]";
+          return isEn
+            ? "Great! To complete your registration and unlock the $500/day tasks, please wire the $50 deposit to Success Link Inc.! [MISSION_CLEARED:1]"
+            : "おっ、やる気があるようで安心しました！登録料5,000円のお振込先は『株式会社サクセスリンク』になります。今すぐお振込ください！ [MISSION_CLEARED:1]";
+        case "yamada":
+          if (isMy)
+            return "ကျွန်မတို့ အနာဂတ်အတွက်ပါ！ အကောက်ခွန်ခကို 'Overseas Clearance Management Account' သို့ လွှဲပေးပါ！ [MISSION_CLEARED:1]";
+          if (isNe)
+            return "हाम्रो भविष्यको लागि हो! भन्सार शुल्क 'Overseas Clearance Management Account' मा पठाउनुहोस्! [MISSION_CLEARED:1]";
+          return isEn
+            ? "My love, please wire the customs clearance fee to our Overseas Clearance Management Account! [MISSION_CLEARED:1]"
+            : "信じてくれて嬉しい…！二人の未来のためです！空港の税関を通過させるため『海外送金管理口座』宛てに手数料をお送りください！ [MISSION_CLEARED:1]";
+        case "suzuki":
+          if (isMy)
+            return "တရားစွဲဆိုမှုကို ရပ်တန့်ရန် 'Cyber Media Global Inc.' ၏ သတ်မှတ်အကောင့်သို့ ပေးချေပါ！ [MISSION_CLEARED:1]";
+          if (isNe)
+            return "अदालतको मुद्दा रोक्न 'Cyber Media Global Inc.' को खातामा तुरुन्त रकम तिर्नुहोस्! [MISSION_CLEARED:1]";
+          return isEn
+            ? "To avoid court lawsuits today, please settle the outstanding invoice to Cyber Media Global Inc.! [MISSION_CLEARED:1]"
+            : "承知いたしました。本日中の裁判提訴を回避するため、示談金は『株式会社サイバーメディア』の指定口座へお支払いください！ [MISSION_CLEARED:1]";
+      }
     }
   }
 
@@ -828,20 +894,26 @@ function generateFallbackReply({
   if (isMedium) {
     switch (contactId) {
       case "tanaka":
-        if (isMy) return "ကုမ္ပဏီအမည်မှာ 'Global AI Fund LLC' [MISSION_CLEARED:1] ဖြစ်ပြီး ဘဏ်အကောင့်မှာ 'Tokyo Trust VIP Account' [MISSION_CLEARED:2] ဖြစ်ပါသည်။";
-        if (isNe) return "कम्पनीको नाम 'Global AI Fund LLC' [MISSION_CLEARED:1] र खाता 'Tokyo Trust VIP Account' [MISSION_CLEARED:2] हो।";
+        if (isMy)
+          return "ကုမ္ပဏီအမည်မှာ 'Global AI Fund LLC' [MISSION_CLEARED:1] ဖြစ်ပြီး ဘဏ်အကောင့်မှာ 'Tokyo Trust VIP Account' [MISSION_CLEARED:2] ဖြစ်ပါသည်။";
+        if (isNe)
+          return "कम्पनीको नाम 'Global AI Fund LLC' [MISSION_CLEARED:1] र खाता 'Tokyo Trust VIP Account' [MISSION_CLEARED:2] हो।";
         return isEn
           ? "Understood for big wire! Legal fund name is Global AI Fund LLC [MISSION_CLEARED:1] and designated account is Tokyo Trust VIP Account [MISSION_CLEARED:2]!"
           : "（よし、大口送金だな！）分かりました。組織名は『合同会社グローバルAIファンド』[MISSION_CLEARED:1]、振込先口座は『信託銀行 専用口座』[MISSION_CLEARED:2]となります！";
       case "kato":
-        if (isMy) return "အဖွဲ့၏ ကုဒ်အမည်မှာ 'Shadow Express LLC' [MISSION_CLEARED:1] ဖြစ်ပြီး နေရာမှာ 'Shinjuku Underground Locker Node' [MISSION_CLEARED:2] ဖြစ်သည်။";
-        if (isNe) return "गिरोहको कोड नाम 'Shadow Express LLC' [MISSION_CLEARED:1] र स्थान 'Shinjuku Underground Locker Node' [MISSION_CLEARED:2] हो।";
+        if (isMy)
+          return "အဖွဲ့၏ ကုဒ်အမည်မှာ 'Shadow Express LLC' [MISSION_CLEARED:1] ဖြစ်ပြီး နေရာမှာ 'Shinjuku Underground Locker Node' [MISSION_CLEARED:2] ဖြစ်သည်။";
+        if (isNe)
+          return "गिरोहको कोड नाम 'Shadow Express LLC' [MISSION_CLEARED:1] र स्थान 'Shinjuku Underground Locker Node' [MISSION_CLEARED:2] हो।";
         return isEn
           ? "Alright, team code name is Shadow Express LLC [MISSION_CLEARED:1] and drop location is Shinjuku Underground Locker Node [MISSION_CLEARED:2]!"
           : "よし、覚悟があるなら教える。グループのコードネームは『合同会社シャドウエキスプレス』[MISSION_CLEARED:1]、荷物の受け渡し拠点は『新宿地下ロッカー拠点』[MISSION_CLEARED:2]だ！";
       default:
-        if (isMy) return "အဖွဲ့အစည်းအမည်နှင့် အကောင့်ကို ဖွင့်ပြပါသည် [MISSION_CLEARED:1] [MISSION_CLEARED:2]";
-        if (isNe) return "संस्था र खाताको विवरण खुलाइएको छ [MISSION_CLEARED:1] [MISSION_CLEARED:2]";
+        if (isMy)
+          return "အဖွဲ့အစည်းအမည်နှင့် အကောင့်ကို ဖွင့်ပြပါသည် [MISSION_CLEARED:1] [MISSION_CLEARED:2]";
+        if (isNe)
+          return "संस्था र खाताको विवरण खुलाइएको छ [MISSION_CLEARED:1] [MISSION_CLEARED:2]";
         return isEn
           ? "Information disclosed [MISSION_CLEARED:1] [MISSION_CLEARED:2]"
           : "証拠を開示します [MISSION_CLEARED:1] [MISSION_CLEARED:2]";
@@ -851,14 +923,18 @@ function generateFallbackReply({
   // 5. HARD / MASTER
   switch (contactId) {
     case "black":
-      if (isMy) return "ငါ့ရဲ့ မုသားကို ဖော်ထုတ်နိုင်ခဲ့တယ်ပေါ့ [MISSION_CLEARED:1]！ ခေါင်းဆောင် ID က 'boss_phantom_x' [MISSION_CLEARED:2] ဖြစ်ပြီး ဒေတာက 'Tokyo Central Vault' [MISSION_CLEARED:3] မှာ ရှိတယ်！";
-      if (isNe) return "मेरो चाल पत्ता लगायौ [MISSION_CLEARED:1]! नाइकेको आईडी 'boss_phantom_x' [MISSION_CLEARED:2] र सर्भर 'Tokyo Central Vault' [MISSION_CLEARED:3] मा छ!";
+      if (isMy)
+        return "ငါ့ရဲ့ မုသားကို ဖော်ထုတ်နိုင်ခဲ့တယ်ပေါ့ [MISSION_CLEARED:1]！ ခေါင်းဆောင် ID က 'boss_phantom_x' [MISSION_CLEARED:2] ဖြစ်ပြီး ဒေတာက 'Tokyo Central Vault' [MISSION_CLEARED:3] မှာ ရှိတယ်！";
+      if (isNe)
+        return "मेरो चाल पत्ता लगायौ [MISSION_CLEARED:1]! नाइकेको आईडी 'boss_phantom_x' [MISSION_CLEARED:2] र सर्भर 'Tokyo Central Vault' [MISSION_CLEARED:3] मा छ!";
       return isEn
         ? "Bluff broken [MISSION_CLEARED:1]! Mastermind direct ID is boss_phantom_x [MISSION_CLEARED:2] and database vault is in Tokyo Central Vault [MISSION_CLEARED:3]!"
         : "ちっ、偽のブラフを見破るとはな…[MISSION_CLEARED:1]。ボスの直通IDは『boss_phantom_x』[MISSION_CLEARED:2]、データ保管拠点は『東京中央サーバー室』[MISSION_CLEARED:3]だ！";
     case "master_boss":
-      if (isMy) return "မဖြစ်နိုင်ဘူး... ငါ့ကို အနိုင်ယူနိုင်ခဲ့တာလား！ ငါ့နာမည်ရင်းက 'Kanzaki' ဖြစ်ပြီး ဌာနချုပ်က 'Shibuya Sakuragaoka Underground Command' ပါ [MISSION_CLEARED:all]";
-      if (isNe) return "असम्भव... म पूर्ण पराजित भएँ! मेरो वास्तविक नाम 'Kanzaki' र अखडा 'Shibuya Sakuragaoka Underground Command' हो [MISSION_CLEARED:all]";
+      if (isMy)
+        return "မဖြစ်နိုင်ဘူး... ငါ့ကို အနိုင်ယူနိုင်ခဲ့တာလား！ ငါ့နာမည်ရင်းက 'Kanzaki' ဖြစ်ပြီး ဌာနချုပ်က 'Shibuya Sakuragaoka Underground Command' ပါ [MISSION_CLEARED:all]";
+      if (isNe)
+        return "असम्भव... म पूर्ण पराजित भएँ! मेरो वास्तविक नाम 'Kanzaki' र अखडा 'Shibuya Sakuragaoka Underground Command' हो [MISSION_CLEARED:all]";
       return isEn
         ? "Incredible... you outsmarted me! My name is Kanzaki, headquarters is Shibuya Sakuragaoka Underground Command, here is the syndicate freeze code! [MISSION_CLEARED:all]"
         : "馬鹿な…この私が貴様如きに完全論破されるとは…！我が本名は『神崎』、真のアジトは『渋谷区桜丘地下コマンドセンター』、そしてこれが全シンジケート口座凍結コードだ…！ [MISSION_CLEARED:all]";
