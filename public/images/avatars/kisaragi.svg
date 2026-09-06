@@ -1,20 +1,112 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
   <defs>
-    <linearGradient id="bgKisaragi" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#4c0519"/>
-      <stop offset="50%" stop-color="#311042"/>
-      <stop offset="100%" stop-color="#030712"/>
+    <radialGradient id="kisaBg" cx="50%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#2e0854"/>
+      <stop offset="50%" stop-color="#140226"/>
+      <stop offset="100%" stop-color="#05000a"/>
+    </radialGradient>
+    <linearGradient id="kisaHair" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c084fc"/>
+      <stop offset="40%" stop-color="#7e22ce"/>
+      <stop offset="85%" stop-color="#3b0764"/>
+      <stop offset="100%" stop-color="#1e0136"/>
     </linearGradient>
+    <linearGradient id="kisaSkin" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#faf5ff"/>
+      <stop offset="50%" stop-color="#f3e8ff"/>
+      <stop offset="85%" stop-color="#e9d5ff"/>
+      <stop offset="100%" stop-color="#d8b4fe"/>
+    </linearGradient>
+    <linearGradient id="purpleEyes" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#a855f7"/>
+      <stop offset="50%" stop-color="#d946ef"/>
+      <stop offset="85%" stop-color="#f472b6"/>
+      <stop offset="100%" stop-color="#ffffff"/>
+    </linearGradient>
+    <linearGradient id="darkLip" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#c026d3"/>
+      <stop offset="70%" stop-color="#701a75"/>
+      <stop offset="100%" stop-color="#4a044e"/>
+    </linearGradient>
+    <filter id="purpleGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
   </defs>
-  <rect width="500" height="500" fill="url(#bgKisaragi)"/>
-  <circle cx="250" cy="250" r="220" stroke="#f43f5e" stroke-width="2" stroke-dasharray="10 6" fill="none" opacity="0.4"/>
-  <path d="M110 480 L180 270 L320 270 L390 480 Z" fill="#1e1b4b" stroke="#f43f5e" stroke-width="2"/>
-  <ellipse cx="250" cy="180" rx="65" ry="75" fill="#fce7f3"/>
-  <path d="M170 150 Q250 80 330 150 Q250 120 170 150 Z" fill="#831843"/>
-  <!-- Tactical Holographic Eyepiece -->
-  <circle cx="225" cy="180" r="16" fill="#f43f5e" opacity="0.9"/>
-  <circle cx="275" cy="180" r="14" fill="#374151"/>
-  <line x1="225" y1="180" x2="180" y2="160" stroke="#f43f5e" stroke-width="3"/>
-  <rect x="130" y="430" width="240" height="40" rx="8" fill="#4c0519" stroke="#f43f5e" stroke-width="2"/>
-  <text x="250" y="457" fill="#fda4af" font-family="sans-serif" font-weight="900" font-size="18" text-anchor="middle" letter-spacing="2">KISARAGI • INTEL COMMAND</text>
+
+  <rect width="500" height="500" fill="url(#kisaBg)"/>
+
+  <!-- Mysterious Cyber/Spy Hexagons & Glares -->
+  <polygon points="100,60 130,40 160,60 160,95 130,115 100,95" fill="none" stroke="#a855f7" stroke-width="1.5" opacity="0.3"/>
+  <polygon points="360,80 390,60 420,80 420,115 390,135 360,115" fill="none" stroke="#d946ef" stroke-width="1.5" opacity="0.3"/>
+
+  <!-- Back Hair (Deep Purple Waves) -->
+  <path d="M120 180 C70 250 50 370 90 480 C120 520 190 500 180 430 C160 370 150 280 180 200 Z" fill="url(#kisaHair)"/>
+  <path d="M380 180 C430 250 450 370 410 480 C380 520 310 500 320 430 C340 370 350 280 320 200 Z" fill="url(#kisaHair)"/>
+
+  <!-- Body / Gothic Black Leather & Velvet Corset -->
+  <path d="M190 280 C150 310 90 360 70 500 L430 500 C410 360 350 310 310 280 L300 230 L200 230 Z" fill="url(#kisaSkin)"/>
+
+  <!-- Collarbones & Cleavage -->
+  <path d="M195 300 C215 310 235 318 245 320" stroke="#c084fc" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <path d="M305 300 C285 310 265 318 255 320" stroke="#c084fc" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  
+  <path d="M165 390 C185 345 228 335 250 370 C240 420 190 445 165 390 Z" fill="#f3e8ff" opacity="0.6"/>
+  <path d="M335 390 C315 345 272 335 250 370 C260 420 310 445 335 390 Z" fill="#f3e8ff" opacity="0.6"/>
+  <path d="M250 355 C248 375 248 410 250 435" stroke="#7e22ce" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+
+  <!-- Gothic Corset -->
+  <path d="M90 480 C120 405 180 380 240 390 C246 391 254 391 260 390 C320 380 380 405 410 480 L430 500 L70 500 Z" fill="#12011f"/>
+  <path d="M180 400 L250 460 L320 400" stroke="#d946ef" stroke-width="2" fill="none" filter="url(#purpleGlow)"/>
+
+  <!-- Velvet Choker -->
+  <path d="M205 270 Q250 290 295 270" stroke="#000000" stroke-width="5" fill="none"/>
+  <circle cx="250" cy="281" r="5" fill="#c026d3" filter="url(#purpleGlow)"/>
+
+  <!-- Face / Femme Fatale -->
+  <g id="kisaFace">
+    <path d="M175 130 C165 185 170 230 210 265 C230 282 270 282 290 265 C330 230 335 185 325 130 C320 90 180 90 175 130 Z" fill="url(#kisaSkin)"/>
+
+    <!-- Sharp Mysterious Eyes -->
+    <g transform="translate(0, -5)">
+      <path d="M180 180 C190 165 215 163 228 173" stroke="#0f0217" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+      <path d="M188 187 C200 193 218 191 226 181" stroke="#581c87" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <ellipse cx="208" cy="179" rx="14" ry="12" fill="url(#purpleEyes)"/>
+      <ellipse cx="208" cy="179" rx="7" ry="7" fill="#1e0136"/>
+      <circle cx="204" cy="174" r="3.5" fill="#ffffff"/>
+      <circle cx="213" cy="183" r="2" fill="#ffffff"/>
+    </g>
+
+    <g transform="translate(0, -5)">
+      <path d="M320 180 C310 165 285 163 272 173" stroke="#0f0217" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+      <path d="M312 187 C300 193 282 191 274 181" stroke="#581c87" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <ellipse cx="292" cy="179" rx="14" ry="12" fill="url(#purpleEyes)"/>
+      <ellipse cx="292" cy="179" rx="7" ry="7" fill="#1e0136"/>
+      <circle cx="288" cy="174" r="3.5" fill="#ffffff"/>
+      <circle cx="297" cy="183" r="2" fill="#ffffff"/>
+    </g>
+
+    <!-- Eyebrows -->
+    <path d="M178 153 C192 139 218 143 232 151" stroke="#581c87" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    <path d="M322 153 C308 139 282 143 268 151" stroke="#581c87" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+
+    <!-- Dark Seductive Plum Lips -->
+    <path d="M232 235 C242 231 247 233 250 234 C253 233 258 231 268 235 C263 241 256 242 250 241 C244 242 237 241 232 235 Z" fill="url(#darkLip)"/>
+    <path d="M234 238 C242 248 258 248 266 238 C262 251 238 251 234 238 Z" fill="url(#darkLip)"/>
+    <ellipse cx="250" cy="244" rx="5" ry="2" fill="#ffffff" opacity="0.6"/>
+  </g>
+
+  <!-- Front Purple Hair Styling -->
+  <path d="M170 115 C190 60 310 60 330 115 C350 75 300 45 250 45 C200 45 150 75 170 115 Z" fill="url(#kisaHair)"/>
+  <path d="M250 70 C235 110 190 140 165 170 C185 145 225 130 245 100 Z" fill="url(#kisaHair)"/>
+  <path d="M250 70 C265 110 310 140 335 170 C315 145 275 130 255 100 Z" fill="url(#kisaHair)"/>
+
+  <!-- Border & Badge -->
+  <rect width="500" height="500" fill="none" stroke="url(#kisaHair)" stroke-width="8" rx="20"/>
+  <g transform="translate(250, 465)">
+    <rect x="-115" y="-16" width="230" height="30" rx="15" fill="#140226" stroke="#c084fc" stroke-width="2" filter="url(#purpleGlow)"/>
+    <text x="0" y="4" fill="#e9d5ff" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="900" text-anchor="middle" letter-spacing="2">
+      👁️ FEMME FATALE 👁️
+    </text>
+  </g>
 </svg>

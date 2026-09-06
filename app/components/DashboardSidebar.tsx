@@ -52,7 +52,7 @@ interface DashboardSidebarProps {
 
 const AVATAR_MAP: Record<string, string> = {
   sato: "/images/avatars/sato.jpg",
-  yamada: "/images/avatars/yamada.jpg",
+  yamada: "/images/avatars/yamada.svg",
   suzuki: "/images/avatars/suzuki.jpg",
   tanaka: "/images/avatars/tanaka.jpg",
   kato: "/images/avatars/kato.jpg",
