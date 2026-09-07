@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%">
+  <defs>
+    <radialGradient id="roomBg" cx="50%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#400e2b"/>
+      <stop offset="35%" stop-color="#26081a"/>
+      <stop offset="100%" stop-color="#080105"/>
+    </radialGradient>
+    <linearGradient id="cuteSkin" x1="45%" y1="0%" x2="55%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="25%" stop-color="#fff0f5"/>
+      <stop offset="60%" stop-color="#ffe4ec"/>
+      <stop offset="85%" stop-color="#fecdd6"/>
+      <stop offset="100%" stop-color="#fba1b7"/>
+    </linearGradient>
+    <linearGradient id="sweatGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="roseBrownHair" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#4a2433"/>
+      <stop offset="30%" stop-color="#301320"/>
+      <stop offset="70%" stop-color="#1c0912"/>
+      <stop offset="100%" stop-color="#0a0206"/>
+    </linearGradient>
+    <radialGradient id="jewelIris" cx="50%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#ff719a"/>
+      <stop offset="30%" stop-color="#e11d48"/>
+      <stop offset="65%" stop-color="#9f1239"/>
+      <stop offset="100%" stop-color="#1f0108"/>
+    </radialGradient>
+    <linearGradient id="strawberryLip" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ff4d79"/>
+      <stop offset="50%" stop-color="#e6004c"/>
+      <stop offset="100%" stop-color="#5e001a"/>
+    </linearGradient>
+    <radialGradient id="cuteBlush" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff2e74" stop-opacity="0.65"/>
+      <stop offset="60%" stop-color="#ff4d88" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#ff4d88" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="cuteGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <rect width="600" height="600" fill="url(#roomBg)"/>
+  <path d="M130 220 C80 300 70 450 120 580 C160 620 240 580 230 490 C190 410 180 300 210 230 Z" fill="url(#roseBrownHair)"/>
+  <path d="M470 220 C520 300 530 450 480 580 C440 620 360 580 370 490 C410 410 420 300 390 220 Z" fill="url(#roseBrownHair)"/>
+  <path d="M210 460 C150 490 100 540 80 600 L520 600 C500 540 450 490 390 460 Z" fill="url(#cuteSkin)"/>
+  <path d="M180 520 Q300 550 420 520 L450 600 L150 600 Z" fill="#170c13"/>
+  <path d="M260 380 L260 480 Q300 500 340 480 L340 380 Z" fill="url(#cuteSkin)"/>
+  <path d="M190 230 C190 360 240 450 300 450 C360 450 410 360 410 230 C410 150 360 120 300 120 C240 120 190 150 190 230 Z" fill="url(#cuteSkin)"/>
+  <ellipse cx="225" cy="330" rx="45" ry="25" fill="url(#cuteBlush)"/>
+  <ellipse cx="375" cy="330" rx="45" ry="25" fill="url(#cuteBlush)"/>
+  <path d="M296 345 Q300 350 304 345" stroke="#f43f5e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M200 245 Q240 240 270 250" stroke="#4a2433" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+  <path d="M400 245 Q360 240 330 250" stroke="#4a2433" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+  
+      <ellipse cx="240" cy="285" rx="28" ry="32" fill="#ff719a" filter="url(#cuteGlow)"/>
+      <circle cx="240" cy="285" r="16" fill="#4c0519"/>
+      <path d="M235 280 C235 275 242 275 245 280 C248 275 255 275 255 280 C255 288 245 295 245 295 C245 295 235 288 235 280 Z" fill="#ff4d88"/>
+      <circle cx="234" cy="275" r="6" fill="#ffffff"/>
+      <path d="M335 290 Q360 270 385 290" stroke="#4a2433" stroke-width="5" stroke-linecap="round" fill="none"/>
+      <path d="M345 293 L340 300 M375 293 L380 300" stroke="#4a2433" stroke-width="3" stroke-linecap="round"/>
+    
+  
+      <path d="M275 395 Q300 425 325 395 Q300 405 275 395 Z" fill="#e6004c"/>
+      <polygon points="296,400 304,400 300,408" fill="#ffffff"/>
+    
+  <path d="M180 190 Q210 120 300 120 Q390 120 420 190 C430 250 440 350 410 400 Q390 330 395 240 Q300 160 205 240 Q210 330 190 400 C160 350 170 250 180 190 Z" fill="url(#roseBrownHair)"/>
+  <circle cx="215" cy="320" r="2.5" fill="#3b0718"/>
+  
+      <g filter="url(#cuteGlow)">
+        <path d="M420 250 C420 240 435 240 440 250 C445 240 460 240 460 250 C460 265 440 278 440 278 C440 278 420 265 420 250 Z" fill="#ec4899"/>
+        <polygon points="170,260 175,275 190,280 175,285 170,300 165,285 150,280 165,275" fill="#fbcfe8"/>
+      </g>
+    
+</svg>

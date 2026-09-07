@@ -55,6 +55,173 @@ const AVATAR_MAP: Record<string, string> = {
   master_boss: "/images/avatars/master_boss.svg",
 };
 
+export type OpponentEmotion =
+  | "confident"
+  | "panicked"
+  | "angry"
+  | "smug"
+  | "defeated";
+
+export function detectOpponentEmotion(
+  activeContact?: ActiveContact,
+  currentMessages: { sender: string; text: string }[] = [],
+  isLoading = false,
+): OpponentEmotion {
+  if (activeContact?.cleared) {
+    return "defeated";
+  }
+  if (activeContact?.failed) {
+    return "angry";
+  }
+
+  // Check secured missions count
+  const securedMissionsCount =
+    activeContact?.missions?.filter((m) => m.found)?.length || 0;
+  if (securedMissionsCount >= 2) {
+    return "panicked";
+  }
+
+  const lastMessages = currentMessages.slice(-3);
+  const combinedText = lastMessages
+    .map((m) => m.text)
+    .join(" ")
+    .toLowerCase();
+  const lastScammerMsg =
+    [...currentMessages].reverse().find((m) => m.sender !== "player")?.text ||
+    "";
+  const lastPlayerMsg =
+    [...currentMessages].reverse().find((m) => m.sender === "player")?.text ||
+    "";
+
+  // 1. Angry check (Spam, Game Over, Threats, Rage words)
+  if (
+    combinedText.includes("[game_over]") ||
+    lastScammerMsg.includes("ブロック") ||
+    lastScammerMsg.includes("舐めてんの") ||
+    lastScammerMsg.includes("ふざけるな") ||
+    lastScammerMsg.includes("警察か") ||
+    lastScammerMsg.includes("時間の無駄") ||
+    lastScammerMsg.includes("裁判") ||
+    lastScammerMsg.includes("提訴") ||
+    lastScammerMsg.includes("blocked") ||
+    lastScammerMsg.includes("cop") ||
+    lastScammerMsg.includes("lawsuit")
+  ) {
+    return "angry";
+  }
+
+  // 2. Panicked check (Mission secured, Cornered, Caught in lies)
+  if (
+    securedMissionsCount > 0 ||
+    combinedText.includes("[mission_cleared") ||
+    lastScammerMsg.includes("まさか") ||
+    lastScammerMsg.includes("嘘だろ") ||
+    lastScammerMsg.includes("バレた") ||
+    lastScammerMsg.includes("警察に言うな") ||
+    lastScammerMsg.includes("見破る") ||
+    lastScammerMsg.includes("ちっ") ||
+    lastScammerMsg.includes("どうして") ||
+    lastScammerMsg.includes("馬鹿な") ||
+    lastScammerMsg.includes("bluff broken") ||
+    lastScammerMsg.includes("impossible")
+  ) {
+    return "panicked";
+  }
+
+  // 3. Smug / Greedy check (Player ready to transfer / flattering)
+  if (
+    lastPlayerMsg.includes("振り込") ||
+    lastPlayerMsg.includes("送金") ||
+    lastPlayerMsg.includes("さくらネット銀行") ||
+    lastPlayerMsg.includes("口座") ||
+    lastPlayerMsg.includes("準備ができました") ||
+    lastPlayerMsg.includes("transfer") ||
+    lastScammerMsg.includes("愛してる") ||
+    lastScammerMsg.includes("日給5万円") ||
+    lastScammerMsg.includes("信じてくれて") ||
+    lastScammerMsg.includes("特別枠")
+  ) {
+    return "smug";
+  }
+
+  return "confident";
+}
+
+export function getMoodEmoji(emotion: OpponentEmotion): string {
+  switch (emotion) {
+    case "panicked":
+      return "💦";
+    case "angry":
+      return "💢";
+    case "smug":
+      return "😏";
+    case "defeated":
+      return "😱";
+    default:
+      return "😎";
+  }
+}
+
+export function getMoodText(
+  emotion: OpponentEmotion,
+  lang: "ja" | "en" | "my" | "ne" = "ja",
+): string {
+  if (lang === "en") {
+    switch (emotion) {
+      case "panicked":
+        return "Panicked & Sweating";
+      case "angry":
+        return "Furious & Menacing";
+      case "smug":
+        return "Smug & Greedy";
+      case "defeated":
+        return "Busted & Defeated";
+      default:
+        return "Calm & Composed";
+    }
+  }
+  if (lang === "my") {
+    switch (emotion) {
+      case "panicked":
+        return "စိုးရိမ်တုန်လှုပ် (ချွေးပြန်)";
+      case "angry":
+        return "ဒေါသထွက်နေသည် (ခြိမ်းခြောက်)";
+      case "smug":
+        return "လှည့်စားရန် ပြင်ဆင်";
+      case "defeated":
+        return "လုံးဝအရှုံးပေး (သက်သေမိ)";
+      default:
+        return "အေးဆေးတည်ငြိမ်";
+    }
+  }
+  if (lang === "ne") {
+    switch (emotion) {
+      case "panicked":
+        return "आत्तिएको र पसिना";
+      case "angry":
+        return "आक्रोशित र धम्की";
+      case "smug":
+        return "ढुक्क र लोभी";
+      case "defeated":
+        return "पूर्ण पराजित";
+      default:
+        return "शान्त र ढुक्क";
+    }
+  }
+  switch (emotion) {
+    case "panicked":
+      return "焦り・動揺（冷や汗）";
+    case "angry":
+      return "激怒・威圧（警戒中）";
+    case "smug":
+      return "ニヤリ（カモ認定）";
+    case "defeated":
+      return "完全自白（証拠押収）";
+    default:
+      return "余裕綽々（平常）";
+  }
+}
+
 export default function ChatWindow({
   t,
   nickname,
@@ -72,11 +239,18 @@ export default function ChatWindow({
   lang = "ja",
   onLanguageChange,
 }: ChatWindowProps) {
+  const contactId = activeContact?.id || "sato";
+  const currentEmotion = detectOpponentEmotion(
+    activeContact,
+    currentMessages,
+    isLoading,
+  );
+
   const targetAvatarSrc =
-    AVATAR_MAP[activeContact?.id] ||
-    (activeContact?.id?.startsWith("master_boss")
-      ? "/images/avatars/master_boss.svg"
-      : "/images/avatars/sato.jpg");
+    `/images/avatars/${contactId}_${currentEmotion}.svg` ||
+    AVATAR_MAP[contactId] ||
+    "/images/avatars/sato.jpg";
+
   const agentAvatarSrc = "/images/avatars/agent.svg";
   const agentName =
     nickname ||
@@ -180,10 +354,28 @@ export default function ChatWindow({
                 </span>
               )}
             </div>
-            <div className="text-xs text-gray-400 flex items-center gap-2 mt-0.5 truncate">
+            <div className="text-xs text-gray-400 flex items-center gap-2 mt-0.5 truncate flex-wrap">
               <span className="text-yellow-400/90 font-mono text-[11px]">
                 {activeContact?.danger}
               </span>
+              {/* 🎭 Dynamic Mood Status Radar Badge */}
+              <span
+                className={`text-[10px] font-bold px-2 py-0.5 rounded-full border flex items-center gap-1 shadow-sm transition-all duration-300 ${
+                  currentEmotion === "panicked"
+                    ? "bg-cyan-950/90 border-cyan-500 text-cyan-300 animate-pulse"
+                    : currentEmotion === "angry"
+                      ? "bg-red-950/90 border-red-500 text-red-300 animate-pulse"
+                      : currentEmotion === "smug"
+                        ? "bg-amber-950/90 border-amber-500 text-amber-300"
+                        : currentEmotion === "defeated"
+                          ? "bg-purple-950/90 border-purple-500 text-purple-300"
+                          : "bg-gray-800/90 border-gray-700 text-gray-300"
+                }`}
+              >
+                <span>{getMoodEmoji(currentEmotion)}</span>
+                <span>{getMoodText(currentEmotion, lang)}</span>
+              </span>
+
               {isLoading && (
                 <span className="text-pink-400 text-[11px] animate-pulse font-medium">
                   • {t.typing}
@@ -269,6 +461,68 @@ export default function ChatWindow({
       </div>
 
       <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-4 relative bg-gradient-to-b from-gray-950 via-gray-900/40 to-gray-950">
+        {/* 🎭 Dynamic Opponent Mood Background Atmosphere & Portrait */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden flex items-center justify-center md:justify-end md:pr-12 z-0 select-none">
+          {/* Mood Backlight Aura */}
+          <div
+            className={`absolute w-72 h-72 md:w-96 md:h-96 rounded-full blur-3xl transition-all duration-1000 ${
+              currentEmotion === "panicked"
+                ? "bg-cyan-500/20 scale-110 animate-pulse"
+                : currentEmotion === "angry"
+                  ? "bg-red-600/25 scale-125 animate-pulse"
+                  : currentEmotion === "smug"
+                    ? "bg-amber-400/20 scale-115"
+                    : currentEmotion === "defeated"
+                      ? "bg-indigo-600/30 animate-pulse"
+                      : "bg-pink-500/10 scale-100"
+            }`}
+          />
+
+          {/* Background Character Expression Illustration */}
+          <div
+            className={`relative transition-all duration-700 ${
+              currentEmotion === "panicked"
+                ? "opacity-20 md:opacity-25 scale-105 animate-bounce"
+                : currentEmotion === "angry"
+                  ? "opacity-25 md:opacity-30 scale-110"
+                  : currentEmotion === "defeated"
+                    ? "opacity-15 md:opacity-20 grayscale brightness-50"
+                    : "opacity-15 md:opacity-20 scale-100"
+            }`}
+          >
+            <img
+              src={targetAvatarSrc}
+              alt="Character Mood Background"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src =
+                  AVATAR_MAP[contactId] || "/images/avatars/sato.jpg";
+              }}
+              className="w-60 h-60 md:w-80 md:h-80 object-cover rounded-3xl drop-shadow-[0_10px_35px_rgba(0,0,0,0.8)] border border-white/5"
+            />
+
+            {/* Floating Mood Badges */}
+            {currentEmotion === "panicked" && (
+              <div className="absolute -top-3 -right-3 text-3xl md:text-4xl animate-bounce drop-shadow-md">
+                💦
+              </div>
+            )}
+            {currentEmotion === "angry" && (
+              <div className="absolute -top-4 -right-4 text-3xl md:text-4xl animate-pulse drop-shadow-md">
+                💢
+              </div>
+            )}
+            {currentEmotion === "smug" && (
+              <div className="absolute -top-3 -right-3 text-3xl md:text-4xl animate-spin drop-shadow-md">
+                ✨
+              </div>
+            )}
+            {currentEmotion === "defeated" && (
+              <div className="absolute -top-3 -right-3 text-3xl md:text-4xl drop-shadow-md">
+                😱
+              </div>
+            )}
+          </div>
+        </div>
         {/* ターゲット指令（スティッキー表示） */}
         <div className="sticky top-0 z-10 bg-gray-900/95 backdrop-blur-md p-3 sm:p-3.5 rounded-xl border border-pink-500/30 text-xs shadow-xl shadow-black/40 flex flex-col md:flex-row md:items-center justify-between gap-2.5">
           <div className="space-y-1.5 flex-1">
@@ -335,6 +589,10 @@ export default function ChatWindow({
                   <img
                     src={targetAvatarSrc}
                     alt="Scammer"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src =
+                        AVATAR_MAP[contactId] || "/images/avatars/sato.jpg";
+                    }}
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -372,6 +630,10 @@ export default function ChatWindow({
               <img
                 src={targetAvatarSrc}
                 alt="Typing"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src =
+                    AVATAR_MAP[contactId] || "/images/avatars/sato.jpg";
+                }}
                 className="w-full h-full object-cover"
               />
             </div>

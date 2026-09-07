@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%">
+  <defs>
+    <radialGradient id="charBg" cx="50%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#3f0b0b"/>
+      <stop offset="60%" stop-color="#090d16"/>
+      <stop offset="100%" stop-color="#020408"/>
+    </radialGradient>
+    <linearGradient id="charSkin" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fde047" stop-opacity="0.1"/>
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#cbd5e1"/>
+    </linearGradient>
+    <linearGradient id="sweatGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="600" height="600" fill="url(#charBg)"/>
+  
+  <!-- Cyber Grid Lines -->
+  <g stroke="#fb923c" stroke-width="1" opacity="0.15">
+    <line x1="0" y1="150" x2="600" y2="150"/>
+    <line x1="0" y1="300" x2="600" y2="300"/>
+    <line x1="0" y1="450" x2="600" y2="450"/>
+    <line x1="150" y1="0" x2="150" y2="600"/>
+    <line x1="300" y1="0" x2="300" y2="600"/>
+    <line x1="450" y1="0" x2="450" y2="600"/>
+  </g>
+
+  <!-- Shoulders & Suit -->
+  <path d="M120 600 L180 460 L260 480 L300 560 L340 480 L420 460 L480 600 Z" fill="#292524"/>
+  <polygon points="260,480 300,560 340,480 320,460 280,460" fill="#f8fafc"/>
+  <polygon points="290,470 310,470 305,530 295,530" fill="#fb923c"/>
+
+  <!-- Head & Neck -->
+  <path d="M260 380 L260 470 L340 470 L340 380 Z" fill="#e2e8f0"/>
+  <path d="M190 220 C190 350 230 440 300 440 C370 440 410 350 410 220 C410 140 360 110 300 110 C240 110 190 140 190 220 Z" fill="#f1f5f9"/>
+
+  <!-- Hair -->
+  <path d="M180 200 C170 120 230 80 300 80 C370 80 430 120 420 200 C400 160 350 140 300 140 C250 140 200 160 180 200 Z" fill="#1c1917"/>
+
+  <!-- Eyebrows -->
+  <path d="M190 250 L270 230" stroke="#0f172a" stroke-width="5" stroke-linecap="round"/>
+  <path d="M410 250 L330 230" stroke="#0f172a" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- Eyes -->
+  <polygon points="220,260 270,270 250,290 210,280" fill="#ef4444"/><polygon points="380,260 330,270 350,290 390,280" fill="#ef4444"/>
+
+  <!-- Nose -->
+  <polygon points="295,310 305,310 300,345" fill="#94a3b8"/>
+
+  <!-- Mouth -->
+  <path d="M260 410 Q300 390 340 410" stroke="#f87171" stroke-width="5" fill="none"/>
+
+  <!-- FX -->
+  
+      <g transform="translate(390, 190) scale(0.9)">
+        <path d="M-15 -5 L-5 -5 L-5 -15 L5 -15 L5 -5 L15 -5 L15 5 L5 5 L5 15 L-5 15 L-5 5 L-15 5 Z" fill="#ef4444"/>
+      </g>
+    
+
+  <!-- Label Badge -->
+  <rect x="20" y="530" width="220" height="45" rx="8" fill="#090d16" stroke="#fb923c" stroke-width="1.5" opacity="0.9"/>
+  <text x="35" y="558" fill="#fb923c" font-family="monospace" font-weight="bold" font-size="18">KATO</text>
+</svg>

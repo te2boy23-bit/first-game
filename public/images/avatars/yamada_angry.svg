@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%">
+  <defs>
+    <radialGradient id="roomBg" cx="50%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#4a0505"/>
+      <stop offset="35%" stop-color="#2a0202"/>
+      <stop offset="100%" stop-color="#080105"/>
+    </radialGradient>
+    <linearGradient id="cuteSkin" x1="45%" y1="0%" x2="55%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="25%" stop-color="#fff0f5"/>
+      <stop offset="60%" stop-color="#ffe4ec"/>
+      <stop offset="85%" stop-color="#fecdd6"/>
+      <stop offset="100%" stop-color="#fba1b7"/>
+    </linearGradient>
+    <linearGradient id="sweatGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="roseBrownHair" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#4a2433"/>
+      <stop offset="30%" stop-color="#301320"/>
+      <stop offset="70%" stop-color="#1c0912"/>
+      <stop offset="100%" stop-color="#0a0206"/>
+    </linearGradient>
+    <radialGradient id="jewelIris" cx="50%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#ff719a"/>
+      <stop offset="30%" stop-color="#e11d48"/>
+      <stop offset="65%" stop-color="#9f1239"/>
+      <stop offset="100%" stop-color="#1f0108"/>
+    </radialGradient>
+    <linearGradient id="strawberryLip" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ff4d79"/>
+      <stop offset="50%" stop-color="#e6004c"/>
+      <stop offset="100%" stop-color="#5e001a"/>
+    </linearGradient>
+    <radialGradient id="cuteBlush" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff2e74" stop-opacity="0.65"/>
+      <stop offset="60%" stop-color="#ff4d88" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#ff4d88" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="cuteGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <rect width="600" height="600" fill="url(#roomBg)"/>
+  <path d="M130 220 C80 300 70 450 120 580 C160 620 240 580 230 490 C190 410 180 300 210 230 Z" fill="url(#roseBrownHair)"/>
+  <path d="M470 220 C520 300 530 450 480 580 C440 620 360 580 370 490 C410 410 420 300 390 220 Z" fill="url(#roseBrownHair)"/>
+  <path d="M210 460 C150 490 100 540 80 600 L520 600 C500 540 450 490 390 460 Z" fill="url(#cuteSkin)"/>
+  <path d="M180 520 Q300 550 420 520 L450 600 L150 600 Z" fill="#170c13"/>
+  <path d="M260 380 L260 480 Q300 500 340 480 L340 380 Z" fill="url(#cuteSkin)"/>
+  <path d="M190 230 C190 360 240 450 300 450 C360 450 410 360 410 230 C410 150 360 120 300 120 C240 120 190 150 190 230 Z" fill="url(#cuteSkin)"/>
+  <ellipse cx="225" cy="330" rx="45" ry="25" fill="url(#cuteBlush)"/>
+  <ellipse cx="375" cy="330" rx="45" ry="25" fill="url(#cuteBlush)"/>
+  <path d="M296 345 Q300 350 304 345" stroke="#f43f5e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M200 260 Q240 245 275 235" stroke="#4a2433" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+  <path d="M400 260 Q360 245 325 235" stroke="#4a2433" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+  
+      <ellipse cx="240" cy="285" rx="26" ry="24" fill="#e11d48"/>
+      <circle cx="240" cy="285" r="14" fill="#4c0519"/>
+      <circle cx="236" cy="280" r="4" fill="#ffffff"/>
+      <ellipse cx="360" cy="285" rx="26" ry="24" fill="#e11d48"/>
+      <circle cx="360" cy="285" r="14" fill="#4c0519"/>
+      <circle cx="356" cy="280" r="4" fill="#ffffff"/>
+    
+  
+      <path d="M280 415 Q300 400 320 415" stroke="#9f1239" stroke-width="4" stroke-linecap="round" fill="none"/>
+    
+  <path d="M180 190 Q210 120 300 120 Q390 120 420 190 C430 250 440 350 410 400 Q390 330 395 240 Q300 160 205 240 Q210 330 190 400 C160 350 170 250 180 190 Z" fill="url(#roseBrownHair)"/>
+  <circle cx="215" cy="320" r="2.5" fill="#3b0718"/>
+  
+      <g transform="translate(380, 200) scale(0.9)" filter="url(#cuteGlow)">
+        <path d="M-15 -5 L-5 -5 L-5 -15 L5 -15 L5 -5 L15 -5 L15 5 L5 5 L5 15 L-5 15 L-5 5 L-15 5 Z" fill="#ef4444"/>
+      </g>
+      <path d="M180 380 Q160 360 170 340 Q185 360 180 380 Z" fill="#ffffff" opacity="0.6"/>
+    
+</svg>
