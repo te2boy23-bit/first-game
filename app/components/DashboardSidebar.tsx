@@ -49,6 +49,7 @@ interface DashboardSidebarProps {
   onReset: () => void;
   lang?: "ja" | "en" | "my" | "ne";
   onLanguageChange?: (val: "ja" | "en" | "my" | "ne") => void;
+  onUpdateNickname?: (val: string) => void;
 }
 
 const AVATAR_MAP: Record<string, string> = {
@@ -98,6 +99,7 @@ export default function DashboardSidebar({
   onReset,
   lang = "ja",
   onLanguageChange,
+  onUpdateNickname,
 }: DashboardSidebarProps) {
   // 次のレベルまでの進行度計算
   const isEn = lang === "en";
@@ -105,6 +107,23 @@ export default function DashboardSidebar({
   const isNe = lang === "ne";
 
   const [copiedBankInfo, setCopiedBankInfo] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [tempName, setTempName] = useState(nickname || "");
+  const [nameUpdatedAlert, setNameUpdatedAlert] = useState(false);
+
+  const handleSaveName = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const finalName =
+      tempName.trim() ||
+      (isEn ? "Agent" : isMy ? "စုံစမ်းရေးမှူး" : isNe ? "एजेन्ट" : "カモ太郎");
+    if (onUpdateNickname) {
+      onUpdateNickname(finalName);
+    }
+    localStorage.setItem("scam_nickname", finalName);
+    setIsEditingName(false);
+    setNameUpdatedAlert(true);
+    setTimeout(() => setNameUpdatedAlert(false), 2500);
+  };
 
   const handleCopyBankInfo = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -339,17 +358,33 @@ export default function DashboardSidebar({
         </div>
 
         {/* 👤 エージェント情報（アバターアイコン付き） */}
-        <div
-          onClick={() => setShowArchiveModal(true)}
-          className="bg-gray-900 border border-gray-800 hover:border-pink-500 rounded-xl p-3 mb-4 text-xs space-y-2.5 cursor-pointer transition shadow-md group"
-        >
+        <div className="bg-gray-900 border border-gray-800 hover:border-pink-500 rounded-xl p-3 mb-4 text-xs space-y-2.5 transition shadow-md group">
           <div className="text-gray-400 font-semibold flex justify-between items-center">
             <span className="flex items-center gap-1.5">
               <span>{t.agentInfo}</span>
             </span>
-            <span className="text-pink-400 text-[11px] group-hover:underline">
-              {t.openArchive}
-            </span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setTempName(nickname || "");
+                  setIsEditingName(true);
+                }}
+                className="text-[10px] text-sky-400 hover:text-sky-300 font-bold bg-sky-950/80 border border-sky-700/60 px-2 py-0.5 rounded cursor-pointer transition flex items-center gap-1 shadow-sm"
+                title="プレイヤー名・おとり名を変更"
+              >
+                <span>✏️</span>
+                <span>{isEn ? "Edit Name" : "名前を変更"}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowArchiveModal(true)}
+                className="text-pink-400 text-[11px] hover:underline cursor-pointer"
+              >
+                {t.openArchive}
+              </button>
+            </div>
           </div>
 
           <div className="flex items-center gap-3">
@@ -363,8 +398,20 @@ export default function DashboardSidebar({
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex justify-between items-center gap-1">
-                <div className="font-bold text-white text-sm truncate">
-                  {nickname}
+                <div
+                  onClick={() => {
+                    setTempName(nickname || "");
+                    setIsEditingName(true);
+                  }}
+                  className="font-bold text-white text-sm truncate flex items-center gap-1.5 cursor-pointer hover:text-sky-300 transition"
+                  title="クリックして名前を変更"
+                >
+                  <span className="text-pink-400 font-black">
+                    {nickname || (isEn ? "Agent" : "エージェント")}
+                  </span>
+                  <span className="text-xs text-gray-500 hover:text-sky-400">
+                    ✏️
+                  </span>
                 </div>
                 <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase border bg-gray-950 border-gray-700 text-yellow-400 shrink-0">
                   {currentRankText}
@@ -392,6 +439,102 @@ export default function DashboardSidebar({
           </div>
         </div>
 
+        {/* 🕵️‍♂️ 名前・おとり名義変更モーダル */}
+        {isEditingName && (
+          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="w-full max-w-md bg-gray-950 border-2 border-sky-500/80 rounded-2xl p-5 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200">
+              <div className="flex justify-between items-center border-b border-gray-800 pb-3">
+                <div className="flex items-center gap-2 text-sky-400 font-black text-base">
+                  <span>✏️</span>
+                  <span>
+                    {isEn
+                      ? "Change Undercover / Agent Name"
+                      : "エージェント名・おとり名義の変更"}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsEditingName(false)}
+                  className="text-gray-400 hover:text-white text-xs px-2 py-1 bg-gray-800 rounded cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <p className="text-xs text-gray-300 leading-relaxed">
+                {isEn
+                  ? "Set your custom undercover persona name. This alias will be used in undercover bank transfers, fake IDs, and suspect chats."
+                  : "ゲーム内で使用するあなたの名前（おとり捜査用の偽名）を設定できます。設定した名前は口座名義や偽身分証、詐欺師とのチャットに自動反映されます。"}
+              </p>
+
+              <form onSubmit={handleSaveName} className="space-y-3">
+                <div>
+                  <label className="text-[11px] font-bold text-gray-400 mb-1 block">
+                    {isEn
+                      ? "Agent / Undercover Name:"
+                      : "設定する名前（名義）:"}
+                  </label>
+                  <input
+                    type="text"
+                    value={tempName}
+                    onChange={(e) => setTempName(e.target.value)}
+                    placeholder={
+                      isEn ? "e.g. Taro Tanaka" : "例: 田中 太郎, カモ次郎"
+                    }
+                    className="w-full bg-gray-900 border-2 border-sky-600/70 text-emerald-300 text-sm p-2.5 rounded-xl font-bold focus:outline-none focus:border-sky-400"
+                    autoFocus
+                  />
+                </div>
+
+                {/* Quick Presets */}
+                <div>
+                  <div className="text-[10px] text-gray-400 mb-1.5 font-bold">
+                    {isEn
+                      ? "Quick Presets:"
+                      : "💡 おすすめのおとり偽名候補（ワンタップ入力）:"}
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {[
+                      "カモ太郎",
+                      "田中 太郎",
+                      "佐藤 健一",
+                      "山田 翔太",
+                      "鈴木 一郎",
+                      "カモ次郎",
+                      "Agent 007",
+                    ].map((preset) => (
+                      <button
+                        key={preset}
+                        type="button"
+                        onClick={() => setTempName(preset)}
+                        className="text-[11px] bg-gray-900 hover:bg-sky-950 text-gray-300 hover:text-sky-300 border border-gray-700 hover:border-sky-600 px-2 py-1 rounded-lg transition cursor-pointer font-medium"
+                      >
+                        {preset}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex gap-2 pt-2 border-t border-gray-800">
+                  <button
+                    type="submit"
+                    className="flex-1 py-2.5 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-bold text-sm rounded-xl cursor-pointer shadow-lg transition"
+                  >
+                    ✔ {isEn ? "Save Name" : "決定して保存"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsEditingName(false)}
+                    className="px-4 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold text-sm rounded-xl cursor-pointer transition"
+                  >
+                    {isEn ? "Cancel" : "キャンセル"}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
         {/* 💳 おとり捜査用・公式プロファイル（個人情報保護カード） */}
         <div className="bg-gray-900/95 border border-sky-500/40 rounded-xl p-3.5 mb-4 text-xs space-y-2.5 shadow-md shadow-sky-950/20">
           <div className="flex items-center justify-between">
@@ -407,25 +550,48 @@ export default function DashboardSidebar({
                       : "おとり捜査用・口座プロファイル"}
               </span>
             </span>
-            <button
-              type="button"
-              onClick={handleCopyBankInfo}
-              className="text-[10px] bg-sky-950 hover:bg-sky-900 text-sky-300 border border-sky-700/60 px-2 py-0.5 rounded cursor-pointer transition font-bold flex items-center gap-1"
-            >
-              <span>{copiedBankInfo ? "✔" : "📋"}</span>
-              <span>
-                {copiedBankInfo
-                  ? isEn
-                    ? "Copied!"
-                    : "コピー完了！"
-                  : isEn
-                    ? "Copy Bank"
-                    : "口座情報をコピー"}
-              </span>
-            </button>
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => {
+                  setTempName(nickname || "");
+                  setIsEditingName(!isEditingName);
+                }}
+                className="text-[10px] bg-gray-800 hover:bg-gray-700 text-sky-300 border border-sky-700/60 px-2 py-0.5 rounded cursor-pointer transition font-bold flex items-center gap-1"
+                title="おとり捜査用の名義・名前を変更"
+              >
+                <span>✏️</span>
+                <span>{isEn ? "Edit Name" : "名義変更"}</span>
+              </button>
+              <button
+                type="button"
+                onClick={handleCopyBankInfo}
+                className="text-[10px] bg-sky-950 hover:bg-sky-900 text-sky-300 border border-sky-700/60 px-2 py-0.5 rounded cursor-pointer transition font-bold flex items-center gap-1"
+              >
+                <span>{copiedBankInfo ? "✔" : "📋"}</span>
+                <span>
+                  {copiedBankInfo
+                    ? isEn
+                      ? "Copied!"
+                      : "コピー完了！"
+                    : isEn
+                      ? "Copy Bank"
+                      : "口座情報をコピー"}
+                </span>
+              </button>
+            </div>
           </div>
 
-          <div className="bg-gray-950/80 border border-gray-800 rounded-lg p-2.5 space-y-1 text-[11px] font-mono">
+          {nameUpdatedAlert && (
+            <div className="text-[10px] bg-emerald-950/90 border border-emerald-500 text-emerald-300 px-2 py-1 rounded font-bold text-center animate-in fade-in duration-200">
+              ✨{" "}
+              {isEn
+                ? "Undercover Name Updated!"
+                : "おとり捜査の名義を更新しました！"}
+            </div>
+          )}
+
+          <div className="bg-gray-950/80 border border-gray-800 rounded-lg p-2.5 space-y-1.5 text-[11px] font-mono">
             <div className="flex justify-between items-center text-gray-300">
               <span className="text-gray-500">
                 {isEn ? "Bank / Branch:" : "銀行・支店:"}
@@ -442,14 +608,65 @@ export default function DashboardSidebar({
               </span>
               <span className="text-sky-300 font-bold">普通 4589210</span>
             </div>
-            <div className="flex justify-between items-center text-gray-300 pt-1 border-t border-gray-800">
-              <span className="text-gray-500">
-                {isEn ? "Holder Name:" : "口座名義(登録名):"}
-              </span>
-              <span className="text-emerald-300 font-bold">
-                {nickname || "カモ太郎"}
-              </span>
+
+            {/* 口座名義（おとり捜査用の設定名） */}
+            <div className="pt-1.5 border-t border-gray-800">
+              <div className="flex justify-between items-center text-gray-300">
+                <span className="text-gray-500">
+                  {isEn ? "Holder Name:" : "口座名義(おとり名):"}
+                </span>
+                {!isEditingName && (
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-emerald-300 font-bold">
+                      {nickname || "カモ太郎"}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setTempName(nickname || "");
+                        setIsEditingName(true);
+                      }}
+                      className="text-[10px] text-sky-400 hover:text-sky-300 underline cursor-pointer"
+                    >
+                      [変更]
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {isEditingName && (
+                <form
+                  onSubmit={handleSaveName}
+                  className="mt-1.5 flex items-center gap-1 bg-gray-900 border border-sky-500/80 p-1 rounded-lg"
+                >
+                  <input
+                    type="text"
+                    value={tempName}
+                    onChange={(e) => setTempName(e.target.value)}
+                    placeholder={isEn ? "Enter alias name" : "おとり名義を入力"}
+                    className="flex-1 bg-transparent text-emerald-300 text-xs px-1 font-bold focus:outline-none"
+                    autoFocus
+                  />
+                  <button
+                    type="submit"
+                    className="bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] px-2 py-0.5 rounded font-bold cursor-pointer transition shadow"
+                  >
+                    {isEn ? "Save" : "保存"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setTempName(nickname || "");
+                      setIsEditingName(false);
+                    }}
+                    className="bg-gray-800 hover:bg-gray-700 text-gray-400 text-[10px] px-1.5 py-0.5 rounded cursor-pointer transition"
+                  >
+                    ✕
+                  </button>
+                </form>
+              )}
             </div>
+
             <div className="flex justify-between items-center text-gray-300 pt-1 border-t border-gray-800">
               <span className="text-gray-500">
                 {isEn ? "Dummy Address:" : "ダミー住所:"}

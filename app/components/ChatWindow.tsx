@@ -31,6 +31,7 @@ interface ChatWindowProps {
   onSelectNextTarget?: () => void;
   lang?: "ja" | "en" | "my" | "ne";
   onLanguageChange?: (val: "ja" | "en" | "my" | "ne") => void;
+  onUpdateNickname?: (val: string) => void;
 }
 
 const AVATAR_MAP: Record<string, string> = {
@@ -238,6 +239,7 @@ export default function ChatWindow({
   onSelectNextTarget,
   lang = "ja",
   onLanguageChange,
+  onUpdateNickname,
 }: ChatWindowProps) {
   const contactId = activeContact?.id || "sato";
   const currentEmotion = detectOpponentEmotion(
@@ -697,18 +699,38 @@ export default function ChatWindow({
         <div className="border-t border-gray-800 bg-gray-900/50 p-2.5 sm:p-3 space-y-2">
           {/* 🛡️ おとり捜査用クイックアクションバー */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px] scrollbar-thin">
-            <span className="text-gray-500 font-bold shrink-0 hidden sm:inline flex items-center gap-1">
-              <span>🛡️</span>
-              <span>
-                {lang === "en"
-                  ? "Undercover Data:"
-                  : lang === "my"
-                    ? "အတုအယောင်ဒေတာ:"
-                    : lang === "ne"
-                      ? "नक्कली डाटा:"
-                      : "おとり捜査用データ:"}
+            {/* Active Persona Badge with Quick Edit */}
+            <div className="flex items-center gap-1 bg-sky-950/90 border border-sky-700/80 px-2 py-1 rounded-lg shrink-0 font-bold text-sky-300 shadow-sm">
+              <span>🕵️</span>
+              <span className="text-gray-400 font-normal">
+                {lang === "en" ? "Alias:" : "名義:"}
               </span>
-            </span>
+              <span className="text-emerald-300 font-black truncate max-w-[110px]">
+                {agentName}
+              </span>
+              {onUpdateNickname && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newNick = window.prompt(
+                      lang === "en"
+                        ? "Enter your Undercover / Agent Name:"
+                        : "おとり捜査用の名前（名義）を入力してください:",
+                      agentName,
+                    );
+                    if (newNick && newNick.trim()) {
+                      onUpdateNickname(newNick.trim());
+                      localStorage.setItem("scam_nickname", newNick.trim());
+                    }
+                  }}
+                  className="text-sky-400 hover:text-white cursor-pointer ml-0.5 underline text-[10px]"
+                  title="名義を変更"
+                >
+                  ✏️[変更]
+                </button>
+              )}
+            </div>
+
             <button
               type="button"
               onClick={handleInsertBank}

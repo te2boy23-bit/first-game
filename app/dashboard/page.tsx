@@ -2968,6 +2968,7 @@ export default function DashboardPage() {
         onReset={handleReset}
         lang={lang}
         onLanguageChange={handleLanguageChange}
+        onUpdateNickname={(val) => setNickname(val)}
       />
 
       <ChatWindow
@@ -2986,6 +2987,7 @@ export default function DashboardPage() {
         onSelectNextTarget={handleProceedToNext}
         lang={lang}
         onLanguageChange={handleLanguageChange}
+        onUpdateNickname={(val) => setNickname(val)}
       />
     </main>
   );

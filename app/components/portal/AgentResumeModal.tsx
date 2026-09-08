@@ -9,6 +9,7 @@ interface AgentResumeModalProps {
   onResumeMission: () => void;
   onSwitchAccount: () => void;
   onClose: () => void;
+  onUpdateNickname?: (newNick: string) => void;
 }
 
 export function AgentResumeModal({
@@ -18,7 +19,21 @@ export function AgentResumeModal({
   onResumeMission,
   onSwitchAccount,
   onClose,
+  onUpdateNickname,
 }: AgentResumeModalProps) {
+  const [isEditing, setIsEditing] = React.useState(false);
+  const [tempName, setTempName] = React.useState(nickname || "");
+
+  const handleSave = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const finalName = tempName.trim() || "カモ太郎";
+    if (onUpdateNickname) {
+      onUpdateNickname(finalName);
+    }
+    localStorage.setItem("scam_nickname", finalName);
+    setIsEditing(false);
+  };
+
   return (
     <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-in fade-in zoom-in-95 duration-200">
       <div className="w-full max-w-lg bg-gray-950 border-2 border-emerald-500 rounded-2xl p-5 sm:p-8 shadow-[0_0_50px_rgba(16,185,129,0.35)] text-gray-100 my-auto">
@@ -47,20 +62,61 @@ export function AgentResumeModal({
 
         {/* Agent Profile Box */}
         <div className="bg-emerald-950/40 border border-emerald-800/60 rounded-xl p-3.5 sm:p-4 mb-5 text-xs">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-12 h-12 rounded-xl overflow-hidden border border-emerald-400/80 shadow-md flex-shrink-0 bg-gray-900">
-              <img
-                src="/images/avatars/agent.svg"
-                alt="Cyber Taskforce Agent"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div>
-              <div className="text-emerald-400 font-bold text-xs">
-                👤 捜査官ステータス (Authenticated Agent)
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl overflow-hidden border border-emerald-400/80 shadow-md flex-shrink-0 bg-gray-900">
+                <img
+                  src="/images/avatars/agent.svg"
+                  alt="Cyber Taskforce Agent"
+                  className="w-full h-full object-cover"
+                />
               </div>
-              <div className="text-white font-bold text-base">
-                {nickname || "Agent"}
+              <div>
+                <div className="text-emerald-400 font-bold text-xs">
+                  👤 捜査官ステータス (Authenticated Agent)
+                </div>
+                {isEditing ? (
+                  <form
+                    onSubmit={handleSave}
+                    className="flex items-center gap-2 mt-1"
+                  >
+                    <input
+                      type="text"
+                      value={tempName}
+                      onChange={(e) => setTempName(e.target.value)}
+                      placeholder="新しい名前・おとり名義"
+                      className="bg-gray-900 border border-emerald-500 rounded px-2 py-0.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-400"
+                      autoFocus
+                    />
+                    <button
+                      type="submit"
+                      className="bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-0.5 rounded text-[11px] font-bold cursor-pointer"
+                    >
+                      保存
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setIsEditing(false)}
+                      className="text-gray-400 hover:text-gray-200 text-[11px] cursor-pointer"
+                    >
+                      取消
+                    </button>
+                  </form>
+                ) : (
+                  <div className="text-white font-bold text-base flex items-center gap-2">
+                    <span>{nickname || "Agent"}</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setTempName(nickname || "");
+                        setIsEditing(true);
+                      }}
+                      className="text-[11px] text-emerald-400 hover:text-emerald-300 font-normal underline cursor-pointer"
+                    >
+                      ✏️ 名前変更
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>

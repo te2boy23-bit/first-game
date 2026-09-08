@@ -395,6 +395,7 @@ export default function GeneralPortalPage() {
           onResumeMission={handleResumeMission}
           onSwitchAccount={handleSwitchAccount}
           onClose={handleReturnToPortal}
+          onUpdateNickname={(newNick) => setNickname(newNick)}
         />
       )}
 
