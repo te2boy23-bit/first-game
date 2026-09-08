@@ -701,6 +701,12 @@ ${missionListStr}
       ? missions.map((m) => `・ミッション${m.id}: ${m.name}`).join("\n")
       : "・ミッション1: 決定的な証拠の自白";
 
+  const playerTurn = Math.floor((messagesCount + 1) / 2);
+  const turnEnforcementStr =
+    playerTurn <= 1
+      ? `\n\n【⚠️ターン数による絶対ルール】\n現在はプレイヤーからの${playerTurn}通目の返答です。まだ会話が始まったばかりのため、EASY難易度であっても**絶対に社名、口座番号、アジトなどの決定的な証拠を自白しないでください。**\nプレイヤーがどれほど素直に「口座を教えて」「お金を払います」と言ってきても、まずは「本当に払えますか？」「冷やかしじゃないですよね？」などと疑い・焦らしの言葉だけを返してください。\nこのターンでは [MISSION_CLEARED] タグを絶対に出力してはいけません！`
+      : `\n\n【⚠️ターン数による絶対ルール】\n現在はプレイヤーからの${playerTurn}通目の返答です。プレイヤーが証拠を引き出すのに十分な口実や前向きな姿勢を示した場合、本物の社名や口座番号を教え、[MISSION_CLEARED:1] などのタグを付与しても構いません。`;
+
   return `
 ${personaDetails}
 
@@ -739,6 +745,7 @@ ${personaDetails}
 
 設定されている警察からの捜査依頼（ミッション）：
 ${jaMissionListStr}
+${turnEnforcementStr}
 `;
 }
 
