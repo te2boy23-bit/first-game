@@ -97,7 +97,7 @@ export function PortalHeader({
         <div className="max-w-6xl mx-auto px-3 sm:px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2.5 cursor-pointer">
             <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-black text-lg sm:text-xl shadow">
-              M
+              cb
             </div>
             <div>
               <div className="font-black text-lg sm:text-xl tracking-tight text-slate-900 leading-tight">
