@@ -74,7 +74,12 @@ export default function GeneralPortalPage() {
           localStorage.setItem("scam_nickname", nick);
           if (mail) localStorage.setItem("scam_email", mail);
           localStorage.setItem("scam_step", "game");
-          router.push("/dashboard");
+          setStep("hacked");
+          window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname,
+          );
         }
       });
     }
@@ -92,6 +97,14 @@ export default function GeneralPortalPage() {
           {},
           document.title,
           window.location.pathname,
+        );
+      } else if (currentUrl.searchParams.has("hacked")) {
+        setStep("hacked");
+        currentUrl.searchParams.delete("hacked");
+        window.history.replaceState(
+          {},
+          document.title,
+          currentUrl.pathname + currentUrl.search,
         );
       }
     }
@@ -180,11 +193,7 @@ export default function GeneralPortalPage() {
     setTimeout(() => {
       setIsLoading(false);
       setShowScamModal(false);
-      if (isLoginMode) {
-        router.push("/dashboard");
-      } else {
-        setStep("hacked");
-      }
+      setStep("hacked");
     }, 800);
   };
 
@@ -258,7 +267,7 @@ export default function GeneralPortalPage() {
 
     // Vercel本番・スマホ環境で確実にVercelのURLへ戻れるようオリジンを判定
     const currentOrigin = getBaseSiteUrl();
-    const redirectUrl = `${currentOrigin}/auth/callback?next=/dashboard`;
+    const redirectUrl = `${currentOrigin}/auth/callback?next=${encodeURIComponent("/?hacked=1")}`;
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider: provider,
