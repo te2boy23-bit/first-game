@@ -101,10 +101,10 @@ export function PortalHeader({
             </div>
             <div>
               <div className="font-black text-lg sm:text-xl tracking-tight text-slate-900 leading-tight">
-                MEDIA TRENDS
+                CYBER-BAIT
               </div>
               <div className="text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-                Digital &amp; Career
+                Undercover Operation
               </div>
             </div>
           </div>
