@@ -350,6 +350,58 @@ export default function GeneralPortalPage() {
         />
       </main>
 
+      {/* 🚨 AdSense対策用のゲーム説明セクション 🚨 */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12 mb-10 border-t border-slate-200">
+        <h2 className="text-2xl sm:text-3xl font-black text-slate-800 mb-6">
+          Cyber-Bait（サイバーベイト）について
+        </h2>
+        <div className="space-y-6 text-slate-600 leading-relaxed text-sm sm:text-base bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100">
+          <p>
+            「Cyber-Bait（サイバーベイト）」は、昨今社会問題化している
+            <strong>特殊詐欺</strong>や<strong>フィッシング詐欺</strong>、
+            <strong>闇バイト</strong>
+            などのサイバー犯罪の手口を疑似体験し、リテラシーと防犯意識を高めることを目的とした
+            <strong>完全無料のブラウザ型潜入捜査シミュレーションゲーム</strong>
+            です。
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-slate-100">
+            <div>
+              <h3 className="text-lg font-bold text-slate-800 mb-3 flex items-center gap-2">
+                <span className="text-rose-500">🎮</span> ゲームの目的
+              </h3>
+              <p>
+                プレイヤーは警察の極秘サイバー捜査官（おとり捜査官）となり、チャット形式で架空の詐欺師たちと交渉を行います。相手の言葉の矛盾を突き、証拠（口座番号やアジトの場所など）を巧みに引き出して逮捕状を請求し、詐欺グループを壊滅させることが目的です。
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-slate-800 mb-3 flex items-center gap-2">
+                <span className="text-rose-500">⚠️</span>{" "}
+                ダミーコンテンツについて
+              </h3>
+              <p>
+                本サイト（ポータルページ）内に掲載されている「1日5分で月収100万！稼げる副業」や「限定情報」といった記事・広告はすべて、
+                <strong>詐欺の手口を再現したフィクション（ダミー）</strong>
+                であり、ゲームへの入り口として機能しています。実在する企業や詐欺サイトとは一切関係ありません。
+              </p>
+            </div>
+          </div>
+          <div className="pt-6 border-t border-slate-100 flex flex-wrap gap-4 text-sm font-semibold">
+            <a
+              href="/terms"
+              className="text-blue-600 hover:text-blue-800 transition"
+            >
+              利用規約 (Terms)
+            </a>
+            <a
+              href="/privacy"
+              className="text-blue-600 hover:text-blue-800 transition"
+            >
+              プライバシーポリシー (Privacy)
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* 🚨 MODALS */}
       {showScamModal && step === "portal" && (
         <ScamTrapModal
