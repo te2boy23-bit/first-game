@@ -9,6 +9,7 @@ import ClearModal from "../components/ClearModal";
 import GameOverModal from "../components/GameOverModal";
 import AdModal from "../components/AdModal";
 import MasterUnlockModal from "../components/MasterUnlockModal";
+import TutorialModal from "../components/TutorialModal";
 import { sound } from "../lib/sound";
 
 interface Mission {
@@ -1939,6 +1940,7 @@ export default function DashboardPage() {
   const [isMobileChatOpen, setIsMobileChatOpen] = useState(false);
 
   const [showArchiveModal, setShowArchiveModal] = useState(false);
+  const [showTutorialModal, setShowTutorialModal] = useState(false);
   const [showAdModal, setShowAdModal] = useState(false);
   const [showMasterUnlockModal, setShowMasterUnlockModal] = useState(false);
   const [clearModalInfo, setClearModalInfo] = useState<{
@@ -2064,6 +2066,12 @@ export default function DashboardPage() {
           });
           return merged;
         });
+
+        const hasSeenTutorial = localStorage.getItem("scam_has_seen_tutorial");
+        if (!hasSeenTutorial) {
+          setShowTutorialModal(true);
+        }
+
         setIsCheckingAuth(false);
       };
 
@@ -2680,6 +2688,16 @@ export default function DashboardPage() {
 
   return (
     <main className="flex h-screen w-screen bg-gray-950 text-gray-100 overflow-hidden relative">
+      {showTutorialModal && (
+        <TutorialModal
+          onClose={() => {
+            localStorage.setItem("scam_has_seen_tutorial", "true");
+            setShowTutorialModal(false);
+          }}
+          lang={lang}
+        />
+      )}
+
       <ArchiveModal
         isOpen={showArchiveModal}
         onClose={() => setShowArchiveModal(false)}
