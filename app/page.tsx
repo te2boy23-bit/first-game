@@ -33,6 +33,7 @@ export default function GeneralPortalPage() {
   const [isInAppBrowser, setIsInAppBrowser] = useState(false);
   const [showInAppModal, setShowInAppModal] = useState(false);
   const [copiedUrl, setCopiedUrl] = useState(false);
+  const [hasSeenWarning, setHasSeenWarning] = useState(false);
 
   // Form States
   const [nickname, setNickname] = useState("");
@@ -120,6 +121,10 @@ export default function GeneralPortalPage() {
     const savedLang = localStorage.getItem("scam_lang") as Language;
     if (savedLang) {
       setLang(savedLang);
+    }
+
+    if (localStorage.getItem("scam_has_seen_warning") === "true") {
+      setHasSeenWarning(true);
     }
   }, [router]);
 
@@ -305,7 +310,48 @@ export default function GeneralPortalPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-rose-500 selection:text-white relative overflow-x-hidden">
+    <div
+      className={`min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-rose-500 selection:text-white relative overflow-x-hidden ${!hasSeenWarning ? "h-screen overflow-hidden" : ""}`}
+    >
+      {/* ⚠️ ゲームプレイ前の注意事項オーバーレイ */}
+      {isMounted && !hasSeenWarning && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900 text-slate-100 p-4 font-sans backdrop-blur-sm">
+          <div className="max-w-2xl bg-slate-800 rounded-2xl shadow-2xl p-6 sm:p-10 border border-slate-700 animate-in fade-in duration-500">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-6">
+              <span className="text-4xl">⚠️</span>
+              <h1 className="text-2xl sm:text-3xl font-black text-white">
+                ゲームプレイ前の注意事項
+              </h1>
+            </div>
+
+            <div className="space-y-4 text-sm sm:text-base text-slate-300 leading-relaxed bg-slate-900/50 p-5 rounded-xl border border-slate-700/50">
+              <p>
+                本サイトは、特殊詐欺やフィッシング詐欺の手口を体験し、防犯意識を高めることを目的とした
+                <strong>教育用シミュレーションゲーム</strong>です。
+              </p>
+              <p className="text-rose-400 font-bold">
+                次に表示される画面上の「稼げる副業」や「限定情報」などの広告や記事は、すべてゲームを演出するためのフィクション（ダミー）です。
+              </p>
+              <p>
+                実在する人物・団体・企業等とは一切関係ありません。
+                <br />
+                ゲームの性質上、詐欺サイトのような表現が含まれますが、実際に課金されたり個人情報が悪用されたりすることはありません。
+              </p>
+            </div>
+
+            <button
+              onClick={() => {
+                localStorage.setItem("scam_has_seen_warning", "true");
+                setHasSeenWarning(true);
+              }}
+              className="w-full mt-8 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold text-lg rounded-xl transition duration-200 shadow-lg shadow-blue-500/20 cursor-pointer"
+            >
+              理解してプレイを開始する
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* ⚡ Glitch Hijack Flash Effect */}
       {isGlitching && (
         <div className="fixed inset-0 z-50 bg-rose-950/80 backdrop-blur-md flex flex-col items-center justify-center animate-pulse">
