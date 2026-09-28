@@ -49,7 +49,7 @@ export default function TutorialModal({ onClose, lang }: TutorialModalProps) {
         <h2 className="text-2xl font-black text-white mb-6 flex items-center gap-2">
           {t.title}
         </h2>
-
+        
         <div className="space-y-4 text-slate-300 text-sm sm:text-base leading-relaxed bg-slate-900/50 p-5 rounded-xl border border-slate-700/50">
           <p className="font-bold text-white">📍 {t.p1}</p>
           <div className="space-y-3 pl-1">
@@ -78,3 +78,4 @@ export default function TutorialModal({ onClose, lang }: TutorialModalProps) {
     </div>
   );
 }
+
